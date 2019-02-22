@@ -1,6 +1,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <assert.h>
+#include <math.h>
 #include "stdbool.h"
 
 #define MAX_COUNT_OF_POINTS 20
@@ -9,6 +10,12 @@
 #define ERR_READ -1
 #define ERR_EMPTY -2
 #define ERR_IO -3
+//todo
+// Добавить экстраполяцию для дробны
+// изменять столбцы и прогонять тот же алгоритм для отсортированного points[i].x
+//
+//
+//
 
 typedef struct COORDINATES coordinates;
 
@@ -18,6 +25,27 @@ struct COORDINATES
     double y;
 };
 
+double func(double x)
+{
+    return cos(x) - x;
+}
+void print_in_file()
+{
+    int start = -3;
+    int end = 3;
+    //int step = 1;
+    FILE *f;
+    f = fopen("input.txt", "w");
+    if (f)
+    {
+        for (double i = start; i <= end; i++)
+        {
+            fprintf(f, "%lf %lf\n", i, func(i));
+        }
+        fclose(f);
+    }
+
+}
 int count_of_points_in_file(FILE *f, int *n)
 {
     float dummy1;
@@ -87,12 +115,15 @@ int user_input(double *num)
     {
         int i = 0;
         int flag = 0;
-        while (string[i] != '\0')
+        while (string[i + 1] != '\0')
         {
-            printf("strin is %c\n", string[i]);
-            if (string[i] > '9' && string[i] < '0')
+            if (string[i] == '-' || string[i] == '.')
             {
-                printf("hey hey\n");
+                i++;
+                continue;
+            }
+            if (string[i] > '9' || string[i] < '0')
+            {
                 flag = 1;
                 break;
             }
@@ -110,6 +141,7 @@ int user_input(double *num)
 
 bool value_existance(double x_value, coordinates *points, int count, int *pos)
 {
+    //printf("points[count].x is %f\n", points[count - 1].x);
     for (int i = 0; i < count; i++)
     {
         //printf("x_value is %f points.x is %f\n", x_value, points[i].x);
@@ -119,6 +151,10 @@ bool value_existance(double x_value, coordinates *points, int count, int *pos)
            // printf("i is %d\n", i);
             return true;
         }
+    }
+    if (x_value < points[0].x || x_value > points[count - 1].x)
+    {
+        return false;
     }
     return false;
 }
@@ -258,6 +294,7 @@ int main(void)
     char c;
     FILE *f;
     coordinates points[MAX_COUNT_OF_POINTS];
+    print_in_file();
     f = fopen("input.txt", "r");
     if (!f)
     {
@@ -273,10 +310,23 @@ int main(void)
             printf("points.x and points.y: %lf, %lf\n", points[i].x, points[i].y);
         }
 
-        printf("Input x value\n");
+        //printf("Input x watching the table above this\n");
         // Сделать проверку на входные данные, порядок не может быть больше чем кол-во узлов в файле! Выдавать ошибки
         // Обработать все else'ы
-        code_error = user_input(&x_value);
+        int cou = 0;
+        do
+        {
+            if (cou > 0)
+            {
+               printf("===== EXTRAPOLATION =====\n");
+            }
+            cou++;
+            printf("Input x watching the table above this\n");
+
+            code_error = user_input(&x_value);
+        }
+        while ((interpolation = value_existance(x_value, points, count, &pos)) == false);
+
         if (code_error == OK)
         {
             printf("input n order\n");
@@ -286,12 +336,16 @@ int main(void)
                 printf("Order is greater than count in files\n");
                 return ERR_READ;
             }
+            else if (n_order < 0)
+            {
+                printf("Order couldn't be less than 0\n");
+                return ERR_READ;
+            }
             else
             {
                 if (code_error == OK)
                 {
                     //printf("%d %d\n", x_value, n_order);
-                    interpolation = value_existance(x_value, points, count, &pos);
                     if (interpolation == false)
                     {
                         printf("Here could be extrapolation\n");
@@ -300,6 +354,7 @@ int main(void)
                     {
                         select_interval(pos, count, n_order, &start, &end);
                         interpolation_func(x_value, start, end, points);
+                        printf("expected result: %lf\n", func(x_value));
                         printf("Do you want to get the root ?\n  Input Y/n:\n ");
                         if (scanf("%c", &c) == 1)
                         {
