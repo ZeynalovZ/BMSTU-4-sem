@@ -27,20 +27,20 @@ struct COORDINATES
 
 double func(double x)
 {
-    return cos(x) - x;
+    return x*x;
 }
 void print_in_file()
 {
-    int start = -3;
-    int end = 3;
-    //int step = 1;
+    int start = -5;
+    int end = 5;
+    //int step = 0.2;
     FILE *f;
-    f = fopen("input.txt", "w");
+    f = fopen("input4.txt", "w");
     if (f)
     {
         for (double i = start; i <= end; i++)
         {
-            fprintf(f, "%lf %lf\n", i, func(i));
+            fprintf(f, "%lf %lf\n", func(i), i);
         }
         fclose(f);
     }
@@ -142,13 +142,15 @@ int user_input(double *num)
 bool value_existance(double x_value, coordinates *points, int count, int *pos)
 {
     //printf("points[count].x is %f\n", points[count - 1].x);
+    double eps = 0.5;
     for (int i = 0; i < count; i++)
     {
         //printf("x_value is %f points.x is %f\n", x_value, points[i].x);
-        if (x_value == points[i].x)
+        if (fabs((x_value - points[i].x)) <= eps)
         {
             *pos = i;
-           // printf("i is %d\n", i);
+
+            //printf("i is %d\n", i);
             return true;
         }
     }
@@ -156,18 +158,40 @@ bool value_existance(double x_value, coordinates *points, int count, int *pos)
     {
         return false;
     }
+    else
+    {
+        return true;
+    }
     return false;
 }
 
 int select_interval(int pos, int count, int n_order, int *start, int *end)
 {
     //assert(n_order + 1 < count);
-    //printf("count is %d, pos is %d\n", count, pos);
+    //printf("n_order is %d\n", n_order);
     *start = pos;
     *end = pos;
+    int flag = 0;
     // идем в цикле до порядок + 1
     for (int i = 0; i < n_order; i++)
     {
+        if (flag == 0 )
+        {
+            flag = 1;
+            if (*start - i > 0)
+            {
+                *start -= 1;
+            }
+        }
+        if (flag == 1 && *end + 1 < count)
+        {
+            flag = 0;
+            if (*end  < count)
+            {
+                *end += 1;
+            }
+        }
+        /*
         if (*end + 1 == count)
         {
             *start = *start - 1;
@@ -176,6 +200,7 @@ int select_interval(int pos, int count, int n_order, int *start, int *end)
         {
             *end = *end + 1;
         }
+        */
     }
     //printf("in select====\n");
     //printf("start is %d, end is %d\n", *start, *end);
@@ -240,7 +265,9 @@ double get_y_part1(int start, int end, coordinates *points, double (*mat_y)[10],
 int interpolation_func(double x_value, int start, int end, coordinates *points)
 {
     double result = 0;
+    //printf("start is %d!\n", start);
     result += points[start].y;
+
     int n = end - start;
     double razn[n + 1];
     double a[n + 1];
@@ -250,7 +277,6 @@ int interpolation_func(double x_value, int start, int end, coordinates *points)
     {
         a[i] = points[start + i].y;
     }
-
     int count = 0;
     int pos = 0;
     int j = 0;
@@ -291,7 +317,7 @@ int main(void)
     int count, pos, start, end;
     double x_value;
     double n_order;
-    char c;
+    //char c;
     FILE *f;
     coordinates points[MAX_COUNT_OF_POINTS];
     print_in_file();
@@ -345,16 +371,20 @@ int main(void)
             {
                 if (code_error == OK)
                 {
-                    //printf("%d %d\n", x_value, n_order);
+
                     if (interpolation == false)
                     {
                         printf("Here could be extrapolation\n");
                     }
                     else
                     {
+
                         select_interval(pos, count, n_order, &start, &end);
+                        printf("start and end are %d %d\n", start, end);
                         interpolation_func(x_value, start, end, points);
+
                         printf("expected result: %lf\n", func(x_value));
+                        /*
                         printf("Do you want to get the root ?\n  Input Y/n:\n ");
                         if (scanf("%c", &c) == 1)
                         {
@@ -371,6 +401,7 @@ int main(void)
                         {
                             printf("bye\n");
                         }
+                        */
                     }
                 }
                 else
