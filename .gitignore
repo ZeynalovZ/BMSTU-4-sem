@@ -1,0 +1,8 @@
+**/__pycache__/**
+*.exe
+<<<<<<< HEAD
+*.o
+*.creator.user.*
+=======
+*.o
+>>>>>>> parent of e317c39... errors with beauty were resolved
