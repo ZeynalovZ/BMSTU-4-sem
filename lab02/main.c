@@ -16,6 +16,7 @@ int main(int argc, char **argv)
     coordinates points[MAX_COUNT_OF_POINTS];
     int count = 0;
     double x_value = 0;
+    double y = 0;
     if (argc != 2)
     {
         printf("Input like this: <app.exe input.txt>");
@@ -41,8 +42,9 @@ int main(int argc, char **argv)
                     existance = value_existance(x_value, points, count);
                     if (existance == true)
                     {
-                        main_process(count, points, x_value);
+                        y = main_process(count, points, x_value);
                         printf("\nexpected result is %f\n\n", func(x_value));
+                        printf("Accuracy is %f\n", fabs(y - func(x_value)));
                     }
                     else
                     {

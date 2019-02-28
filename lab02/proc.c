@@ -1,7 +1,7 @@
 #include "io.h"
 #include "proc.h"
 #include "err.h"
-#include <math.h>
+
 
 
 bool value_existance(double x_value, coordinates *points, int count)
