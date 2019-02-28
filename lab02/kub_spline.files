@@ -1,0 +1,8 @@
+in.txt
+io.c
+io.h
+makefile
+proc.c
+proc.h
+err.h
+main.c
