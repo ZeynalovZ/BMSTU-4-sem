@@ -4,7 +4,7 @@
 #include <math.h>
 
 
-bool value_existance(double x_value, coordinates *points, int count, int *pos)
+bool value_existance(double x_value, coordinates *points, int count)
 {
     //printf("points[count].x is %f\n", points[count - 1].x);
     double eps = 0.5;
@@ -13,8 +13,6 @@ bool value_existance(double x_value, coordinates *points, int count, int *pos)
         //printf("x_value is %f points.x is %f\n", x_value, points[i].x);
         if (fabs((x_value - points[i].x)) <= eps)
         {
-            *pos = i;
-
             //printf("i is %d\n", i);
             return true;
         }
@@ -160,11 +158,11 @@ int main_process(int count, coordinates *points, double x_value)
     //print_array(b, count);
     //print_array(U, count);
     int i = get_pos_x_interval(x_value, points, count);
-    printf("pos is %d\n", i );
+    //printf("pos is %d\n", i );
     double x_x1 = (x_value - points[i - 1].x);
     double result = a[i] + b[i] * x_x1 + U[i] * x_x1 * x_x1 + d[i] * x_x1 * x_x1 * x_x1;
-    printf("===%f %f %f %f===\n", a[i], b[i], U[i], d[i]);
-    printf("result is %f\n", result);
+    printf("\n=== a = %f, b = %f, c = %f, d = %f===\n", a[i], b[i], U[i], d[i]);
+    printf("\ny(%f) = %f\n", x_value, result);
 
     return result;
 

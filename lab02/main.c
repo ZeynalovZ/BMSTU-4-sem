@@ -11,6 +11,7 @@ int main(int argc, char **argv)
     print_in_file();
     setbuf(stdout, NULL);
     int code_error = OK;
+    bool existance = true;
     FILE *f;
     coordinates points[MAX_COUNT_OF_POINTS];
     int count = 0;
@@ -32,15 +33,31 @@ int main(int argc, char **argv)
                  {
                      printf("%f %f\n", points[i].x, points[i].y);
                  }
-                 printf("input x_value\n");
+                 printf("\ninput x_value:\n");
                  code_error = user_input(&x_value);
                  if (code_error == OK)
                  {
-                    printf("x_value is %f\n", x_value);
-                    main_process(count, points, x_value);
-                    printf("expected result is %f\n", func(x_value));
+                    //printf("\nx_value is %f\n", x_value);
+                    existance = value_existance(x_value, points, count);
+                    if (existance == true)
+                    {
+                        main_process(count, points, x_value);
+                        printf("\nexpected result is %f\n\n", func(x_value));
+                    }
+                    else
+                    {
+                        printf("\n!!!!EXTRAPOLATION\n\n");
+                    }
+                 }
+                 else
+                 {
+                     printf("X value is not right\n");
                  }
 
+             }
+             else
+             {
+                 printf("There are should be pair of points\n");
              }
             fclose(f);
         }
