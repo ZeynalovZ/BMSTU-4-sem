@@ -8,7 +8,7 @@
 
 int main(int argc, char **argv)
 {
-    print_in_file();
+   // print_in_file();
     setbuf(stdout, NULL);
     int code_error = OK;
     bool existance = true;

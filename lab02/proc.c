@@ -7,11 +7,11 @@
 bool value_existance(double x_value, coordinates *points, int count)
 {
     //printf("points[count].x is %f\n", points[count - 1].x);
-    double eps = 0.5;
+    //double eps = 0.1;
     for (int i = 0; i < count; i++)
     {
         //printf("x_value is %f points.x is %f\n", x_value, points[i].x);
-        if (fabs((x_value - points[i].x)) <= eps)
+        if (fabs((x_value - points[i].x)) <= 0)
         {
             //printf("i is %d\n", i);
             return true;

@@ -89,7 +89,7 @@ int read_coordinates_from_file(FILE *f, coordinates *points, int *count)
          code_error = count_of_points_in_file(f, &count_of_points);
          if (code_error == OK)
          {
-            if (count_of_points <= 2)
+            if (count_of_points <= 1)
             {
                 return ERR_EMPTY;
             }
