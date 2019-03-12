@@ -2,10 +2,13 @@
 #define MAINWINDOW_H
 
 #include <QMainWindow>
+#include <QValidator>
 
 namespace Ui {
 class MainWindow;
 }
+
+void set_validator();
 
 class MainWindow : public QMainWindow
 {
@@ -20,15 +23,14 @@ public:
     double y1;
     double x2;
     double y2;
-    void draw_brezenham1(QPainter &painter);
-    void draw_brezenham2(QPainter &painter);
+    void draw_brezenham1(QPainter *painter);
+    void draw_brezenham2(QPainter *painter);
 
 protected:
 
-    void paintEvent(QPaintEvent *event);
-
 private slots:
     void on_but_exec_clicked();
+    void on_changed();
 
 
 private:

@@ -4,18 +4,26 @@
 #include <qpainter.h>
 #include <QPainter>
 #include <QMessageBox>
+#include <iostream>
+using namespace std;
 MainWindow::MainWindow(QWidget *parent) :
     QMainWindow(parent),
     ui(new Ui::MainWindow)
 {
     ui->setupUi(this);
-    /*
-    QPixmap bkgnd("фон4.PNG");
-    bkgnd = bkgnd.scaled(this->size(), Qt::IgnoreAspectRatio);
-    QPalette palette;
-    palette.setBrush(QPalette::Background, bkgnd);
-    this->setPalette(palette);
-    */
+
+    QRegExp check ("[-+]?(\\d+(\\.\\d*)?|\\.\\d+)$");
+    QRegExpValidator *my_double_validator = new QRegExpValidator(check, this);
+    ui->lineX1->setValidator(my_double_validator);
+    ui->lineX2->setValidator(my_double_validator);
+    ui->lineY1->setValidator(my_double_validator);
+    ui->lineY2->setValidator(my_double_validator);
+
+    connect(ui->lineX1, SIGNAL(textChanged(QString)), this, SLOT(on_changed()));
+    connect(ui->lineX2, SIGNAL(textChanged(QString)), this, SLOT(on_changed()));
+    connect(ui->lineY1, SIGNAL(textChanged(QString)), this, SLOT(on_changed()));
+    connect(ui->lineY2, SIGNAL(textChanged(QString)), this, SLOT(on_changed()));
+
 }
 
 MainWindow::~MainWindow()
@@ -35,32 +43,9 @@ int sign(double num)
     }
 }
 
-void MainWindow::paintEvent(QPaintEvent *event)
-{
-    Q_UNUSED(event);
-    QPainter painter(this);
-    if (ui->radioButton_2->isChecked())
-    {
-        if (ui->radioButton_BLACK->isChecked())
-        {
-            painter.setBrush(QBrush(Qt::black, Qt::SolidPattern));
-            draw_brezenham1(painter);
-        }
-        else if (ui->radioButton_WHITE->isChecked())
-        {
-            painter.setBrush(QBrush(Qt::white, Qt::SolidPattern));
-            draw_brezenham1(painter);
-        }
-    }
-    else if (ui->radioButton_6->isChecked())
-    {
-        painter.drawLine(x1, y1, x2, y2);
-        update();
-    }
 
-}
 
-void MainWindow::draw_brezenham1(QPainter &painter)
+void MainWindow::draw_brezenham1(QPainter *painter)
 {
     double x = x1;
     double y = y1;
@@ -86,7 +71,7 @@ void MainWindow::draw_brezenham1(QPainter &painter)
     double e = m - 0.5;
     for (int i = 0; i <= dx; i++)
     {
-        painter.drawPoint(x, y);
+        painter->drawPoint(x, y);
         if (e >= 0)
         {
             if (obmen == 0)
@@ -114,7 +99,7 @@ void MainWindow::draw_brezenham1(QPainter &painter)
     }
 }
 
-void MainWindow::draw_brezenham2(QPainter &painter)
+void MainWindow::draw_brezenham2(QPainter *painter)
 {
     double x = x1;
     double y = y1;
@@ -140,7 +125,7 @@ void MainWindow::draw_brezenham2(QPainter &painter)
     double e = m - 0.5;
     for (int i = 0; i <= dx; i++)
     {
-        painter.drawPoint(x, y);
+        painter->drawPoint(x, y);
         if (e >= 0)
         {
             if (obmen == 0)
@@ -223,6 +208,38 @@ void MainWindow::on_but_exec_clicked()
     {
         step_y = -1;
     }
-
+    QPainter *painter = new QPainter(this);
+    if (ui->radioButton_2->isChecked())
+    {
+        if (ui->radioButton_BLACK->isChecked())
+        {
+            painter->setBrush(QBrush(Qt::black, Qt::SolidPattern));
+            draw_brezenham1(painter);
+        }
+        else if (ui->radioButton_WHITE->isChecked())
+        {
+            painter->setBrush(QBrush(Qt::white, Qt::SolidPattern));
+            draw_brezenham1(painter);
+        }
+        cout << "brezenham1" << endl;
+    }
+    else if (ui->radioButton_6->isChecked())
+    {
+        painter->drawLine(x1, y1, x2, y2);
+        update();
+    }
     update();
+}
+
+void MainWindow::on_changed()
+{
+    if (ui->lineX1->hasAcceptableInput() && ui->lineX2->hasAcceptableInput()\
+            &&ui->lineY1->hasAcceptableInput() && ui->lineY2->hasAcceptableInput())
+    {
+        ui->but_exec->setEnabled(true);
+    }
+    else
+    {
+        ui->but_exec->setEnabled(false);
+    }
 }
