@@ -6,6 +6,7 @@
 #include <QMessageBox>
 #include <iostream>
 #include <QColor>
+#include <QColorDialog>
 using namespace std;
 MainWindow::MainWindow(QWidget *parent) :
     QMainWindow(parent),
@@ -355,4 +356,14 @@ void MainWindow::on_but_exec_clicked()
     }
 
     update();
+}
+
+void MainWindow::on_pushButton_clicked()
+{
+    QColor color = QColorDialog::getColor(Qt::yellow, this );
+}
+
+void MainWindow::on_pushCOLOR_clicked()
+{
+    QColor color = QColorDialog::getColor(Qt::yellow, this );
 }
