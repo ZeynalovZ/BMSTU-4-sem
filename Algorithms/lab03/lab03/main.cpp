@@ -223,11 +223,11 @@ bool value_existance_y(double y_value, double **matrix, int count, int *pos)
 
 int select_interval(int pos, int count, int n_order, int *start, int *end)
 {
-    *start = pos;
-    *end = pos;
+    *start = pos + 1;
+    *end = pos + 1;
     int flag = 0;
     // идем в цикле до порядок + 1
-    for (int i = 0; i < n_order + 1; i++)
+    for (int i = 0; i < n_order; i++)
     {
         if (flag == 0 )
         {
@@ -335,7 +335,7 @@ double interpolation_func(double x_value, int start, int end, coordinates *point
         //get_y_part(i, start, i + 1, points);
                 //get_x_part(x_value, i, start, points) *
     }
-    printf("result is %lf\n", result);
+    //printf("result is %lf\n", result);
     return result;
 }
 
@@ -373,7 +373,7 @@ int main()
     coordinates points[MAX_COUNT_OF_POINTS];
     double zets[MAX_COUNT_OF_POINTS];
     double **matrix = NULL;
-    f = fopen("D:\\GITHUB\\BMSTU-4-sem\\Algorithms\\lab03\\lab03\\input.txt", "r");
+    f = fopen("C:\\Users\\user-lab01\\Desktop\\Zeynal\\BMSTU-4-sem\\Algorithms\\lab03\\lab03\\input.txt", "r");
     if (!f)
     {
         printf("Check out file named \"input.txt\"");
@@ -398,9 +398,10 @@ int main()
                     code_error = user_input(&ny_order);
                     if (code_error == OK)
                     {
+                        print_matrix(matrix, count);
                         if (value_existance_x(x_value, matrix, count, &pos) == true)
                         {
-                            printf("pos is %d\n", pos);
+                           // printf("pos is %d\n", pos);
                             code_error = select_interval(pos, count, nx_order, &start_x, &end_x);
                             if (code_error == OK)
                             {
@@ -409,18 +410,18 @@ int main()
                                     code_error = select_interval(pos, count, ny_order, &start_y, &end_y);
                                     if (code_error == OK)
                                     {
-                                       printf("start x and end x %d %d\n", start_x, end_x);
-                                       printf("start y and end y %d %d\n", start_y, end_y);
-                                       printf("pos is %d\n", pos);
+                                       //printf("start x and end x %d %d\n", start_x, end_x);
+                                       //printf("start y and end y %d %d\n", start_y, end_y);
+                                       //printf("pos is %d\n", pos);
                                         int count_zets = end_x - start_x + 1;
                                         //printf("counts zets = %d\n", count_zets);
                                         //for (int i = start_x; i < count_zets; i++)
                                         for (int i = 0; i < count_zets; i++)
                                         {
                                             get_points_for_y(points, matrix, start_x, end_x, start_y, i);
-                                            printf("------\n");
-                                            print_points(points, count);
-                                            printf("------");
+                                            //printf("------\n");
+                                            //print_points(points, count);
+                                            //printf("------");
                                             zets[i] = interpolation_func(y_value, 0, end_y - start_y, points);
 
                                         }
@@ -433,7 +434,7 @@ int main()
                                         //printf("\n");
 
                                         get_points_for_x(points, matrix, zets, start_x, end_x);
-                                        print_points(points, count);
+                                        //print_points(points, count);
                                         double z = interpolation_func(x_value, 0, end_x - start_x, points);
                                         printf("Z is %f  !!!!\n", z);
 
@@ -478,7 +479,7 @@ int main()
         {
             printf("ERROR\n");
         }
-        print_matrix(matrix, count);
+        //print_matrix(matrix, count);
         free(matrix);
     }
     fclose(f);
