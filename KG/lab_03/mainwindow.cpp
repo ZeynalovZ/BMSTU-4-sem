@@ -13,13 +13,27 @@ MainWindow::MainWindow(QWidget *parent) :
     ui(new Ui::MainWindow)
 {
     ui->setupUi(this);
-    /*
-    QPixmap bkgnd("фон4.PNG");
-    bkgnd = bkgnd.scaled(this->size(), Qt::IgnoreAspectRatio);
-    QPalette palette;
-    palette.setBrush(QPalette::Background, bkgnd);
-    this->setPalette(palette);
-    */
+    scene = new QGraphicsScene(this);
+    ui->graphicsView->setScene(scene);
+
+    QRegExp check ("[-+]?(\\d+(\\.\\d*)?|\\.\\d+)$");
+    QRegExpValidator *my_double_validator = new QRegExpValidator(check, this);
+    ui->lineX1->setValidator(my_double_validator);
+    ui->lineX2->setValidator(my_double_validator);
+    ui->lineY1->setValidator(my_double_validator);
+    ui->lineY2->setValidator(my_double_validator);
+    ui->but_exec->setEnabled(false);
+
+    connect(ui->lineX1, SIGNAL(textChanged(QString)), this, SLOT(on_changed()));
+    connect(ui->lineX2, SIGNAL(textChanged(QString)), this, SLOT(on_changed()));
+    connect(ui->lineY1, SIGNAL(textChanged(QString)), this, SLOT(on_changed()));
+    connect(ui->lineY2, SIGNAL(textChanged(QString)), this, SLOT(on_changed()));
+
+
+    QPalette Pal(palette());
+    Pal.setColor(QPalette::Background, Qt::black);
+    ui->frame->setAutoFillBackground(true);
+    ui->frame->setPalette(Pal);
 }
 
 MainWindow::~MainWindow()
@@ -43,72 +57,21 @@ int sign(double num)
     }
 }
 
-void MainWindow::paintEvent(QPaintEvent *event)
-{
-    Q_UNUSED(event);
-    QPainter painter(this);
 
-    if (ui->radioButton_3->isChecked())
+
+void MainWindow::on_changed()
+{
+    if (ui->lineX1->hasAcceptableInput() && ui->lineX2->hasAcceptableInput()\
+            &&ui->lineY1->hasAcceptableInput() && ui->lineY2->hasAcceptableInput())
     {
-        if (ui->radioButton_BLACK->isChecked())
-        {
-            painter.setPen(QPen(Qt::black,1,Qt::SolidLine));
-            painter.setBrush(QBrush(Qt::black, Qt::SolidPattern));
-            draw_brezenham1(painter);
-        }
-        else if (ui->radioButton_WHITE->isChecked())
-        {
-            painter.setPen(QPen(Qt::white,1,Qt::SolidLine));
-            painter.setBrush(QBrush(Qt::white, Qt::SolidPattern));
-            draw_brezenham1(painter);
-        }
+        ui->but_exec->setEnabled(true);
     }
-    else if (ui->radioButton_2->isChecked())
+    else
     {
-        if (ui->radioButton_BLACK->isChecked())
-        {
-            painter.setBrush(QBrush(Qt::black, Qt::SolidPattern));
-            draw_brezenham2(painter);
-        }
-        else if (ui->radioButton_WHITE->isChecked())
-        {
-            painter.setPen(QPen(Qt::white,1,Qt::SolidLine));
-            painter.setBrush(QBrush(Qt::white, Qt::SolidPattern));
-            draw_brezenham2(painter);
-        }
-    }
-    else if (ui->radioButton->isChecked())
-    {
-        if (ui->radioButton_BLACK->isChecked())
-        {
-            painter.setBrush(QBrush(Qt::black, Qt::SolidPattern));
-            draw_cda(painter);
-        }
-        else if (ui->radioButton_WHITE->isChecked())
-        {
-            painter.setPen(QPen(Qt::white,1,Qt::SolidLine));
-            painter.setBrush(QBrush(Qt::white, Qt::SolidPattern));
-            draw_cda(painter);
-        }
-    }
-    else if (ui->radioButton_4->isChecked())
-    {
-        cout << "here, check it" << endl;
-        if (ui->radioButton_BLACK->isChecked())
-        {
-            draw_brezenham_gradation(painter);
-        }
-        else if (ui->radioButton_WHITE->isChecked())
-        {
-            painter.setPen(QPen(Qt::white,1,Qt::SolidLine));
-            draw_brezenham_gradation(painter);
-        }
+        ui->but_exec->setEnabled(false);
     }
 }
-
-
-
-void MainWindow::draw_brezenham1(QPainter &painter)
+void MainWindow::draw_brezenham1(QPen pen)
 {
     double x = x1;
     double y = y1;
@@ -134,7 +97,7 @@ void MainWindow::draw_brezenham1(QPainter &painter)
     double e = m - 0.5;
     for (int i = 0; i <= dx; i++)
     {
-        painter.drawPoint(x, y);
+        scene->addEllipse(x, y, 0.1, 0.1, pen, QBrush(Qt::SolidPattern));
         if (e >= 0)
         {
             if (obmen == 0)
@@ -162,7 +125,7 @@ void MainWindow::draw_brezenham1(QPainter &painter)
     }
 }
 
-void MainWindow::draw_brezenham2(QPainter &painter)
+void MainWindow::draw_brezenham2(QPen pen)
 {
     double x = x1;
     double y = y1;
@@ -187,7 +150,7 @@ void MainWindow::draw_brezenham2(QPainter &painter)
     double fl = 2 * dy - dx;
     for (int i = 0; i <= dx; i++)
     {
-        painter.drawPoint(x, y);
+        scene->addEllipse(x, y, 0.1, 0.1, pen, QBrush(Qt::SolidPattern));
         if (fl >= 0)
         {
             if (obmen == 0)
@@ -215,7 +178,7 @@ void MainWindow::draw_brezenham2(QPainter &painter)
     }
 }
 // Анализ отрезка на вырожденность
-void MainWindow::draw_cda(QPainter &painter)
+void MainWindow::draw_cda(QPen pen)
 {
     double dx = x2 - x1;
     double dy = y2 - y1;
@@ -234,13 +197,13 @@ void MainWindow::draw_cda(QPainter &painter)
     double y = y1;
     for (int i = 0; i <= l; i++)
     {
-        painter.drawPoint(round(x), round(y));
+        scene->addEllipse(x, y, 0.1, 0.1, pen, QBrush(Qt::SolidPattern));
         x = x + sx;
         y = y + sy;
     }
 }
 // TODO Проверка вырожденности отрезка
-void MainWindow::draw_brezenham_gradation(QPainter &painter)
+void MainWindow::draw_brezenham_gradation(QPen pen)
 {
     int I = 255;
     double dx = x2 - x1;
@@ -269,8 +232,9 @@ void MainWindow::draw_brezenham_gradation(QPainter &painter)
     double y = y1;
     m = m * I;
     double W = I - m;
-    painter.setBrush(QBrush(QColor(0, 0, 0, I ), Qt::SolidPattern));
-    painter.drawPoint(x, y);
+    QColor col = pen.color();
+
+    scene->addEllipse(x, y, 0.1, 0.1, pen, QBrush(Qt::SolidPattern));
     for (int i = 0; i < dx; i++)
     {
         if (e <= W)
@@ -291,10 +255,136 @@ void MainWindow::draw_brezenham_gradation(QPainter &painter)
             y = y + sy;
             e  = e - W;
         }
-        painter.setBrush(QBrush(QColor(0, 0, 0, I), Qt::SolidPattern));
-        painter.drawPoint(x, y);
+        col.setAlphaF(1 - (e / I));
+        scene->addEllipse(x, y, 0.1, 0.1, QPen(col,1,Qt::SolidLine), QBrush(Qt::SolidPattern));
     }
 
+}
+
+float fractionalPart(float x)
+{
+    int tmp = (int) x;
+    return x - tmp; //вернёт дробную часть числа
+}
+
+void MainWindow::draw_vu(QPen pen)
+{
+    double I = 255;
+    if (x2 < x1)
+    {
+        double tmp = x2;
+        x2 = x1;
+        x1 = tmp;
+    }
+    double dx = x2 - x1;
+    double dy = y2 - y1;
+    double gradient = 0;
+    QColor col = pen.color();
+    if (dx > dy)
+    {
+        gradient = float(dy / dx);
+        float itery = y1 + gradient;
+        scene->addEllipse(x1, y1, 0.1, 0.1, pen, QBrush(Qt::SolidPattern));
+        for (int x = x1; x < x2; ++x)
+        {
+            col.setAlphaF(((I - fractionalPart(itery) * I)) / I);
+            cout << "hey11 " <<1 - ((I - fractionalPart(itery) * I)) / I <<
+            scene->addEllipse(x, int(itery), 0.1, 0.1, QPen(col,1,Qt::SolidLine), QBrush(Qt::SolidPattern));
+            col.setAlphaF((fractionalPart(itery)));
+            cout << "hey12 " <<(fractionalPart(itery)) <<
+            scene->addEllipse(x, int(itery) + 1, 0.1, 0.1, QPen(col,1,Qt::SolidLine), QBrush(Qt::SolidPattern));
+            itery += gradient;
+        }
+        scene->addEllipse(x2, y2, 0.1, 0.1, pen, QBrush(Qt::SolidPattern));
+    }
+    else
+    {
+        gradient = float(dx / dy);
+        double iterx = x1 + gradient;
+        scene->addEllipse(x1, y1, 0.1, 0.1, pen, QBrush(Qt::SolidPattern));
+        for (int y = y1; y < y2; ++y)
+        {
+            col.setAlphaF(1 - ((I - fractionalPart(iterx) * I)) / I);
+            cout << "hey21 " <<1 - ((I - fractionalPart(iterx) * I)) / I <<
+            scene->addEllipse(int(iterx), y, 0.1, 0.1, QPen(col,1,Qt::SolidLine), QBrush(Qt::SolidPattern));
+            col.setAlphaF((fractionalPart(iterx)));
+            cout << "hey22 " <<(fractionalPart(iterx)) <<
+            scene->addEllipse(int(iterx) + 1, y, 0.1, 0.1, QPen(col,1,Qt::SolidLine), QBrush(Qt::SolidPattern));
+            iterx += gradient;
+        }
+        scene->addEllipse(x2, y2, 0.1, 0.1, pen, QBrush(Qt::SolidPattern));
+    }
+
+}
+
+void MainWindow::choose_method()
+{
+    if (ui->radioButton_3->isChecked())
+    {
+        if (ui->radioButton_BLACK->isChecked())
+        {
+            draw_brezenham1(QPen(color,1,Qt::SolidLine));
+        }
+        else if (ui->radioButton_WHITE->isChecked())
+        {
+            draw_brezenham1(QPen(Qt::white,1,Qt::SolidLine));
+        }
+    }
+    else if (ui->radioButton_2->isChecked())
+    {
+        if (ui->radioButton_BLACK->isChecked())
+        {
+            draw_brezenham2(QPen(color,1,Qt::SolidLine));
+        }
+        else if (ui->radioButton_WHITE->isChecked())
+        {
+            draw_brezenham2(QPen(Qt::white,1,Qt::SolidLine));
+        }
+    }
+    else if (ui->radioButton->isChecked())
+    {
+        if (ui->radioButton_BLACK->isChecked())
+        {
+            draw_cda(QPen(color,1,Qt::SolidLine));
+        }
+        else if (ui->radioButton_WHITE->isChecked())
+        {
+            draw_cda(QPen(Qt::white,1,Qt::SolidLine));
+        }
+    }
+    else if (ui->radioButton_4->isChecked())
+    {
+        if (ui->radioButton_BLACK->isChecked())
+        {
+            draw_brezenham_gradation(QPen(color,1,Qt::SolidLine));
+        }
+        else if (ui->radioButton_WHITE->isChecked())
+        {
+            draw_brezenham_gradation(QPen(Qt::white,1,Qt::SolidLine));
+        }
+    }
+    else if (ui->radioButton_5->isChecked())
+    {
+        if (ui->radioButton_BLACK->isChecked())
+        {
+            draw_vu(QPen(color,1,Qt::SolidLine));
+        }
+        else if (ui->radioButton_WHITE->isChecked())
+        {
+            draw_vu(QPen(Qt::white,1,Qt::SolidLine));
+        }
+    }
+    else if (ui->radioButton_6->isChecked())
+    {
+        if (ui->radioButton_BLACK->isChecked())
+        {
+            scene->addLine(x1, y1, x2, y2, QPen(color,1,Qt::SolidLine));
+        }
+        else if (ui->radioButton_WHITE->isChecked())
+        {
+            scene->addLine(x1, y1, x2, y2, QPen(Qt::white,1,Qt::SolidLine));
+        }
+    }
 }
 
 
@@ -355,15 +445,57 @@ void MainWindow::on_but_exec_clicked()
         step_y = -1;
     }
 
-    update();
-}
+    choose_method();
 
-void MainWindow::on_pushButton_clicked()
-{
-    QColor color = QColorDialog::getColor(Qt::yellow, this );
+    update();
 }
 
 void MainWindow::on_pushCOLOR_clicked()
 {
-    QColor color = QColorDialog::getColor(Qt::yellow, this );
+    color = QColorDialog::getColor(Qt::yellow, this );
+    QPalette Pal(palette());
+    Pal.setColor(QPalette::Background, color);
+    ui->frame->setAutoFillBackground(true);
+    ui->frame->setPalette(Pal);
+    ui->frame->show();
+}
+
+
+void MainWindow::on_pushButton_clicked()
+{
+    scene->clear();
+}
+
+void MainWindow::on_pushButton_2_clicked()
+{
+    on_but_exec_clicked();
+    on_pushButton_clicked();
+
+    double distance = sqrt(pow(fabs(x1 - x2), 2) + pow(fabs(y1 - y2),2));
+    double radius = distance / 2.0;
+    double dx1 = x1;
+    double dy1 = y1;
+    double dx2 = x2;
+    double dy2 = y2;
+    double xc = (x1 + x2) / 2.0;
+    double yc = (y1 + y2) / 2.0;
+    cout << distance << endl;
+    cout << radius << endl;
+    for (int angle = 0; angle <= 180; angle += 30)
+    {
+        double distance1 = sqrt(pow(fabs(x1 - x2), 2) + pow(fabs(y1 - y2),2));
+        cout << distance1 << endl;
+        choose_method();
+        /*
+        x1 = x0 + radius * cos(i * PI / 180);
+        y1 = y0 + radius * sin(i * PI / 180);
+        x2 = x1 + radius * cos(i * PI / 180);
+        y2 = y1 + radius * sin(i * PI / 180);
+        */
+        x1=xc+(dx1-xc)*cos(angle*M_PI/180)-(dy1-yc)*sin(angle*M_PI/180);
+        y1=yc+(dx1-xc)*sin(angle*M_PI/180)+(dy1-yc)*cos(angle*M_PI/180);
+        x2=xc+(dx2-xc)*cos(angle*M_PI/180)-(dy2-yc)*sin(angle*M_PI/180);
+        y2=yc+(dx2-xc)*sin(angle*M_PI/180)+(dy2-yc)*cos(angle*M_PI/180);
+
+    }
 }
