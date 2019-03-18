@@ -7,6 +7,7 @@
 #include <iostream>
 #include <QColor>
 #include <QColorDialog>
+#define EPS 0.0001
 using namespace std;
 MainWindow::MainWindow(QWidget *parent) :
     QMainWindow(parent),
@@ -41,20 +42,13 @@ MainWindow::~MainWindow()
     delete ui;
 }
 
-int sign(double num)
+int sign(double x)
 {
-    if (num < 0)
-    {
-        return -1;
-    }
-    else if (num > 0)
-    {
+    if (x > 0)
         return 1;
-    }
-    else
-    {
+    if (fabs(x) < EPS)
         return 0;
-    }
+    return -1;
 }
 
 
@@ -73,16 +67,18 @@ void MainWindow::on_changed()
 }
 void MainWindow::draw_brezenham1(QPen pen)
 {
-    double x = x1;
-    double y = y1;
-    double dx = x2 - x1;
-    double dy = y2 - y1;
-    double sx = sign(dx);
-    double sy = sign(dy);
+    int x = x1;
+    int y = y1;
+    // ПРоверка вырожденностти
+    int dx = x2 - x1;
+    int dy = y2 - y1;
+    int sx = sign(dx);
+    int sy = sign(dy);
     dx = fabs(dx);
     dy = fabs(dy);
-    double obmen;
-    if (dx > dy)
+    int obmen;
+    double m = static_cast<double>(dy) / dx;
+    if (m <= 1)
     {
         obmen = 0;
     }
@@ -92,8 +88,9 @@ void MainWindow::draw_brezenham1(QPen pen)
         double temp = dx;
         dx = dy;
         dy = temp;
+        m = 1 / m;
     }
-    double m = dy / dx;
+
     double e = m - 0.5;
     for (int i = 0; i <= dx; i++)
     {
@@ -110,72 +107,77 @@ void MainWindow::draw_brezenham1(QPen pen)
             }
             e--;
         }
-        if (e < 0)
+        if (obmen == 0)
         {
-            if (obmen == 0)
-            {
-                x = x + sx;
-            }
-            else
-            {
-                y = y + sy;
-            }
-            e += m;
+            x = x + sx;
         }
+        else
+        {
+            y = y + sy;
+        }
+        e += m;
     }
 }
 
 void MainWindow::draw_brezenham2(QPen pen)
 {
-    double x = x1;
-    double y = y1;
-    double dx = x2 - x1;
-    double dy = y2 - y1;
-    double sx = sign(dx);
-    double sy = sign(dy);
-    dx = fabs(dx);
-    dy = fabs(dy);
-    double obmen;
-    if (dx > dy)
+    int x = x1;
+    int y = y1;
+    int dx = x2 - x1;
+    int dy = y2 - y1;
+    if (dx != 0 || dy != 0)
     {
-        obmen = 0;
+        int sx = sign(dx);
+        int sy = sign(dy);
+        dx = fabs(dx);
+        dy = fabs(dy);
+        int obmen;
+        if (dx > dy)
+        {
+            obmen = 0;
+        }
+        else
+        {
+            obmen = 1;
+            int temp = dx;
+            dx = dy;
+            dy = temp;
+        }
+        int fl = 2 * dy - dx;
+        for (int i = 0; i <= dx; i++)
+        {
+            scene->addEllipse(x, y, 0.1, 0.1, pen, QBrush(Qt::SolidPattern));
+            if (fl >= 0)
+            {
+                if (obmen == 0)
+                {
+                    y = y + sy;
+                }
+                else
+                {
+                    x = x + sx;
+                }
+                fl -= 2 * dx;
+            }
+            if (fl < 0)
+            {
+                if (obmen == 0)
+                {
+                    x = x + sx;
+                }
+                else
+                {
+                    y = y + sy;
+                }
+                fl += 2 * dy;
+            }
+        }
     }
     else
     {
-        obmen = 1;
-        double temp = dx;
-        dx = dy;
-        dy = temp;
-    }
-    double fl = 2 * dy - dx;
-    for (int i = 0; i <= dx; i++)
-    {
         scene->addEllipse(x, y, 0.1, 0.1, pen, QBrush(Qt::SolidPattern));
-        if (fl >= 0)
-        {
-            if (obmen == 0)
-            {
-                y = y + sy;
-            }
-            else
-            {
-                x = x + sx;
-            }
-            fl -= 2 * dx;
-        }
-        if (fl < 0)
-        {
-            if (obmen == 0)
-            {
-                x = x + sx;
-            }
-            else
-            {
-                y = y + sy;
-            }
-            fl += 2 * dy;
-        }
     }
+
 }
 // Анализ отрезка на вырожденность
 void MainWindow::draw_cda(QPen pen)
@@ -183,81 +185,113 @@ void MainWindow::draw_cda(QPen pen)
     double dx = x2 - x1;
     double dy = y2 - y1;
     double l;
-    if (fabs(dx) > fabs(dy))
+    double x = x1;
+    double y = y1;
+    if (dx != 0 || dy != 0)
     {
-        l = fabs(dx);
+        if (fabs(dx) > fabs(dy))
+        {
+            l = fabs(dx);
+        }
+        else
+        {
+            l = fabs(dy);
+        }
+        double sx = dx / l;
+        double sy = dy / l;
+
+        for (int i = 0; i <= l; i++)
+        {
+            scene->addEllipse(round(x), round(y), 0.1, 0.1, pen, QBrush(Qt::SolidPattern));
+            x = x + sx;
+            y = y + sy;
+        }
     }
     else
     {
-        l = fabs(dy);
+        scene->addEllipse(round(x), round(y), 0.1, 0.1, pen, QBrush(Qt::SolidPattern));
     }
-    double sx = dx / l;
-    double sy = dy / l;
-    double x = x1;
-    double y = y1;
-    for (int i = 0; i <= l; i++)
-    {
-        scene->addEllipse(x, y, 0.1, 0.1, pen, QBrush(Qt::SolidPattern));
-        x = x + sx;
-        y = y + sy;
-    }
+
 }
+
+/*
+ *
+    if (dx != 0 || dy != 0)
+    {
+
+    }
+    else
+    {
+        scene->addEllipse(round(x), round(y), 0.1, 0.1, pen, QBrush(Qt::SolidPattern));
+    }
+ */
 // TODO Проверка вырожденности отрезка
 void MainWindow::draw_brezenham_gradation(QPen pen)
 {
     int I = 255;
-    double dx = x2 - x1;
-    double dy = y2 - y1;
-    double sx = sign(dx);
-    double sy = sign(dy);
-    dx = fabs(dx);
-    dy = fabs(dy);
-    double e;
-    double obmen = 0;
-    double m = dy / dx;
-    if (m > 1)
+    //  GHj
+    int dx = x2 - x1;
+    int dy = y2 - y1;
+    int x = x1;
+    int y = y1;
+    if (dx != 0 || dy != 0)
     {
-        double temp = dx;
-        dx = dy;
-        dy = temp;
-        m = 1 / m;
-        obmen = 1;
-    }
-    else
-    {
-        obmen = 0;
-    }
-    e = I / 2;
-    double x = x1;
-    double y = y1;
-    m = m * I;
-    double W = I - m;
-    QColor col = pen.color();
-
-    scene->addEllipse(x, y, 0.1, 0.1, pen, QBrush(Qt::SolidPattern));
-    for (int i = 0; i < dx; i++)
-    {
-        if (e <= W)
+        int sx = sign(dx);
+        int sy = sign(dy);
+        dx = abs(dx);
+        dy = abs(dy);
+        double e;
+        int obmen = 0;
+        double m = static_cast<double> (dy) / dx;
+        if (m > 1)
         {
-            if (obmen == 0)
-            {
-                x = x + sx;
-            }
-            else
-            {
-                y = y + sy;
-            }
-            e += m;
+            int temp = dx;
+            dx = dy;
+            dy = temp;
+            m = 1 / m;
+            obmen = 1;
         }
         else
         {
-            x = x + sx;
-            y = y + sy;
-            e  = e - W;
+            obmen = 0;
         }
-        col.setAlphaF(1 - (e / I));
-        scene->addEllipse(x, y, 0.1, 0.1, QPen(col,1,Qt::SolidLine), QBrush(Qt::SolidPattern));
+
+        e = I * 0.5;
+
+        m = m * I;
+        double W = I - m;
+        QColor col = pen.color();
+
+        scene->addEllipse(x, y, 0.1, 0.1, pen, QBrush(Qt::SolidPattern));
+        for (int i = 0; i < dx; i++)
+        {
+            if (e <= W)
+            {
+                if (obmen == 0)
+                {
+                    x = x + sx;
+                }
+                else
+                {
+                    y = y + sy;
+                }
+                e += m;
+            }
+            else
+            {
+                x = x + sx;
+                y = y + sy;
+                e  = e - W;
+            }
+            col.setAlphaF(1 - (e / I));
+            scene->addEllipse(x, y, 0.1, 0.1, QPen(col,1,Qt::SolidLine), QBrush(Qt::SolidPattern));
+        }
     }
+    else
+    {
+        scene->addEllipse(x, y, 0.1, 0.1, pen, QBrush(Qt::SolidPattern));
+    }
+
 
 }
 
@@ -270,11 +304,15 @@ float fractionalPart(float x)
 void MainWindow::draw_vu(QPen pen)
 {
     double I = 255;
-    if (x2 < x1)
+    if (x2 <= x1)
     {
         double tmp = x2;
         x2 = x1;
         x1 = tmp;
+
+        tmp = y2;
+        y2 = y1;
+        y1 = tmp;
     }
     double dx = x2 - x1;
     double dy = y2 - y1;
@@ -300,15 +338,16 @@ void MainWindow::draw_vu(QPen pen)
     else
     {
         gradient = float(dx / dy);
+
         double iterx = x1 + gradient;
         scene->addEllipse(x1, y1, 0.1, 0.1, pen, QBrush(Qt::SolidPattern));
         for (int y = y1; y < y2; ++y)
         {
             col.setAlphaF(1 - ((I - fractionalPart(iterx) * I)) / I);
-            cout << "hey21 " <<1 - ((I - fractionalPart(iterx) * I)) / I <<
+            cout << "hey21 " << 1 - ((I - fractionalPart(iterx) * I)) / I <<
             scene->addEllipse(int(iterx), y, 0.1, 0.1, QPen(col,1,Qt::SolidLine), QBrush(Qt::SolidPattern));
             col.setAlphaF((fractionalPart(iterx)));
-            cout << "hey22 " <<(fractionalPart(iterx)) <<
+            cout << "hey22 " << (fractionalPart(iterx)) <<
             scene->addEllipse(int(iterx) + 1, y, 0.1, 0.1, QPen(col,1,Qt::SolidLine), QBrush(Qt::SolidPattern));
             iterx += gradient;
         }
@@ -468,34 +507,52 @@ void MainWindow::on_pushButton_clicked()
 
 void MainWindow::on_pushButton_2_clicked()
 {
-    on_but_exec_clicked();
     on_pushButton_clicked();
 
-    double distance = sqrt(pow(fabs(x1 - x2), 2) + pow(fabs(y1 - y2),2));
-    double radius = distance / 2.0;
-    double dx1 = x1;
-    double dy1 = y1;
-    double dx2 = x2;
-    double dy2 = y2;
-    double xc = (x1 + x2) / 2.0;
-    double yc = (y1 + y2) / 2.0;
-    cout << distance << endl;
-    cout << radius << endl;
-    for (int angle = 0; angle <= 180; angle += 30)
+    QString entry_xc = ui->lineEdit_xc->text();
+    QString entry_yc = ui->lineEdit_yc->text();
+    QString entry_lenght = ui->lineEdit_lenght->text();
+    QString entry_angle = ui->lineEdit_angle->text();
+    QStringList xc = entry_xc.split(" ", QString::SkipEmptyParts);
+    QStringList yc = entry_yc.split(" ", QString::SkipEmptyParts);
+    QStringList lenght = entry_lenght.split(" ", QString::SkipEmptyParts);
+    QStringList angle = entry_angle.split(" ", QString::SkipEmptyParts);
+    if (xc.count() != 1 || yc.count() != 1 || lenght.count() != 1 || angle.count() != 1)
     {
-        double distance1 = sqrt(pow(fabs(x1 - x2), 2) + pow(fabs(y1 - y2),2));
-        cout << distance1 << endl;
+        ui->lineX1->clear();
+        ui->lineX2->clear();
+        ui->lineY1->clear();
+        ui->lineY2->clear();
+        QMessageBox msgBox;
+        msgBox.setText("Wait!");
+        // Тип иконки сообщения
+        msgBox.setIcon(QMessageBox::Information);
+        msgBox.setInformativeText("You entered wrong params");
+        // На какой кнопке фокусироваться по умолчанию
+        msgBox.setDefaultButton(QMessageBox::Ok);
+        msgBox.exec();
+        return;
+    }
+    double dxc = xc[0].toDouble();
+    double dyc = yc[0].toDouble();
+    double dlenght = lenght[0].toDouble();
+    double dangle = angle[0].toDouble();
+
+    x1 = dxc - dlenght / 2;
+    y1 = dyc;
+    x2 = dxc + dlenght / 2;
+    y2 = dyc ;
+    for (int angle = 0; angle <= 180; angle += int(dangle))
+    {
         choose_method();
-        /*
-        x1 = x0 + radius * cos(i * PI / 180);
-        y1 = y0 + radius * sin(i * PI / 180);
-        x2 = x1 + radius * cos(i * PI / 180);
-        y2 = y1 + radius * sin(i * PI / 180);
-        */
-        x1=xc+(dx1-xc)*cos(angle*M_PI/180)-(dy1-yc)*sin(angle*M_PI/180);
-        y1=yc+(dx1-xc)*sin(angle*M_PI/180)+(dy1-yc)*cos(angle*M_PI/180);
-        x2=xc+(dx2-xc)*cos(angle*M_PI/180)-(dy2-yc)*sin(angle*M_PI/180);
-        y2=yc+(dx2-xc)*sin(angle*M_PI/180)+(dy2-yc)*cos(angle*M_PI/180);
+        double tmpx1 = dxc+(x1-dxc)*cos(dangle*M_PI/180)-(y1-dyc)*sin(dangle*M_PI/180);
+        double tmpy1 = dyc+(x1-dxc)*sin(dangle*M_PI/180)+(y1-dyc)*cos(dangle*M_PI/180);
+        double tmpx2 = dxc+(x2-dxc)*cos(dangle*M_PI/180)-(y2-dyc)*sin(dangle*M_PI/180);
+        double tmpy2 = dyc+(x2-dxc)*sin(dangle*M_PI/180)+(y2-dyc)*cos(dangle*M_PI/180);
+        x1 = tmpx1;
+        x2 = tmpx2;
+        y1 = tmpy1;
+        y2 = tmpy2;
 
     }
 }
