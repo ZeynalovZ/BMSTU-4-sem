@@ -19,16 +19,32 @@ MainWindow::MainWindow(QWidget *parent) :
 
     QRegExp check ("[-+]?(\\d+(\\.\\d*)?|\\.\\d+)$");
     QRegExpValidator *my_double_validator = new QRegExpValidator(check, this);
+
+    QRegExp check1 ("[-+]?(\\d+(\\.\\d*)?|\\.\\d+)$");
+    QRegExpValidator *my_double_validator1 = new QRegExpValidator(check1, this);
+
     ui->lineX1->setValidator(my_double_validator);
     ui->lineX2->setValidator(my_double_validator);
     ui->lineY1->setValidator(my_double_validator);
     ui->lineY2->setValidator(my_double_validator);
+
+    ui->lineEdit_xc->setValidator(my_double_validator1);
+    ui->lineEdit_yc->setValidator(my_double_validator1);
+    ui->lineEdit_lenght->setValidator(my_double_validator1);
+    ui->lineEdit_angle->setValidator(my_double_validator1);
+
     ui->but_exec->setEnabled(false);
+    ui->pushButton_2->setEnabled(false);
 
     connect(ui->lineX1, SIGNAL(textChanged(QString)), this, SLOT(on_changed()));
     connect(ui->lineX2, SIGNAL(textChanged(QString)), this, SLOT(on_changed()));
     connect(ui->lineY1, SIGNAL(textChanged(QString)), this, SLOT(on_changed()));
     connect(ui->lineY2, SIGNAL(textChanged(QString)), this, SLOT(on_changed()));
+
+    connect(ui->lineEdit_angle, SIGNAL(textChanged(QString)), this, SLOT(on_spectr_changed()));
+    connect(ui->lineEdit_lenght, SIGNAL(textChanged(QString)), this, SLOT(on_spectr_changed()));
+    connect(ui->lineEdit_xc, SIGNAL(textChanged(QString)), this, SLOT(on_spectr_changed()));
+    connect(ui->lineEdit_yc, SIGNAL(textChanged(QString)), this, SLOT(on_spectr_changed()));
 
 
     QPalette Pal(palette());
@@ -63,6 +79,19 @@ void MainWindow::on_changed()
     else
     {
         ui->but_exec->setEnabled(false);
+    }
+}
+
+void MainWindow::on_spectr_changed()
+{
+    if (ui->lineEdit_angle->hasAcceptableInput() && ui->lineEdit_lenght->hasAcceptableInput()\
+            && ui->lineEdit_xc->hasAcceptableInput() && ui->lineEdit_yc->hasAcceptableInput())
+    {
+        ui->pushButton_2->setEnabled(true);
+    }
+    else
+    {
+        ui->pushButton_2->setEnabled(false);
     }
 }
 void MainWindow::draw_brezenham1(QPen pen)

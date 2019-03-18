@@ -37,6 +37,7 @@ private slots:
     void on_but_exec_clicked();
 
     void on_changed();
+    void on_spectr_changed();
     void on_pushCOLOR_clicked();
 
     void on_pushButton_clicked();
