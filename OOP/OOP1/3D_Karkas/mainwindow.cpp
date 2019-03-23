@@ -1,16 +1,29 @@
 #include "mainwindow.h"
 #include "ui_mainwindow.h"
+#include "io.h"
+#include "errors.h"
+#include "edges.h"
+#include "points.h"
+#include "process.h"
+#include <math.h>
+#include <QDebug>
+#define X 1231
+#define Y 531
 
 MainWindow::MainWindow(QWidget *parent) :
     QMainWindow(parent),
     ui(new Ui::MainWindow)
 {
     ui->setupUi(this);
+
+    scene = new QGraphicsScene(this);
+    ui->graphicsView->setScene(scene);
+
     QRegExp check_file  ("[0-9a-z_]+\\.[a-z]+") ;
     QRegExpValidator *file_validator = new QRegExpValidator(check_file, this);
-
-    QRegExp check_int  ("[0-9]+$");
-    QRegExpValidator *int_validator = new QRegExpValidator(check_int, this);
+    // for int "[0-9]+$"
+    QRegExp check_double  ("[-+]?(\\d+(\\.\\d*)?|\\.\\d+)$");
+    QRegExpValidator *int_validator = new QRegExpValidator(check_double, this);
 
     ui->line_input_txt->setValidator(file_validator);
     ui->line_output_txt->setValidator(file_validator);
@@ -19,13 +32,13 @@ MainWindow::MainWindow(QWidget *parent) :
     ui->line_d_2->setValidator(int_validator);
     ui->line_d_3->setValidator(int_validator);
 
-    ui->line_k_1->setValidator(int_validator);
-    ui->line_k_2->setValidator(int_validator);
-    ui->line_k_3->setValidator(int_validator);
+    ui->line_k->setValidator(int_validator);
+    //ui->line_k_2->setValidator(int_validator);
+    //ui->line_k_3->setValidator(int_validator);
 
-    ui->line_angle_x->setValidator(int_validator);
-    ui->line_angle_y->setValidator(int_validator);
-    ui->line_angle_z->setValidator(int_validator);
+    ui->line_angle->setValidator(int_validator);
+    //ui->line_angle_y->setValidator(int_validator);
+    //ui->line_angle_z->setValidator(int_validator);
 
     ui->rotate->setEnabled(false);
     ui->transfer->setEnabled(false);
@@ -37,17 +50,23 @@ MainWindow::MainWindow(QWidget *parent) :
     connect(ui->line_d_2, SIGNAL(textChanged(QString)),this, SLOT(on_changed()));
     connect(ui->line_d_3, SIGNAL(textChanged(QString)),this, SLOT(on_changed()));
 
-    connect(ui->line_k_1, SIGNAL(textChanged(QString)),this, SLOT(on_changed()));
-    connect(ui->line_k_2, SIGNAL(textChanged(QString)),this, SLOT(on_changed()));
-    connect(ui->line_k_3, SIGNAL(textChanged(QString)),this, SLOT(on_changed()));
+    connect(ui->line_k, SIGNAL(textChanged(QString)),this, SLOT(on_changed()));
+    //connect(ui->line_k_2, SIGNAL(textChanged(QString)),this, SLOT(on_changed()));
+    //connect(ui->line_k_3, SIGNAL(textChanged(QString)),this, SLOT(on_changed()));
 
-    connect(ui->line_angle_x, SIGNAL(textChanged(QString)),this, SLOT(on_changed()));
-    connect(ui->line_angle_y, SIGNAL(textChanged(QString)),this, SLOT(on_changed()));
-    connect(ui->line_angle_z, SIGNAL(textChanged(QString)),this, SLOT(on_changed()));
+    connect(ui->line_angle, SIGNAL(textChanged(QString)),this, SLOT(on_changed()));
+    //connect(ui->line_angle_y, SIGNAL(textChanged(QString)),this, SLOT(on_changed()));
+    //connect(ui->line_angle_z, SIGNAL(textChanged(QString)),this, SLOT(on_changed()));
 
     connect(ui->line_input_txt, SIGNAL(textChanged(QString)),this, SLOT(on_changed()));
     connect(ui->line_output_txt, SIGNAL(textChanged(QString)),this, SLOT(on_changed()));
 
+
+    center.x = X / 2;
+    center.y = Y / 2;
+    //scene->setSceneRect(X - X, Y - Y, X - 20, Y - 20);
+    //scene->addLine(X / 2, Y - Y, X / 2, Y);
+    //scene->addLine(X - X, Y / 2, X, Y / 2);
 }
 
 MainWindow::~MainWindow()
@@ -61,7 +80,6 @@ void MainWindow::on_changed()
     if (ui->line_input_txt->hasAcceptableInput())
     {
         ui->download->setEnabled(true);
-        file_success = 1;
     }
     else
     {
@@ -78,7 +96,7 @@ void MainWindow::on_changed()
             ui->transfer->setEnabled(false);
         }
 
-        if (ui->line_k_1->hasAcceptableInput() || ui->line_k_2->hasAcceptableInput() || ui->line_k_3->hasAcceptableInput())
+        if (ui->line_k->hasAcceptableInput())
         {
             ui->scale->setEnabled(true);
         }
@@ -87,7 +105,7 @@ void MainWindow::on_changed()
             ui->scale->setEnabled(false);
         }
 
-        if (ui->line_angle_x->hasAcceptableInput() || ui->line_angle_y->hasAcceptableInput() || ui->line_angle_z->hasAcceptableInput())
+        if (ui->line_angle->hasAcceptableInput())
         {
             ui->rotate->setEnabled(true);
         }
@@ -105,6 +123,149 @@ void MainWindow::on_changed()
         }
     }
 
+}
+
+void MainWindow::on_download_clicked()
+{
 
 
+    int code_error = OK;
+    QString filename = ui->line_input_txt->text();
+    QByteArray BA = filename.toLatin1();
+    char *str = BA.data();
+    code_error = read_model_from_file(str, &points, &edges, &n, &m);
+    if (code_error == OK)
+    {
+        if (points != NULL)
+        {
+            qDebug() << "While OK" << n << endl;
+            file_success = 1;
+            set_view(points, edges, n, m);
+        }
+        else
+        {
+            qDebug() << "NULL" << n << endl;
+        }
+
+    }
+    else
+    {
+        qDebug() << code_error <<" code error" << endl;
+    }
+}
+
+void MainWindow::set_view(points_t *points, edges_t *edges, int n, int m)
+{
+    points_2d p_res[n];
+    scene->addEllipse(center.x, center.y, 2, 2);
+    //qDebug() << "sizes" << xSize << ySize;
+    for (int i = 0; i < n; i++)
+    {
+        //int dist = 400;
+
+        int z1 = sqrt(2) / 2 * points[i].z;
+        //int sx = xSize / 2 + points[i].x * dist / (points[i].z + dist);
+        //int sy = ySize / 2 - points[i].y * dist / (points[i].z + dist);
+        int sx = center.x + points[i].x;
+        int sy = points[i].y;
+        p_res[i].x = sx;
+        p_res[i].y = sy;
+        scene->addEllipse(sx, sy, 1, 1);
+    }
+    for (int i = 0; i < m; i++)
+    {
+        qDebug() << edges[i].first << edges[i].second;
+        scene->addLine(p_res[edges[i].first].x, p_res[edges[i].first].y,p_res[edges[i].second].x, p_res[edges[i].second].y);
+    }
+}
+
+double MainWindow::get_input(QString string_input)
+{
+    double num = 0;
+    QStringList inputed = string_input.split(" ", QString::SkipEmptyParts);
+    if (inputed.count() != 1)
+    {
+        return num;
+    }
+    num = inputed[0].toDouble();
+    return num;
+}
+
+double MainWindow::get_input_for_scale(QString string_input)
+{
+    double num = 1;
+    QStringList inputed = string_input.split(" ", QString::SkipEmptyParts);
+    if (inputed.count() != 1)
+    {
+        return num;
+    }
+    num = inputed[0].toDouble();
+    return num;
+}
+
+
+
+
+void MainWindow::on_pushButton_clicked()
+{
+    scene->clear();
+}
+
+
+void MainWindow::on_rotate_clicked()
+{
+    scene->clear();
+    QString entry_angle = ui->line_angle->text();
+    double angle = get_input(entry_angle);
+    if (ui->radio_X->isChecked())
+    {
+        rotate_x(points, n, angle, center);
+    }
+    else if (ui->radio_Y->isChecked())
+    {
+        rotate_y(points, n, angle, center);
+    }
+    else if (ui->radio_Z->isChecked())
+    {
+        rotate_z(points, n, angle, center);
+    }
+
+    set_view(points, edges, n, m);
+
+
+
+}
+
+void MainWindow::on_transfer_clicked()
+{
+    scene->clear();
+    QString entry_x = ui->line_d_1->text();
+    double dx = get_input(entry_x);
+    QString entry_y = ui->line_d_2->text();
+    //qDebug() << entry_y;
+    double dy = get_input(entry_y);
+    QString entry_z = ui->line_d_2->text();
+    double dz = get_input(entry_z);
+    qDebug() << dx << dy << dz;
+    transform_point(points, n, dx, dy, dz);
+    set_view(points, edges, n, m);
+}
+
+void MainWindow::on_scale_clicked()
+{
+    scene->clear();
+    QString entry_k = ui->line_k->text();
+    double k = get_input_for_scale(entry_k);
+    scale(points, n, k);
+    set_view(points, edges, n, m);
+}
+
+void MainWindow::on_upload_clicked()
+{
+    int code_error = OK;
+    QString filename = ui->line_input_txt->text();
+    QByteArray BA = filename.toLatin1();
+    char *str = BA.data();
+    code_error = save_changes(str, points, edges, n, m);
+    qDebug() << code_error << "is code_error";
 }

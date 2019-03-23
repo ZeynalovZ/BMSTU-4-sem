@@ -21,7 +21,6 @@
 #include <QtWidgets/QMainWindow>
 #include <QtWidgets/QMenuBar>
 #include <QtWidgets/QPushButton>
-#include <QtWidgets/QRadioButton>
 #include <QtWidgets/QStatusBar>
 #include <QtWidgets/QWidget>
 
@@ -47,18 +46,19 @@ public:
     QPushButton *transfer;
     QLabel *label_4;
     QPushButton *scale;
-    QLineEdit *line_k;
+    QLineEdit *line_k_3;
+    QLineEdit *line_k_1;
+    QLineEdit *line_k_2;
+    QLineEdit *line_angle_z;
     QLabel *label_5;
     QPushButton *rotate;
-    QLineEdit *line_angle;
+    QLineEdit *line_angle_x;
+    QLineEdit *line_angle_y;
     QLabel *label_6;
     QLineEdit *line_d_2;
     QLineEdit *line_d_1;
     QLineEdit *line_d_3;
     QPushButton *pushButton;
-    QRadioButton *radio_X;
-    QRadioButton *radio_Y;
-    QRadioButton *radio_Z;
     QMenuBar *menuBar;
     QStatusBar *statusBar;
 
@@ -327,13 +327,13 @@ public:
         line_2->setFrameShadow(QFrame::Sunken);
         label = new QLabel(centralWidget);
         label->setObjectName(QStringLiteral("label"));
-        label->setGeometry(QRect(10, 550, 351, 21));
+        label->setGeometry(QRect(10, 550, 351, 16));
         QFont font;
         font.setPointSize(12);
         label->setFont(font);
         label_2 = new QLabel(centralWidget);
         label_2->setObjectName(QStringLiteral("label_2"));
-        label_2->setGeometry(QRect(10, 630, 381, 21));
+        label_2->setGeometry(QRect(10, 630, 381, 16));
         label_2->setFont(font);
         line_3 = new QFrame(centralWidget);
         line_3->setObjectName(QStringLiteral("line_3"));
@@ -352,7 +352,7 @@ public:
         line_5->setFrameShadow(QFrame::Sunken);
         label_3 = new QLabel(centralWidget);
         label_3->setObjectName(QStringLiteral("label_3"));
-        label_3->setGeometry(QRect(590, 550, 411, 21));
+        label_3->setGeometry(QRect(590, 550, 411, 16));
         label_3->setFont(font);
         transfer = new QPushButton(centralWidget);
         transfer->setObjectName(QStringLiteral("transfer"));
@@ -406,7 +406,7 @@ public:
         transfer->setPalette(palette4);
         label_4 = new QLabel(centralWidget);
         label_4->setObjectName(QStringLiteral("label_4"));
-        label_4->setGeometry(QRect(590, 630, 451, 31));
+        label_4->setGeometry(QRect(590, 630, 451, 21));
         label_4->setFont(font);
         scale = new QPushButton(centralWidget);
         scale->setObjectName(QStringLiteral("scale"));
@@ -458,13 +458,22 @@ public:
         palette5.setBrush(QPalette::Disabled, QPalette::ToolTipBase, brush8);
         palette5.setBrush(QPalette::Disabled, QPalette::ToolTipText, brush);
         scale->setPalette(palette5);
-        line_k = new QLineEdit(centralWidget);
-        line_k->setObjectName(QStringLiteral("line_k"));
-        line_k->setGeometry(QRect(600, 660, 431, 31));
-        line_k->setEchoMode(QLineEdit::Normal);
+        line_k_3 = new QLineEdit(centralWidget);
+        line_k_3->setObjectName(QStringLiteral("line_k_3"));
+        line_k_3->setGeometry(QRect(880, 660, 151, 31));
+        line_k_1 = new QLineEdit(centralWidget);
+        line_k_1->setObjectName(QStringLiteral("line_k_1"));
+        line_k_1->setGeometry(QRect(600, 660, 131, 31));
+        line_k_1->setEchoMode(QLineEdit::Normal);
+        line_k_2 = new QLineEdit(centralWidget);
+        line_k_2->setObjectName(QStringLiteral("line_k_2"));
+        line_k_2->setGeometry(QRect(740, 660, 131, 31));
+        line_angle_z = new QLineEdit(centralWidget);
+        line_angle_z->setObjectName(QStringLiteral("line_angle_z"));
+        line_angle_z->setGeometry(QRect(880, 740, 151, 31));
         label_5 = new QLabel(centralWidget);
         label_5->setObjectName(QStringLiteral("label_5"));
-        label_5->setGeometry(QRect(590, 710, 451, 31));
+        label_5->setGeometry(QRect(590, 710, 451, 21));
         label_5->setFont(font);
         rotate = new QPushButton(centralWidget);
         rotate->setObjectName(QStringLiteral("rotate"));
@@ -516,10 +525,13 @@ public:
         palette6.setBrush(QPalette::Disabled, QPalette::ToolTipBase, brush8);
         palette6.setBrush(QPalette::Disabled, QPalette::ToolTipText, brush);
         rotate->setPalette(palette6);
-        line_angle = new QLineEdit(centralWidget);
-        line_angle->setObjectName(QStringLiteral("line_angle"));
-        line_angle->setGeometry(QRect(880, 740, 151, 31));
-        line_angle->setEchoMode(QLineEdit::Normal);
+        line_angle_x = new QLineEdit(centralWidget);
+        line_angle_x->setObjectName(QStringLiteral("line_angle_x"));
+        line_angle_x->setGeometry(QRect(600, 740, 131, 31));
+        line_angle_x->setEchoMode(QLineEdit::Normal);
+        line_angle_y = new QLineEdit(centralWidget);
+        line_angle_y->setObjectName(QStringLiteral("line_angle_y"));
+        line_angle_y->setGeometry(QRect(740, 740, 131, 31));
         label_6 = new QLabel(centralWidget);
         label_6->setObjectName(QStringLiteral("label_6"));
         label_6->setGeometry(QRect(0, 720, 551, 71));
@@ -589,20 +601,6 @@ public:
         palette7.setBrush(QPalette::Disabled, QPalette::ToolTipText, brush);
         pushButton->setPalette(palette7);
         pushButton->setStyleSheet(QStringLiteral("background-color: rgb(255, 170, 0);"));
-        radio_X = new QRadioButton(centralWidget);
-        radio_X->setObjectName(QStringLiteral("radio_X"));
-        radio_X->setGeometry(QRect(690, 750, 84, 19));
-        QFont font2;
-        font2.setPointSize(11);
-        radio_X->setFont(font2);
-        radio_Y = new QRadioButton(centralWidget);
-        radio_Y->setObjectName(QStringLiteral("radio_Y"));
-        radio_Y->setGeometry(QRect(600, 750, 84, 19));
-        radio_Y->setFont(font2);
-        radio_Z = new QRadioButton(centralWidget);
-        radio_Z->setObjectName(QStringLiteral("radio_Z"));
-        radio_Z->setGeometry(QRect(780, 750, 84, 19));
-        radio_Z->setFont(font2);
         MainWindow->setCentralWidget(centralWidget);
         menuBar = new QMenuBar(MainWindow);
         menuBar->setObjectName(QStringLiteral("menuBar"));
@@ -631,12 +629,20 @@ public:
         transfer->setText(QApplication::translate("MainWindow", "\320\237\320\265\321\200\320\265\320\275\320\265\321\201\321\202\320\270", nullptr));
         label_4->setText(QApplication::translate("MainWindow", "\320\222\320\262\320\265\320\264\320\270\321\202\320\265 \320\272\320\276\321\215\321\204\321\204\320\270\321\206\320\270\320\265\320\275\321\202\321\213  \320\274\320\260\321\201\321\210\321\202\320\260\320\261\320\270\321\200\320\276\320\262\320\260\320\275\320\270\321\217:", nullptr));
         scale->setText(QApplication::translate("MainWindow", "\320\234\320\260\321\201\321\210\321\202\320\260\320\261\320\270\321\200\320\276\320\262\320\260\321\202\321\214", nullptr));
-        line_k->setText(QString());
-        line_k->setPlaceholderText(QApplication::translate("MainWindow", "kx", nullptr));
-        label_5->setText(QApplication::translate("MainWindow", "\320\222\321\213\320\261\320\265\321\200\320\270\321\202\320\265 \320\276\321\201\321\214 \320\270 \320\222\320\262\320\265\320\264\320\270\321\202\320\265 \321\203\320\263\320\276\320\273 \320\277\320\276\320\262\320\276\321\200\320\276\321\202\320\260:", nullptr));
+        line_k_3->setText(QString());
+        line_k_3->setPlaceholderText(QApplication::translate("MainWindow", "kz", nullptr));
+        line_k_1->setText(QString());
+        line_k_1->setPlaceholderText(QApplication::translate("MainWindow", "kx", nullptr));
+        line_k_2->setText(QString());
+        line_k_2->setPlaceholderText(QApplication::translate("MainWindow", "ky", nullptr));
+        line_angle_z->setText(QString());
+        line_angle_z->setPlaceholderText(QApplication::translate("MainWindow", "z\302\260", nullptr));
+        label_5->setText(QApplication::translate("MainWindow", "\320\222\320\262\320\265\320\264\320\270\321\202\320\265 \321\203\320\263\320\273\321\213 \320\277\320\276\320\262\320\276\321\200\320\276\321\202\320\276\320\262:", nullptr));
         rotate->setText(QApplication::translate("MainWindow", "\320\237\320\276\320\262\320\265\321\200\320\275\321\203\321\202\321\214", nullptr));
-        line_angle->setText(QString());
-        line_angle->setPlaceholderText(QApplication::translate("MainWindow", "angle\302\260", nullptr));
+        line_angle_x->setText(QString());
+        line_angle_x->setPlaceholderText(QApplication::translate("MainWindow", "x\302\260", nullptr));
+        line_angle_y->setText(QString());
+        line_angle_y->setPlaceholderText(QApplication::translate("MainWindow", "y\302\260", nullptr));
         label_6->setText(QApplication::translate("MainWindow", "\320\222\320\262\320\265\320\264\320\270\321\202\320\265 \321\201\320\275\320\260\321\207\320\260\320\273\320\260 \320\275\320\260\320\267\320\262\320\260\320\275\320\270\320\265 \321\204\320\260\320\271\320\273\320\260, \320\260 \320\267\320\260\321\202\320\265\320\274 \320\275\320\260\320\266\320\274\320\270\321\202\320\265 \320\275\320\260 \320\272\320\275\320\276\320\277\320\272\321\203 \"\320\227\320\260\320\263\321\200\321\203\320\267\320\270\321\202\321\214\". \n"
 " \320\224\320\260\320\273\320\265\320\265 \320\277\321\200\320\276\320\270\320\267\320\262\320\276\320\264\320\270\321\202\320\265 \320\273\321\216\320\261\321\213\320\265 \320\276\320\277\320\265\321\200\320\260\321\206\320\270\320\270, \320\272\320\276\321\202\320\276\321\200\321\213\320\265 \320\262\320\260\320\274 \321\203\320\263\320\276\320\264\320\275\321\213. \n"
 " \320\222\321\213 \321\202\320\260\320\272 \320\266\320\265 \320\274\320\276\320\266\320\265\321\202\320\265 \321\201\320\276\321\205\321\200\320\260\320\275\320\270\321\202"
@@ -646,9 +652,6 @@ public:
         line_d_1->setPlaceholderText(QApplication::translate("MainWindow", "dx", nullptr));
         line_d_3->setPlaceholderText(QApplication::translate("MainWindow", "dz", nullptr));
         pushButton->setText(QApplication::translate("MainWindow", "\320\236\321\207\320\270\321\201\321\202\320\270\321\202\321\214", nullptr));
-        radio_X->setText(QApplication::translate("MainWindow", "\320\222\320\276\320\272\321\200\321\203\320\263 \320\245", nullptr));
-        radio_Y->setText(QApplication::translate("MainWindow", "\320\222\320\276\320\272\321\200\321\203\320\263 \320\243", nullptr));
-        radio_Z->setText(QApplication::translate("MainWindow", "\320\222\320\276\320\272\321\200\321\203\320\263 Z", nullptr));
     } // retranslateUi
 
 };

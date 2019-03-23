@@ -25,10 +25,22 @@ DEFINES += QT_DEPRECATED_WARNINGS
 
 SOURCES += \
         main.cpp \
-        mainwindow.cpp
+        mainwindow.cpp \
+        io.cpp \
+    procces.cpp
 
 HEADERS += \
-        mainwindow.h
+        mainwindow.h \
+    edges.h \
+    errors.h \
+    io.h \
+    points.h \
+    process.h
 
 FORMS += \
         mainwindow.ui
+
+DISTFILES += \
+    in.txt \
+    ../build-3D_Karkas-Desktop_Qt_MinGW_w64_64bit_MSYS2-Debug/in.txt \
+    ../build-3D_Karkas-Desktop_Qt_MinGW_w64_64bit_MSYS2-Debug/kub.txt
