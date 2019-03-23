@@ -43,4 +43,6 @@ FORMS += \
 DISTFILES += \
     in.txt \
     ../build-3D_Karkas-Desktop_Qt_MinGW_w64_64bit_MSYS2-Debug/in.txt \
-    ../build-3D_Karkas-Desktop_Qt_MinGW_w64_64bit_MSYS2-Debug/kub.txt
+    ../build-3D_Karkas-Desktop_Qt_MinGW_w64_64bit_MSYS2-Debug/kub.txt \
+    wrong_entry.txt \
+    pyramid.txt

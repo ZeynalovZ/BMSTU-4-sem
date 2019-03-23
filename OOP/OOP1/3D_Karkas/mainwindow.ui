@@ -2304,7 +2304,7 @@
      </font>
     </property>
     <property name="text">
-     <string>Введите коэффициенты  масштабирования:</string>
+     <string>Введите коэффициент  масштабирования:</string>
     </property>
    </widget>
    <widget class="QPushButton" name="scale">
@@ -2769,7 +2769,7 @@
      </font>
     </property>
     <property name="text">
-     <string>Выберите ось и Введите угол поворота:</string>
+     <string>Выберите ось и введите угол поворота:</string>
     </property>
    </widget>
    <widget class="QPushButton" name="rotate">

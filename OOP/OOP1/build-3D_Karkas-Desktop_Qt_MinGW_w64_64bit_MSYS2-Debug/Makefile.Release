@@ -57,7 +57,9 @@ OBJECTS       = release/main.o \
 
 DIST          = in.txt \
 		../build-3D_Karkas-Desktop_Qt_MinGW_w64_64bit_MSYS2-Debug/in.txt \
-		../build-3D_Karkas-Desktop_Qt_MinGW_w64_64bit_MSYS2-Debug/kub.txt ../3D_Karkas/mainwindow.h \
+		../build-3D_Karkas-Desktop_Qt_MinGW_w64_64bit_MSYS2-Debug/kub.txt \
+		wrong_entry.txt \
+		pyramid.txt ../3D_Karkas/mainwindow.h \
 		../3D_Karkas/edges.h \
 		../3D_Karkas/errors.h \
 		../3D_Karkas/io.h \
@@ -169,7 +171,8 @@ release/io.o: ../3D_Karkas/io.cpp ../3D_Karkas/errors.h \
 	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o release/io.o ../3D_Karkas/io.cpp
 
 release/procces.o: ../3D_Karkas/procces.cpp ../3D_Karkas/process.h \
-		../3D_Karkas/points.h
+		../3D_Karkas/points.h \
+		../3D_Karkas/edges.h
 	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o release/procces.o ../3D_Karkas/procces.cpp
 
 release/moc_mainwindow.o: release/moc_mainwindow.cpp 

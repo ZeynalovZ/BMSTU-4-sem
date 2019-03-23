@@ -5,8 +5,8 @@ void rotate_x(points_t *points, int n, float angle, points_t center)
 {
     float sina, cosa;
     float z, y;
-    cosa = cos(angle );
-    sina = sin(angle );
+    cosa = cos(angle * M_PI / 180);
+    sina = sin(angle * M_PI / 180);
     for (int i = 0; i < n; i++)
     {
         y = points[i].y * cosa - points[i].z * sina;
@@ -20,8 +20,8 @@ void rotate_y(points_t *points, int n, float angle, points_t center)
 {
     float sina, cosa;
     float z, x;
-    cosa = cos(angle * 180 / M_PI);
-    sina = sin(angle * 180 / M_PI);
+    cosa = cos(angle * M_PI / 180);
+    sina = sin(angle * M_PI / 180);
     for (int i = 0; i < n; i++)
     {
         x = points[i].x * cosa - points[i].z * sina;

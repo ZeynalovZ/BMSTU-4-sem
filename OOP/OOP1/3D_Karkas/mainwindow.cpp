@@ -7,6 +7,7 @@
 #include "process.h"
 #include <math.h>
 #include <QDebug>
+#include <QMessageBox>
 #define X 1231
 #define Y 531
 
@@ -64,7 +65,7 @@ MainWindow::MainWindow(QWidget *parent) :
 
     center.x = X / 2;
     center.y = Y / 2;
-    //scene->setSceneRect(X - X, Y - Y, X - 20, Y - 20);
+    scene->setSceneRect(X - X, Y - Y, X - 20, Y - 20);
     //scene->addLine(X / 2, Y - Y, X / 2, Y);
     //scene->addLine(X - X, Y / 2, X, Y / 2);
 }
@@ -138,7 +139,6 @@ void MainWindow::on_download_clicked()
     {
         if (points != NULL)
         {
-            qDebug() << "While OK" << n << endl;
             file_success = 1;
             set_view(points, edges, n, m);
         }
@@ -150,7 +150,24 @@ void MainWindow::on_download_clicked()
     }
     else
     {
-        qDebug() << code_error <<" code error" << endl;
+        QString message = "";
+        switch (code_error)
+        {
+        case ERR_OPEN:
+            message = "Не удалось найти такой файл!";
+            break;
+        case ERR_READ:
+            message = "Не удалось прочесть данные из файла, проверьте содержимое!";
+            break;
+        case ERR_MEMORY:
+            message = "Произошла системная ошибка, перезапустите приложение или обратитесь в техническую поддержку!";
+            break;
+        default:
+            break;
+        }
+        if (message != "")
+                QMessageBox::information(this, "Ошибка", message);
+
     }
 }
 
@@ -158,6 +175,7 @@ void MainWindow::set_view(points_t *points, edges_t *edges, int n, int m)
 {
     points_2d p_res[n];
     scene->addEllipse(center.x, center.y, 2, 2);
+
     //qDebug() << "sizes" << xSize << ySize;
     for (int i = 0; i < n; i++)
     {
@@ -167,7 +185,7 @@ void MainWindow::set_view(points_t *points, edges_t *edges, int n, int m)
         //int sx = xSize / 2 + points[i].x * dist / (points[i].z + dist);
         //int sy = ySize / 2 - points[i].y * dist / (points[i].z + dist);
         int sx = center.x + points[i].x;
-        int sy = points[i].y;
+        int sy = center.y + points[i].y;
         p_res[i].x = sx;
         p_res[i].y = sy;
         scene->addEllipse(sx, sy, 1, 1);
@@ -232,8 +250,6 @@ void MainWindow::on_rotate_clicked()
 
     set_view(points, edges, n, m);
 
-
-
 }
 
 void MainWindow::on_transfer_clicked()
@@ -263,7 +279,7 @@ void MainWindow::on_scale_clicked()
 void MainWindow::on_upload_clicked()
 {
     int code_error = OK;
-    QString filename = ui->line_input_txt->text();
+    QString filename = ui->line_output_txt->text();
     QByteArray BA = filename.toLatin1();
     char *str = BA.data();
     code_error = save_changes(str, points, edges, n, m);

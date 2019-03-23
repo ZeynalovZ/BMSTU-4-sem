@@ -96,6 +96,14 @@ int read_model_from_file(char *filename, points_t **points, edges_t **edges, int
             }
             else
             {
+                if (points)
+                {
+                    free(points);
+                }
+                if (edges)
+                {
+                    free(edges);
+                }
                 return ERR_MEMORY;
             }
         }
@@ -104,7 +112,7 @@ int read_model_from_file(char *filename, points_t **points, edges_t **edges, int
     else
     {
         qDebug() << "There is no such file";
-        return ERR_READ;
+        return ERR_OPEN;
     }
     return code_error;
 }
@@ -135,14 +143,14 @@ int save_changes(char *filename, points_t *points, edges_t *edges, int n, int m)
     f = fopen(filename, "w");
     if (f)
     {
-        fprintf(f, "%d %d", n, m);
+        fprintf(f, "%d %d\n", n, m);
         for (int i = 0; i < n; i++)
         {
-            fprintf(f, "%d %d %d", points[i].x, points[i].y, points[i].z);
+            fprintf(f, "%d %d %d\n", points[i].x, points[i].y, points[i].z);
         }
         for (int i = 0; i < m; i++)
         {
-            fprintf(f, "%d->%d", edges[i].first, edges[i].second);
+            fprintf(f, "%d->%d\n", edges[i].first, edges[i].second);
         }
         fclose(f);
     }
