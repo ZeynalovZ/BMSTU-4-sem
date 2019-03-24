@@ -1,10 +1,10 @@
 #include "process.h"
 #include "math.h"
 
-void rotate_x(points_t *points, int n, float angle, points_t center)
+void rotate_x(points_t *points, int n, float angle)
 {
     float sina, cosa;
-    float z, y;
+    double z, y;
     cosa = cos(angle * M_PI / 180);
     sina = sin(angle * M_PI / 180);
     for (int i = 0; i < n; i++)
@@ -16,10 +16,10 @@ void rotate_x(points_t *points, int n, float angle, points_t center)
     }
 }
 
-void rotate_y(points_t *points, int n, float angle, points_t center)
+void rotate_y(points_t *points, int n, float angle)
 {
     float sina, cosa;
-    float z, x;
+    double z, x;
     cosa = cos(angle * M_PI / 180);
     sina = sin(angle * M_PI / 180);
     for (int i = 0; i < n; i++)
@@ -31,12 +31,12 @@ void rotate_y(points_t *points, int n, float angle, points_t center)
     }
 }
 
-void rotate_z(points_t *points, int n, float angle, points_t center)
+void rotate_z(points_t *points, int n, float angle)
 {
     float sina, cosa;
-    float x, y;
-    cosa = cos(angle * 180 / M_PI);
-    sina = sin(angle * 180 / M_PI);
+    double x, y;
+    cosa = cos(angle * M_PI / 180);
+    sina = sin(angle * M_PI / 180);
     for (int i = 0; i < n; i++)
     {
         x = points[i].x * cosa - points[i].y * sina;

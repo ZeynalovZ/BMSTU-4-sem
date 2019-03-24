@@ -3,14 +3,14 @@
 typedef struct POINTS points_t;
 struct POINTS
 {
-    int x;
-    int y;
-    int z;
+    double x;
+    double y;
+    double z;
 };
 typedef struct POINTS_2D points_2d;
 struct POINTS_2D
 {
-    int x;
-    int y;
+    double x;
+    double y;
 };
 #endif // POINTS_H

@@ -29,7 +29,7 @@ int read_points_from_file(FILE *file, points_t *points, int n)
     {
         for (int i = 0; i < n; i++)
         {
-            if (fscanf(file, "%d %d %d", &points[i].x, &points[i].y, &points[i].z) != 3)
+            if (fscanf(file, "%lf %lf %lf", &points[i].x, &points[i].y, &points[i].z) != 3)
             {
                 return ERR_READ;
             }
@@ -75,7 +75,7 @@ int read_model_from_file(char *filename, points_t **points, edges_t **edges, int
         code_error = read_counts_from_file(file, n, m);
         if (code_error == OK)
         {
-            qDebug() << "n and m " << *n << *m << endl;
+            //qDebug() << "n and m " << *n << *m << endl;
             p_tmp = (points_t*)malloc(*n * sizeof(points_t));
             e_tmp = (edges_t*)malloc(*m * sizeof(edges_t));
             if (points && edges)
@@ -146,7 +146,7 @@ int save_changes(char *filename, points_t *points, edges_t *edges, int n, int m)
         fprintf(f, "%d %d\n", n, m);
         for (int i = 0; i < n; i++)
         {
-            fprintf(f, "%d %d %d\n", points[i].x, points[i].y, points[i].z);
+            fprintf(f, "%lf %lf %lf\n", points[i].x, points[i].y, points[i].z);
         }
         for (int i = 0; i < m; i++)
         {
