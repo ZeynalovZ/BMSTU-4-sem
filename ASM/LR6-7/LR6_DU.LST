@@ -1,0 +1,140 @@
+Microsoft (R) Macro Assembler Version 5.10                  3/24/19 20:01:44
+                                                             Page     1-1
+
+
+       1				public print_du
+       2				EXTRN X:FAR
+       3 0000				CSEG SEGMENT PARA PUBLIC 'CODE'
+       4				ASSUME CS:CSEG
+       5 0000					print_du proc near
+       6 0000  A1 0000 E				MOV 	AX, X
+lr6_du.asm(6): warning A4057: Illegal size for operand
+       7 0003  1E					PUSH	DS
+       8 0004  56					PUSH	SI
+       9 0005  50					PUSH	AX
+      10 0006  BB 000A					MOV 	BX, 10	
+									
+								
+      11				
+      12				
+      13 0009						DU_DIV1:
+      14 0009  BA 0000							MOV
+							DX,0
+      15 000C  F7 F3							DIV
+							BX		
+									
+							
+      16 000E  50							PUSH
+						AX			
+									
+      17 000F  B4 02							MOV
+							AH,2		
+									
+      18 0011  B2 61							MOV
+							DL,'a'
+      19 0013  CD 21							INT
+							21h
+      20 0015  58							POP
+							AX		
+									
+						
+      21 0016  3D 0000							CMP
+							AX,0		
+									
+      22 0019  75 EE							JNE
+							DU_DIV1		
+							
+      23				
+      24 001B  B4 02							MOV
+						AH,2
+      25 001D  B2 08							MOV DL,
+					8				
+									
+      26 001F  CD 21							INT 21h
+      27				
+      28 0021  58							POP
+							AX		
+									
+							
+      29				
+Microsoft (R) Macro Assembler Version 5.10                  3/24/19 20:01:44
+                                                             Page     1-2
+
+
+      30 0022						DU_DIV2:
+      31 0022  BA 0000							MOV
+							DX,0
+      32 0025  F7 F3							DIV
+							BX		
+									
+							
+      33 0027  50							PUSH
+							AX		
+									
+							
+      34 0028  B4 02							MOV
+							AH,2
+      35 002A  80 C2 30							ADD
+							DL,'0'		
+									
+      36 002D  CD 21							INT
+							21h
+      37 002F  B2 08							MOV
+							DL,8		
+									
+						
+      38 0031  CD 21							INT
+							21h
+      39 0033  CD 21							INT
+							21h
+      40 0035  58							POP
+							AX		
+									
+							
+      41 0036  3D 0000							CMP
+							AX,0		
+									
+						
+      42 0039  75 E7							JNE
+							DU_DIV2		
+      43 003B  5E					POP 	SI
+      44 003C  1F					POP 	DS
+      45 003D  C3					ret
+      46 003E					print_du endp
+      47					
+      48 003E				CSEG ENDS
+      49				END
+Microsoft (R) Macro Assembler Version 5.10                  3/24/19 20:01:44
+                                                             Symbols-1
+
+
+Segments and Groups:
+
+                N a m e         	Length	 Align	Combine Class
+
+CSEG . . . . . . . . . . . . . .  	003E	PARA	PUBLIC	'CODE'
+
+Symbols:            
+
+                N a m e         	Type	 Value	 Attr
+
+DU_DIV1  . . . . . . . . . . . .  	L NEAR	0009	CSEG
+DU_DIV2  . . . . . . . . . . . .  	L NEAR	0022	CSEG
+
+PRINT_DU . . . . . . . . . . . .  	N PROC	0000	CSEG	Global	Length = 003E
+
+X  . . . . . . . . . . . . . . .  	L FAR 	0000		External
+
+@CPU . . . . . . . . . . . . . .  	TEXT  0101h		
+@FILENAME  . . . . . . . . . . .  	TEXT  lr6_du		
+@VERSION . . . . . . . . . . . .  	TEXT  510		
+
+
+     49 Source  Lines
+     49 Total   Lines
+     11 Symbols
+
+  46744 + 447412 Bytes symbol space free
+
+      1 Warning Errors
+      0 Severe  Errors

@@ -1,0 +1,174 @@
+Microsoft (R) Macro Assembler Version 5.10                  3/24/19 20:01:45
+                                                             Page     1-1
+
+
+       1				public input
+       2 0000				DataSeg SEGMENT PUBLIC
+       3 0000  0D 0A 3C 65 6E 74		INPUT_SUCCEED	DB	13,10,'
+					<entered>',13,10,'$'
+       4       65 72 65 64 3E 0D	
+       5       0A 24			
+       6 000E  45 4E 54 45 52 20		INPUT_ENTER		DB
+						'ENTER NUMBER: ', '$'
+       7       4E 55 4D 42 45 52	
+       8       3A 20 24			
+       9 001D				DataSeg ENDS
+      10				
+      11 0000				CSEG SEGMENT PARA PUBLIC 'CODE'
+      12				ASSUME CS:CSEG
+      13 0000					input proc near
+      14 0000  1E						PUSH 	DS
+      15 0001  56						PUSH	SI
+							
+      16							
+      17 0002  B8 ---- R					MOV	
+						AX,DataSeg 
+      18 0005  8E D8						MOV	
+						DS, AX
+      19 0007  B8 0000						MOV	
+						AX,0
+      20 000A  BB 0000						MOV	
+						BX,0
+      21							
+      22 000D  B4 09						MOV	
+						AH,9
+      23 000F  BA 000E R					MOV	
+						DX, OFFSET INPUT_ENTER	
+						
+      24 0012  CD 21						INT	
+						21h
+      25 0014  BA 0000						MOV	
+						DX,0   		
+      26				
+      27 0017						INPUT_LOOP:
+      28 0017  B4 01							MOV
+							AH,1
+      29 0019  CD 21							INT
+							21h		
+								
+      30				
+      31 001B  3C 0D							CMP
+							AL,13		
+								
+      32 001D  74 1B							JE
+							INPUT_SUCCESS   
+      33				
+      34 001F  3C 2D							CMP
+							AL,2Dh 		
+						
+Microsoft (R) Macro Assembler Version 5.10                  3/24/19 20:01:45
+                                                             Page     1-2
+
+
+      35 0021  75 05							JNE
+							INPUT_NOT_MINUS 
+      36 0023  BE 0001							MOV
+							SI,1		
+								
+      37 0026  EB EF							JMP
+							INPUT_LOOP  	
+						
+      38				
+      39 0028						INPUT_NOT_MINUS:
+      40 0028  50							PUSH
+						AX			
+								
+      41 0029  8B C3							MOV
+							AX,BX       
+      42 002B  BB 000A							MOV
+							BX,10		
+							
+      43 002E  F7 E3							MUL
+							BX		
+								
+      44 0030  5B							POP
+							BX		
+								
+      45 0031  80 EB 30							SUB
+							BL,'0'		
+							
+      46 0034  B7 00							MOV
+							BH,0		
+							
+      47 0036  03 D8							ADD
+							BX,AX		
+								
+      48 0038  EB DD							JMP
+							INPUT_LOOP
+      49				
+      50 003A						INPUT_SUCCESS:
+      51 003A  8B C3							MOV
+						AX,BX			
+							
+      52 003C  83 FE 01							CMP
+						SI,1			
+							
+      53 003F  75 02							JNE
+						INPUT_END		
+							
+      54 0041  F7 D8							NEG
+						AX			
+									
+      55				
+      56 0043						INPUT_END:
+      57 0043  50							PUSH
+							AX		
+									
+Microsoft (R) Macro Assembler Version 5.10                  3/24/19 20:01:45
+                                                             Page     1-3
+
+
+      58 0044  BA 0000 R						MOV
+							DX,OFFSET INPUT_SUCCEED
+      59 0047  B4 09							MOV
+							AH,9
+      60 0049  CD 21							INT
+							21h
+      61 004B  58							POP
+							AX		
+									
+      62 004C  5E							POP
+							SI
+      63 004D  1F							POP 
+							DS
+      64 004E  C3							RET
+      65 004F					input endp
+      66					
+      67 004F				CSEG ENDS
+      68				END
+Microsoft (R) Macro Assembler Version 5.10                  3/24/19 20:01:45
+                                                             Symbols-1
+
+
+Segments and Groups:
+
+                N a m e         	Length	 Align	Combine Class
+
+CSEG . . . . . . . . . . . . . .  	004F	PARA	PUBLIC	'CODE'
+DATASEG  . . . . . . . . . . . .  	001D	PARA	PUBLIC	
+
+Symbols:            
+
+                N a m e         	Type	 Value	 Attr
+
+INPUT  . . . . . . . . . . . . .  	N PROC	0000	CSEG	Global	Length = 004F
+INPUT_END  . . . . . . . . . . .  	L NEAR	0043	CSEG
+INPUT_ENTER  . . . . . . . . . .  	L BYTE	000E	DATASEG
+INPUT_LOOP . . . . . . . . . . .  	L NEAR	0017	CSEG
+INPUT_NOT_MINUS  . . . . . . . .  	L NEAR	0028	CSEG
+INPUT_SUCCEED  . . . . . . . . .  	L BYTE	0000	DATASEG
+INPUT_SUCCESS  . . . . . . . . .  	L NEAR	003A	CSEG
+
+@CPU . . . . . . . . . . . . . .  	TEXT  0101h		
+@FILENAME  . . . . . . . . . . .  	TEXT  lr6_in		
+@VERSION . . . . . . . . . . . .  	TEXT  510		
+
+
+     64 Source  Lines
+     64 Total   Lines
+     15 Symbols
+
+  46704 + 445404 Bytes symbol space free
+
+      0 Warning Errors
+      0 Severe  Errors

@@ -1,0 +1,198 @@
+Microsoft (R) Macro Assembler Version 5.10                  3/24/19 20:01:44
+                                                             Page     1-1
+
+
+       1				public print_hs
+       2				EXTRN X:FAR
+       3 0000				Data	SEGMENT	PUBLIC
+       4 0000  30 31 32 33 34 35		SYMBOLS	DB	'0123456789ABCD
+					EF'
+       5       36 37 38 39 41 42	
+       6       43 44 45 46		
+       7 0010				Data	ENDS
+       8				
+       9 0000				CSEG SEGMENT PARA PUBLIC 'CODE'
+      10				ASSUME CS:CSEG, DS:Data
+      11 0000					print_hs proc near
+      12 0000  A1 0000 E					MOV AX, X
+lr6_hs.asm(10): warning A4057: Illegal size for operand
+      13 0003  1E						PUSH DS
+      14							
+      15 0004  3D 0000						CMP	
+						AX,0
+      16 0007  7D 0A						JGE	
+						HS_AFTER_MINUS	
+      17				
+      18 0009  50						PUSH	AX
+      19				
+      20 000A  B4 02						MOV	
+						AH,2h
+      21 000C  B2 2D						MOV	
+						DL,'-'
+      22 000E  CD 21						INT	
+						21h
+      23 0010  58						POP	
+						AX
+      24 0011  F7 D8						NEG	
+						AX
+      25				
+      26 0013						HS_AFTER_MINUS:
+      27 0013  B9 ---- R					MOV CX, Data
+      28 0016  8E D9						MOV DS, CX
+      29 0018  BB 0010						MOV BX,16
+									
+									
+      30 001B  50						PUSH	AX
+									
+									
+      31				
+      32				
+      33 001C						HS_DIV1:
+      34 001C  BA 0000							MOV
+							DX,0
+      35 001F  F7 F3							DIV
+							BX		
+									
+						
+      36 0021  50							PUSH
+							AX		
+									
+Microsoft (R) Macro Assembler Version 5.10                  3/24/19 20:01:44
+                                                             Page     1-2
+
+
+						
+      37 0022  B4 02							MOV
+							AH,2		
+									
+      38 0024  B2 61							MOV
+							DL,'a'
+      39 0026  CD 21							INT
+							21h
+      40 0028  58							POP
+							AX		
+									
+						
+      41 0029  3D 0000							CMP
+							AX,0		
+								
+      42 002C  75 EE							JNE
+							HS_DIV1		
+							
+      43				
+      44 002E  B4 02							MOV
+						AH,2
+      45 0030  B2 08							MOV DL,
+					8				
+								 
+      46 0032  CD 21							INT 21h
+      47				
+      48 0034  58							POP
+							AX		
+									
+						
+      49				
+      50 0035						HS_DIV2:
+      51 0035  BA 0000							MOV
+							DX,0
+      52 0038  F7 F3							DIV
+							BX		
+									
+						
+      53 003A  50							PUSH
+						AX			
+								
+      54				
+      55 003B  53							PUSH
+						BX
+      56 003C  BB 0000 R						MOV   B
+					X, OFFSET SYMBOLS
+      57 003F  8A C2							MOV
+							AL, DL
+      58 0041  D7							XLAT
+      59 0042  8A D0							MOV
+							DL, AL
+      60 0044  5B							POP 
+						BX
+      61 0045  B4 02							MOV
+Microsoft (R) Macro Assembler Version 5.10                  3/24/19 20:01:44
+                                                             Page     1-3
+
+
+							AH,2
+      62 0047  EB 07 90							JMP
+							HS_ADD_0
+      63				
+      64 004A						HS_ADD_A:
+      65 004A  80 C2 41							ADD
+							DL,'A'
+      66 004D  80 EA 0A							SUB
+							DL,10
+      67				
+      68 0050						HS_ADD_0:
+      69 0050  CD 21							INT
+							21h		
+									
+						
+      70 0052  B2 08							MOV
+							DL,8		
+									
+      71 0054  CD 21							INT
+							21h
+      72 0056  CD 21							INT
+							21h
+      73 0058  58							POP
+							AX		
+									
+						
+      74 0059  3D 0000							CMP
+							AX,0		
+								
+      75 005C  75 D7							JNE
+							HS_DIV2
+      76				
+      77 005E  1F						POP DS	
+      78 005F  C3					ret
+      79 0060					print_hs endp
+      80 0060				CSEG ENDS
+      81				END
+Microsoft (R) Macro Assembler Version 5.10                  3/24/19 20:01:44
+                                                             Symbols-1
+
+
+Segments and Groups:
+
+                N a m e         	Length	 Align	Combine Class
+
+CSEG . . . . . . . . . . . . . .  	0060	PARA	PUBLIC	'CODE'
+DATA . . . . . . . . . . . . . .  	0010	PARA	PUBLIC	
+
+Symbols:            
+
+                N a m e         	Type	 Value	 Attr
+
+HS_ADD_0 . . . . . . . . . . . .  	L NEAR	0050	CSEG
+HS_ADD_A . . . . . . . . . . . .  	L NEAR	004A	CSEG
+HS_AFTER_MINUS . . . . . . . . .  	L NEAR	0013	CSEG
+HS_DIV1  . . . . . . . . . . . .  	L NEAR	001C	CSEG
+HS_DIV2  . . . . . . . . . . . .  	L NEAR	0035	CSEG
+
+PRINT_HS . . . . . . . . . . . .  	N PROC	0000	CSEG	Global	Length = 0060
+
+SYMBOLS  . . . . . . . . . . . .  	L BYTE	0000	DATA
+
+X  . . . . . . . . . . . . . . .  	L FAR 	0000		External
+
+@CPU . . . . . . . . . . . . . .  	TEXT  0101h		
+@FILENAME  . . . . . . . . . . .  	TEXT  lr6_hs		
+@VERSION . . . . . . . . . . . .  	TEXT  510		
+
+
+     79 Source  Lines
+     79 Total   Lines
+     16 Symbols
+
+  46706 + 445402 Bytes symbol space free
+
+      1 Warning Errors
+      0 Severe  Errors

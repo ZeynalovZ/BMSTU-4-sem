@@ -1,0 +1,114 @@
+Microsoft (R) Macro Assembler Version 5.10                  3/24/19 20:01:44
+                                                             Page     1-1
+
+
+       1				public print_bs
+       2				EXTRN X:FAR
+       3				
+       4 0000				CSEG SEGMENT PARA PUBLIC 'CODE'
+       5					ASSUME CS:CSEG
+       6 0000					EXIT:
+       7 0000  B2 30					MOV DL, '0'
+       8 0002  B4 02					MOV AH, 2
+       9 0004  CD 21					INT 21H
+      10 0006  5E			        POP SI
+      11 0007  1F					POP DS
+      12 0008  C3					ret
+      13 0009					print_bs proc near
+      14 0009  A1 0000 E					MOV 	AX, X
+lr6_bs.asm(14): warning A4057: Illegal size for operand
+      15 000C  1E						PUSH	DS
+      16 000D  56						PUSH	SI
+      17							
+      18 000E  3D 0000						CMP AX, 0
+      19 0011  7D 0A						JGE START
+      20							
+      21 0013  50						PUSH AX
+      22 0014  B4 02						MOV AH, 2
+      23 0016  B2 2D						MOV DL, '-'
+      24 0018  CD 21						INT 21H
+      25 001A  58						POP AX
+      26 001B  F7 D8						NEG AX
+      27							
+      28							
+      29 001D						START:
+      30 001D  BE 0010						MOV SI,	16
+      31				            
+      32 0020						IGNORE_ZEROS:
+      33 0020  4E						DEC SI
+      34 0021  83 FE 00						CMP SI, 0
+      35 0024  74 DA						JZ EXIT
+      36 0026  B6 00						MOV DH, 0
+      37 0028  D1 E0						SHL AX, 1
+      38 002A  73 F4						JNC IGNORE_ZERO
+					S
+      39 002C  FE C6						INC DH
+      40 002E  EB 0A 90						JMP PRINT_BIT
+      41							
+      42 0031						SHIFT:
+      43 0031  4E						DEC SI
+      44 0032  B6 00						MOV DH, 0
+      45 0034  D1 E0						SHL AX, 1
+      46 0036  73 02						JNC PRINT_BIT
+      47 0038  FE C6						INC DH
+      48							
+      49				
+      50 003A						PRINT_BIT:
+      51 003A  B2 30						MOV DL, '0'
+      52 003C  02 D6						ADD DL, DH
+      53 003E  50						PUSH AX
+Microsoft (R) Macro Assembler Version 5.10                  3/24/19 20:01:44
+                                                             Page     1-2
+
+
+      54 003F  B4 02						MOV AH, 2
+      55 0041  CD 21						INT 21H
+      56 0043  58						POP AX
+      57 0044  83 FE 00						CMP SI, 0
+      58 0047  75 E8						JNZ SHIFT
+      59 0049  5E					POP SI
+      60 004A  1F					POP DS
+      61 004B  C3					ret
+      62 004C					print_bs endp
+      63					
+      64 004C				CSEG ENDS
+      65				END
+Microsoft (R) Macro Assembler Version 5.10                  3/24/19 20:01:44
+                                                             Symbols-1
+
+
+Segments and Groups:
+
+                N a m e         	Length	 Align	Combine Class
+
+CSEG . . . . . . . . . . . . . .  	004C	PARA	PUBLIC	'CODE'
+
+Symbols:            
+
+                N a m e         	Type	 Value	 Attr
+
+EXIT . . . . . . . . . . . . . .  	L NEAR	0000	CSEG
+
+IGNORE_ZEROS . . . . . . . . . .  	L NEAR	0020	CSEG
+
+PRINT_BIT  . . . . . . . . . . .  	L NEAR	003A	CSEG
+PRINT_BS . . . . . . . . . . . .  	N PROC	0009	CSEG	Global	Length = 0043
+
+SHIFT  . . . . . . . . . . . . .  	L NEAR	0031	CSEG
+START  . . . . . . . . . . . . .  	L NEAR	001D	CSEG
+
+X  . . . . . . . . . . . . . . .  	L FAR 	0000		External
+
+@CPU . . . . . . . . . . . . . .  	TEXT  0101h		
+@FILENAME  . . . . . . . . . . .  	TEXT  lr6_bs		
+@VERSION . . . . . . . . . . . .  	TEXT  510		
+
+
+     65 Source  Lines
+     65 Total   Lines
+     14 Symbols
+
+  46744 + 447412 Bytes symbol space free
+
+      1 Warning Errors
+      0 Severe  Errors

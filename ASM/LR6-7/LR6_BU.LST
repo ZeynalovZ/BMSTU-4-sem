@@ -1,0 +1,97 @@
+Microsoft (R) Macro Assembler Version 5.10                  3/24/19 20:01:44
+                                                             Page     1-1
+
+
+       1				EXTRN X:FAR
+       2				public print_bu
+       3 0000				CSEG SEGMENT PARA PUBLIC 'CODE'
+       4					ASSUME CS:CSEG
+       5 0000				    EXIT:
+       6 0000  B2 30					MOV DL, '0'
+       7 0002  B4 02					MOV AH, 2
+       8 0004  CD 21					INT 21H
+       9 0006  5E			        POP SI
+      10 0007  1F					POP DS
+      11 0008  C3					ret
+      12 0009					print_bu proc near
+      13 0009  A1 0000 E					MOV 	AX, X
+lr6_bu.asm(13): warning A4057: Illegal size for operand
+      14 000C  1E						PUSH	DS
+      15 000D  56						PUSH	SI
+      16							
+      17							
+      18 000E  BE 0010						MOV SI,	16
+      19				            
+      20 0011						IGNORE_ZEROS:
+      21 0011  4E						DEC SI
+      22 0012  83 FE 00						CMP SI, 0
+      23 0015  74 E9						JZ EXIT
+      24 0017  B6 00						MOV DH, 0
+      25 0019  D1 E0						SHL AX, 1
+      26 001B  73 F4						JNC IGNORE_ZERO
+					S
+      27 001D  FE C6						INC DH
+      28 001F  EB 0A 90						JMP PRINT_BIT
+      29							
+      30 0022						SHIFT:
+      31 0022  4E						DEC SI
+      32 0023  B6 00						MOV DH, 0
+      33 0025  D1 E0						SHL AX, 1
+      34 0027  73 02						JNC PRINT_BIT
+      35 0029  FE C6						INC DH
+      36							
+      37				
+      38 002B						PRINT_BIT:
+      39 002B  B2 30						MOV DL, '0'
+      40 002D  02 D6						ADD DL, DH
+      41 002F  50						PUSH AX
+      42 0030  B4 02						MOV AH, 2
+      43 0032  CD 21						INT 21H
+      44 0034  58						POP AX
+      45 0035  83 FE 00						CMP SI, 0
+      46 0038  75 E8						JNZ SHIFT
+      47 003A  5E					POP SI
+      48 003B  1F					POP DS
+      49 003C  C3					ret
+      50 003D					print_bu endp
+      51					
+      52 003D				CSEG ENDS
+      53				END
+Microsoft (R) Macro Assembler Version 5.10                  3/24/19 20:01:44
+                                                             Symbols-1
+
+
+Segments and Groups:
+
+                N a m e         	Length	 Align	Combine Class
+
+CSEG . . . . . . . . . . . . . .  	003D	PARA	PUBLIC	'CODE'
+
+Symbols:            
+
+                N a m e         	Type	 Value	 Attr
+
+EXIT . . . . . . . . . . . . . .  	L NEAR	0000	CSEG
+
+IGNORE_ZEROS . . . . . . . . . .  	L NEAR	0011	CSEG
+
+PRINT_BIT  . . . . . . . . . . .  	L NEAR	002B	CSEG
+PRINT_BU . . . . . . . . . . . .  	N PROC	0009	CSEG	Global	Length = 0034
+
+SHIFT  . . . . . . . . . . . . .  	L NEAR	0022	CSEG
+
+X  . . . . . . . . . . . . . . .  	L FAR 	0000		External
+
+@CPU . . . . . . . . . . . . . .  	TEXT  0101h		
+@FILENAME  . . . . . . . . . . .  	TEXT  lr6_bu		
+@VERSION . . . . . . . . . . . .  	TEXT  510		
+
+
+     53 Source  Lines
+     53 Total   Lines
+     13 Symbols
+
+  46744 + 447412 Bytes symbol space free
+
+      1 Warning Errors
+      0 Severe  Errors

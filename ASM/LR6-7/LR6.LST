@@ -1,0 +1,213 @@
+Microsoft (R) Macro Assembler Version 5.10                  3/24/19 20:01:44
+                                                             Page     1-1
+
+
+       1				PUBLIC X
+       2				extrn input:near, print_bu:near, print_
+					bs:near, print_du:near, print_ds:near, 
+					print_hu:near, print_hs:near
+       3 0000				SSTACK SEGMENT PARA STACK  'STACK'
+       4 0000  0040[					DB   64 DUP(0)
+       5	   00			
+       6			 ]	
+       7				
+       8 0040				SSTACK     ENDS
+       9				
+      10 0000				DSEG SEGMENT  PARA PUBLIC 'DATA'
+      11 0000  0A 0D							
+						db 10,13
+      12 0002  30 2E 20 50 72 69			zero_p  	db '0. 
+					Print menu'
+      13       6E 74 20 6D 65 6E	
+      14       75			
+      15 000F  0A 0D							
+						db 10,13
+      16 0011  31 2E 20 45 6E 74			one_p   	db '1. 
+					Enter a number'
+      17       65 72 20 61 20 6E	
+      18       75 6D 62 65 72		
+      19 0022  0A 0D							
+						db 10,13
+      20 0024  32 2E 20 50 72 69			two_p   	db '2. 
+					Print binary unsigned'
+      21       6E 74 20 62 69 6E	
+      22       61 72 79 20 75 6E	
+      23       73 69 67 6E 65 64	
+      24 003C  0A 0D							
+						db 10,13
+      25 003E  33 2E 20 50 72 69			three_p 	db '3. 
+					Print binary signed'
+      26       6E 74 20 62 69 6E	
+      27       61 72 79 20 73 69	
+      28       67 6E 65 64		
+      29 0054  0A 0D							
+						db 10,13
+      30 0056  34 2E 20 50 72 69			four_p  	db '4. 
+					Print decimal unsigned'
+      31       6E 74 20 64 65 63	
+      32       69 6D 61 6C 20 75	
+      33       6E 73 69 67 6E 65	
+      34       64			
+      35 006F  0A 0D							
+						db 10,13
+      36 0071  35 2E 20 50 72 69			five_p  	db '5. 
+					Print decimal signed'
+      37       6E 74 20 64 65 63	
+      38       69 6D 61 6C 20 73	
+      39       69 67 6E 65 64		
+      40 0088  0A 0D							
+Microsoft (R) Macro Assembler Version 5.10                  3/24/19 20:01:44
+                                                             Page     1-2
+
+
+						db 10,13
+      41 008A  36 2E 20 50 72 69			six_p   	db '6. 
+					Print hexadecimal unsigned'
+      42       6E 74 20 68 65 78	
+      43       61 64 65 63 69 6D	
+      44       61 6C 20 75 6E 73	
+      45       69 67 6E 65 64		
+      46 00A7  0A 0D							
+						db 10,13
+      47 00A9  37 2E 20 50 72 69			seven_p 	db '7. 
+					Print hexadecimal signed'
+      48       6E 74 20 68 65 78	
+      49       61 64 65 63 69 6D	
+      50       61 6C 20 73 69 67	
+      51       6E 65 64			
+      52 00C4  0A 0D							
+						db 10,13
+      53 00C6  38 2E 20 45 78 69			eight_p 	db '8. 
+					Exit'
+      54       74			
+      55 00CD  0A 0D 24							
+						db 10,13,'$'
+      56								
+						
+      57 00D0  0000 E 0000 E 0000 E			ADDR		dw prin
+					t_bu, print_bs, print_du, print_ds, pri
+					nt_hu, print_hs
+      58       0000 E 0000 E 0000 E	
+      59 00DC  000A					X		
+						dw 10
+      60 00DE				DSEG          ENDS
+      61				
+Microsoft (R) Macro Assembler Version 5.10                  3/24/19 20:01:44
+                                                             Page     1-3
+
+
+      62				PAGE
+      63 0000				    CSEG SEGMENT PARA PUBLIC 'CODE'
+      64				        ASSUME CS:CSEG,DS:DSEG,SS:SSTAC
+					K
+      65				               
+      66 0000						call_input:
+      67 0000  E8 0000 E					call input
+      68 0003  A3 00DC R					MOV X, AX
+      69 0006  EB 24 90						jmp MENU
+      70				
+      71 0009						read:     
+      72 0009  B4 07						mov ah, 7
+      73 000B  CD 21						int 21h
+      74 000D  3C 30						cmp al,'0'
+      75 000F  74 1B						je menu
+      76 0011  3C 38						cmp al, '8'
+      77 0013  74 27						je exit
+      78 0015  3C 31						CMP AL, '1'
+      79 0017  74 E7						JE call_input
+      80 0019  FE C8						dec al
+      81 001B  FE C8						dec al
+      82 001D  B4 00						mov ah, 0
+      83 001F  2D 0030						sub ax, '0'
+      84 0022  B2 02						mov dl, 2
+      85 0024  F6 E2						mul dl
+      86 0026  8B D8						MOV BX, AX
+      87 0028  FF 97 00D0 R					call ADDR[BX]
+      88				   
+      89 002C						menu:     
+      90 002C  B4 09						mov ah, 9
+      91 002E  BA 0000						mov dx, 0
+      92 0031  CD 21						int 21h
+      93 0033  EB D4						jmp read
+      94					 
+      95 0035						START:    
+      96 0035  B8 ---- R						MOV  AX
+					,DSEG				
+      97 0038  8E D8			               	MOV  DS,AX
+      98 003A  EB F0			               	jmp menu
+      99				
+     100 003C						exit:     
+     101 003C  B4 4C							mov ah,
+					 4ch
+     102 003E  CD 21							int 21h
+     103 0040				    CSEG ENDS     
+     104						END  START
+Microsoft (R) Macro Assembler Version 5.10                  3/24/19 20:01:44
+                                                             Symbols-1
+
+
+Segments and Groups:
+
+                N a m e         	Length	 Align	Combine Class
+
+CSEG . . . . . . . . . . . . . .  	0040	PARA	PUBLIC	'CODE'
+DSEG . . . . . . . . . . . . . .  	00DE	PARA	PUBLIC	'DATA'
+SSTACK . . . . . . . . . . . . .  	0040	PARA	STACK	'STACK'
+
+Symbols:            
+
+                N a m e         	Type	 Value	 Attr
+
+ADDR . . . . . . . . . . . . . .  	L 0002	00D0	DSEG
+
+CALL_INPUT . . . . . . . . . . .  	L NEAR	0000	CSEG
+
+EIGHT_P  . . . . . . . . . . . .  	L BYTE	00C6	DSEG
+EXIT . . . . . . . . . . . . . .  	L NEAR	003C	CSEG
+
+FIVE_P . . . . . . . . . . . . .  	L BYTE	0071	DSEG
+FOUR_P . . . . . . . . . . . . .  	L BYTE	0056	DSEG
+
+INPUT  . . . . . . . . . . . . .  	L NEAR	0000		External
+
+MENU . . . . . . . . . . . . . .  	L NEAR	002C	CSEG
+
+ONE_P  . . . . . . . . . . . . .  	L BYTE	0011	DSEG
+
+PRINT_BS . . . . . . . . . . . .  	L NEAR	0000		External
+PRINT_BU . . . . . . . . . . . .  	L NEAR	0000		External
+PRINT_DS . . . . . . . . . . . .  	L NEAR	0000		External
+PRINT_DU . . . . . . . . . . . .  	L NEAR	0000		External
+PRINT_HS . . . . . . . . . . . .  	L NEAR	0000		External
+PRINT_HU . . . . . . . . . . . .  	L NEAR	0000		External
+
+READ . . . . . . . . . . . . . .  	L NEAR	0009	CSEG
+
+SEVEN_P  . . . . . . . . . . . .  	L BYTE	00A9	DSEG
+SIX_P  . . . . . . . . . . . . .  	L BYTE	008A	DSEG
+START  . . . . . . . . . . . . .  	L NEAR	0035	CSEG
+
+THREE_P  . . . . . . . . . . . .  	L BYTE	003E	DSEG
+TWO_P  . . . . . . . . . . . . .  	L BYTE	0024	DSEG
+
+X  . . . . . . . . . . . . . . .  	L WORD	00DC	DSEG	Global
+
+ZERO_P . . . . . . . . . . . . .  	L BYTE	0002	DSEG
+
+@CPU . . . . . . . . . . . . . .  	TEXT  0101h		
+@FILENAME  . . . . . . . . . . .  	TEXT  lr6		
+@VERSION . . . . . . . . . . . .  	TEXT  510		
+
+Microsoft (R) Macro Assembler Version 5.10                  3/24/19 20:01:44
+                                                             Symbols-2
+
+
+
+     74 Source  Lines
+     74 Total   Lines
+     34 Symbols
+
+  46624 + 443437 Bytes symbol space free
+
+      0 Warning Errors
+      0 Severe  Errors

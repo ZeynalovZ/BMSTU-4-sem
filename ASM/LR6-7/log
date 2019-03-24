@@ -1,0 +1,75 @@
+Microsoft (R) Macro Assembler Version 5.10 
+Copyright (C) Microsoft Corp 1981, 1988.  All rights reserved.
+
+
+  46624 + 443437 Bytes symbol space free
+
+      0 Warning Errors
+      0 Severe  Errors
+Microsoft (R) Macro Assembler Version 5.10 
+Copyright (C) Microsoft Corp 1981, 1988.  All rights reserved.
+
+lr6_bs.asm(14): warning A4057: Illegal size for operand
+
+  46744 + 447412 Bytes symbol space free
+
+      1 Warning Errors
+      0 Severe  Errors
+Microsoft (R) Macro Assembler Version 5.10 
+Copyright (C) Microsoft Corp 1981, 1988.  All rights reserved.
+
+lr6_bu.asm(13): warning A4057: Illegal size for operand
+
+  46744 + 447412 Bytes symbol space free
+
+      1 Warning Errors
+      0 Severe  Errors
+Microsoft (R) Macro Assembler Version 5.10 
+Copyright (C) Microsoft Corp 1981, 1988.  All rights reserved.
+
+lr6_ds.asm(8): warning A4057: Illegal size for operand
+
+  46744 + 447412 Bytes symbol space free
+
+      1 Warning Errors
+      0 Severe  Errors
+Microsoft (R) Macro Assembler Version 5.10 
+Copyright (C) Microsoft Corp 1981, 1988.  All rights reserved.
+
+lr6_du.asm(6): warning A4057: Illegal size for operand
+
+  46744 + 447412 Bytes symbol space free
+
+      1 Warning Errors
+      0 Severe  Errors
+Microsoft (R) Macro Assembler Version 5.10 
+Copyright (C) Microsoft Corp 1981, 1988.  All rights reserved.
+
+lr6_hs.asm(10): warning A4057: Illegal size for operand
+
+  46706 + 445402 Bytes symbol space free
+
+      1 Warning Errors
+      0 Severe  Errors
+Microsoft (R) Macro Assembler Version 5.10 
+Copyright (C) Microsoft Corp 1981, 1988.  All rights reserved.
+
+lr6_hu.asm(12): warning A4057: Illegal size for operand
+
+  46706 + 447450 Bytes symbol space free
+
+      1 Warning Errors
+      0 Severe  Errors
+Microsoft (R) Macro Assembler Version 5.10 
+Copyright (C) Microsoft Corp 1981, 1988.  All rights reserved.
+
+
+  46704 + 445404 Bytes symbol space free
+
+      0 Warning Errors
+      0 Severe  Errors
+"link" 
+
+Microsoft (R) Overlay Linker  Version 3.64   
+Copyright (C) Microsoft Corp 1983-1988.  All rights reserved.
+

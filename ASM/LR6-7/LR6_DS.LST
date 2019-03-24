@@ -1,0 +1,160 @@
+Microsoft (R) Macro Assembler Version 5.10                  3/24/19 20:01:44
+                                                             Page     1-1
+
+
+       1				public print_ds
+       2				EXTRN X:FAR
+       3 0000				CSEG SEGMENT PARA PUBLIC 'CODE'
+       4				ASSUME CS:CSEG
+       5 0000					print_ds proc near
+       6 0000  1E					PUSH	DS
+       7				
+       8 0001  A1 0000 E				MOV 	AX, X
+lr6_ds.asm(8): warning A4057: Illegal size for operand
+       9				
+      10 0004  3D 0000					CMP		AX,0
+      11 0007  7D 0A					JGE		DS_AFTE
+					R_MINUS
+      12 0009  50					PUSH		AX
+      13 000A  B4 02					MOV		AH,2h
+      14 000C  B2 2D					MOV		DL,'-'
+      15 000E  CD 21					INT		21h
+      16 0010  58					POP		AX
+      17 0011  F7 D8					NEG		AX
+      18				
+      19 0013						DS_AFTER_MINUS:
+      20 0013  50							PUSH
+						AX
+      21 0014  BB 000A							MOV 
+						BX, 10	
+      22				
+      23				
+      24 0017						DS_DIV1:
+      25 0017  BA 0000							MOV
+							DX,0
+      26 001A  F7 F3							DIV
+							BX		
+									
+							
+      27 001C  50							PUSH
+						AX			
+									
+						
+      28 001D  B4 02							MOV
+							AH,2		
+									
+						
+      29 001F  B2 61							MOV
+							DL,'a'
+      30 0021  CD 21							INT
+							21h
+      31 0023  58							POP
+							AX		
+									
+							
+      32 0024  3D 0000							CMP
+							AX,0		
+									
+						
+      33 0027  75 EE							JNE
+Microsoft (R) Macro Assembler Version 5.10                  3/24/19 20:01:44
+                                                             Page     1-2
+
+
+							DS_DIV1		
+								
+      34				
+      35 0029  B4 02							MOV
+						AH,2
+      36 002B  B2 08							MOV DL,
+					8				
+									
+      37 002D  CD 21							INT 21h
+      38				
+      39 002F  58							POP
+							AX		
+									
+							
+      40				
+      41 0030						DS_DIV2:
+      42 0030  BA 0000							MOV
+							DX,0
+      43 0033  F7 F3							DIV
+							BX		
+									
+							
+      44 0035  50							PUSH
+							AX		
+									
+							
+      45 0036  B4 02							MOV
+							AH,2
+      46 0038  80 C2 30							ADD
+							DL,'0'		
+									
+      47 003B  CD 21							INT
+							21h
+      48 003D  B2 08							MOV
+							DL,8		
+									
+						
+      49 003F  CD 21							INT
+							21h
+      50 0041  CD 21							INT
+							21h
+      51 0043  58							POP
+							AX		
+									
+							
+      52 0044  3D 0000							CMP
+							AX,0		
+									
+						
+      53 0047  75 E7							JNE
+							DS_DIV2
+      54 0049  1F					POP 	DS
+      55				
+      56 004A  C3					ret
+Microsoft (R) Macro Assembler Version 5.10                  3/24/19 20:01:44
+                                                             Page     1-3
+
+
+      57 004B					print_ds endp
+      58					
+      59 004B				CSEG ENDS
+      60				END
+Microsoft (R) Macro Assembler Version 5.10                  3/24/19 20:01:44
+                                                             Symbols-1
+
+
+Segments and Groups:
+
+                N a m e         	Length	 Align	Combine Class
+
+CSEG . . . . . . . . . . . . . .  	004B	PARA	PUBLIC	'CODE'
+
+Symbols:            
+
+                N a m e         	Type	 Value	 Attr
+
+DS_AFTER_MINUS . . . . . . . . .  	L NEAR	0013	CSEG
+DS_DIV1  . . . . . . . . . . . .  	L NEAR	0017	CSEG
+DS_DIV2  . . . . . . . . . . . .  	L NEAR	0030	CSEG
+
+PRINT_DS . . . . . . . . . . . .  	N PROC	0000	CSEG	Global	Length = 004B
+
+X  . . . . . . . . . . . . . . .  	L FAR 	0000		External
+
+@CPU . . . . . . . . . . . . . .  	TEXT  0101h		
+@FILENAME  . . . . . . . . . . .  	TEXT  lr6_ds		
+@VERSION . . . . . . . . . . . .  	TEXT  510		
+
+
+     60 Source  Lines
+     60 Total   Lines
+     12 Symbols
+
+  46744 + 447412 Bytes symbol space free
+
+      1 Warning Errors
+      0 Severe  Errors
