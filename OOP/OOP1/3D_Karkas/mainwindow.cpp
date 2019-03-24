@@ -34,6 +34,9 @@ MainWindow::MainWindow(QWidget *parent) :
     ui->line_d_3->setValidator(int_validator);
 
     ui->line_k->setValidator(int_validator);
+    ui->line_k_2->setValidator(int_validator);
+    ui->line_k_3->setValidator(int_validator);
+
     ui->line_angle->setValidator(int_validator);
 
     ui->rotate->setEnabled(false);
@@ -47,6 +50,8 @@ MainWindow::MainWindow(QWidget *parent) :
     connect(ui->line_d_3, SIGNAL(textChanged(QString)),this, SLOT(on_changed()));
 
     connect(ui->line_k, SIGNAL(textChanged(QString)),this, SLOT(on_changed()));
+    connect(ui->line_k_2, SIGNAL(textChanged(QString)),this, SLOT(on_changed()));
+    connect(ui->line_k_3, SIGNAL(textChanged(QString)),this, SLOT(on_changed()));
 
     connect(ui->line_angle, SIGNAL(textChanged(QString)),this, SLOT(on_changed()));
 
@@ -88,7 +93,7 @@ void MainWindow::on_changed()
             ui->transfer->setEnabled(false);
         }
 
-        if (ui->line_k->hasAcceptableInput())
+        if (ui->line_k->hasAcceptableInput() || ui->line_k_2->hasAcceptableInput() || ui->line_k_3->hasAcceptableInput())
         {
             ui->scale->setEnabled(true);
         }
@@ -247,9 +252,13 @@ void MainWindow::on_transfer_clicked()
 void MainWindow::on_scale_clicked()
 {
     scene->clear();
-    QString entry_k = ui->line_k->text();
-    double k = get_input_for_scale(entry_k);
-    scale(points, n, k);
+    QString entry_kx = ui->line_k->text();
+    double kx = get_input_for_scale(entry_kx);
+    QString entry_ky = ui->line_k_2->text();
+    double ky = get_input_for_scale(entry_ky);
+    QString entry_kz = ui->line_k_3->text();
+    double kz = get_input_for_scale(entry_kz);
+    scale(points, n, kx, ky, kz);
     set_view(points, edges, n, m);
 }
 

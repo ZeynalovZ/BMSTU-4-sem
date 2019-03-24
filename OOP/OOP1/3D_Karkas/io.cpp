@@ -1,13 +1,23 @@
 #include "errors.h"
 #include "points.h"
 #include "edges.h"
-#include <stdlib.h>
-#include <stdio.h>
 #include "io.h"
-#include <iostream>
 #include <QDebug>
-using namespace std;
-int read_counts_from_file(FILE *file, int *n, int *m)
+#include <stdlib.h>
+
+static void free_all(points_t *points, edges_t *edges)
+{
+    if (points)
+    {
+        free(points);
+    }
+    if (edges)
+    {
+        free(edges);
+    }
+}
+
+static int read_counts_from_file(FILE *file, int *n, int *m)
 {
     if (file)
     {
@@ -23,7 +33,7 @@ int read_counts_from_file(FILE *file, int *n, int *m)
     return OK;
 }
 
-int read_points_from_file(FILE *file, points_t *points, int n)
+static int read_points_from_file(FILE *file, points_t *points, int n)
 {
     if (file)
     {
@@ -33,8 +43,6 @@ int read_points_from_file(FILE *file, points_t *points, int n)
             {
                 return ERR_READ;
             }
-            //qDebug() << points[i].x << " " << points[i].y << " " << points[i].z << endl;
-
         }
     }
     else
@@ -44,7 +52,7 @@ int read_points_from_file(FILE *file, points_t *points, int n)
     return OK;
 }
 
-int read_edges_from_file(FILE *file, edges_t *edges, int m)
+static int read_edges_from_file(FILE *file, edges_t *edges, int m)
 {
     if (file)
     {
@@ -75,7 +83,6 @@ int read_model_from_file(char *filename, points_t **points, edges_t **edges, int
         code_error = read_counts_from_file(file, n, m);
         if (code_error == OK)
         {
-            //qDebug() << "n and m " << *n << *m << endl;
             p_tmp = (points_t*)malloc(*n * sizeof(points_t));
             e_tmp = (edges_t*)malloc(*m * sizeof(edges_t));
             if (points && edges)
@@ -90,21 +97,21 @@ int read_model_from_file(char *filename, points_t **points, edges_t **edges, int
                     {
                         *points = p_tmp;
                         *edges = e_tmp;
-                        return OK;
                     }
+                    else
+                    {
+                        free_all(p_tmp, e_tmp);
+                    }
+                }
+                else
+                {
+                    free_all(p_tmp, e_tmp);
                 }
             }
             else
             {
-                if (points)
-                {
-                    free(points);
-                }
-                if (edges)
-                {
-                    free(edges);
-                }
-                return ERR_MEMORY;
+                free_all(p_tmp, e_tmp);
+                code_error = ERR_MEMORY;
             }
         }
         fclose(file);
@@ -112,25 +119,12 @@ int read_model_from_file(char *filename, points_t **points, edges_t **edges, int
     else
     {
         qDebug() << "There is no such file";
-        return ERR_OPEN;
+        code_error = ERR_OPEN;
     }
     return code_error;
 }
 
-void print_points(points_t *points, int n)
-{
-    for (int i = 0; i < n; i++)
-    {
-        qDebug() << points[i].x << " " << points[i].y << " " << points[i].z << endl;
-    }
-}
-void print_edges(edges_t *edges, int n)
-{
-    for (int i = 0; i < n; i++)
-    {
-        qDebug() << edges[i].first << " " << edges[i].second << endl;
-    }
-}
+
 
 
 int save_changes(char *filename, points_t *points, edges_t *edges, int n, int m)

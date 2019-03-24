@@ -56,12 +56,12 @@ void transform_point(points_t *points, int n, double dx, double dy, double dz)
     }
 }
 
-void scale(points_t *points, int n, double koef)
+void scale(points_t *points, int n, double kx, double ky, double kz)
 {
     for (int i = 0; i < n; i++)
     {
-        points[i].x = points[i].x * koef;
-        points[i].y = points[i].y * koef;
-        points[i].z = points[i].z * koef;
+        points[i].x = points[i].x * kx;
+        points[i].y = points[i].y * ky;
+        points[i].z = points[i].z * kz;
     }
 }
