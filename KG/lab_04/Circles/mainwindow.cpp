@@ -139,8 +139,10 @@ void MainWindow::on_draw_button_clicked()
             case BREZENHAM:
                 break;
             case CANON:
+                draw_canon_ellipse(xc, yc, a, b, *painter, QPen(color,line_width,Qt::SolidLine));
                 break;
             case PARAM:
+                draw_param_ellipse(xc, yc, a, b, *painter, QPen(color,line_width,Qt::SolidLine));
                 break;
             case MIDDLEPOINT:
                 break;
@@ -265,7 +267,29 @@ void MainWindow::on_ellipse_spectr_button_clicked()
     double step = step1.toDouble(&ok6);
     if (ok1 && ok2 && ok3 && ok4 && ok5 && ok6)
     {
-        create_ellipse_spectr(xc, yc, ae, be, ne, step, *painter, QPen(color,line_width,Qt::SolidLine), draw_library_ellipse);
+        bool LIB = false;
+        switch (algorithm_index)
+        {
+        case BREZENHAM:
+
+            break;
+        case CANON:
+            create_ellipse_spectr(xc, yc, ae, be, ne, step, *painter, QPen(color,line_width,Qt::SolidLine), draw_canon_ellipse, LIB);
+            break;
+        case PARAM:
+            create_ellipse_spectr(xc, yc, ae, be, ne, step, *painter, QPen(color,line_width,Qt::SolidLine), draw_param_ellipse, LIB);
+            break;
+        case MIDDLEPOINT:
+            break;
+        case LIBRARY:
+            // here Library method is choosing
+            LIB = true;
+            create_ellipse_spectr(xc, yc, ae, be, ne, step, *painter, QPen(color,line_width,Qt::SolidLine), draw_library_ellipse, LIB);
+            break;
+        default:
+            break;
+        }
+
         ui->draw_label->setPixmap(*scene);
     }
     else

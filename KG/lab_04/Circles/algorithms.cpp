@@ -37,13 +37,21 @@ void create_circle_spectr(double xc, double yc, double R, double dr, int N, QPai
     }
 }
 
-void create_ellipse_spectr(double xc, double yc, double a, double b, int step, int N, QPainter &painter, QPen pen, void (*func)(double, double, double, double,  QPainter &, QPen))
+void create_ellipse_spectr(double xc, double yc, double a, double b, int step, int N, QPainter &painter, QPen pen, void (*func)(double, double, double, double,  QPainter &, QPen), bool LIB)
 {
     double delta = 0;
     for (int i = 0; i < N; i++)
     {
         //painter.drawEllipse(xc - R - delta / 2, yc - R - delta / 2 , R + delta, R + delta);
-        func(xc - a - delta, yc - b - delta, a * 2 + delta * 2, b * 2 + delta * 2, painter, pen);
+        if (LIB == true)
+        {
+            func(xc - a - delta, yc - b - delta, a * 2 + delta * 2, b * 2 + delta * 2, painter, pen);
+        }
+        else
+        {
+            func(xc, yc, a + delta, b + delta, painter, pen);
+        }
+
         //scene->addEllipse(xc - R - delta / 2, yc - R - delta / 2, R * 2 + delta , R * 2 + delta, pen);
         delta += step;
     }
@@ -139,7 +147,47 @@ void draw_brezenham_circle(double xc, double yc, double R, QPainter &painter, QP
             }
         }
     }
-
-
 }
+
+void draw_canon_ellipse(double xc, double yc, double a, double b, QPainter &painter, QPen pen)
+{
+    int x, y;
+    painter.setPen(pen);
+    if (a != 0 && b != 0)
+    {
+        for (y = 0; y <= b; y++)
+        {
+            x = round(a * sqrt(1 - y * y / (b * b)));
+            painter.drawPoint(xc + x, yc - y);
+            painter.drawPoint(xc - x, yc - y);
+            painter.drawPoint(xc - x, yc + y);
+            painter.drawPoint(xc + x, yc + y);
+        }
+        for (x = 0; x <= a; x++)
+        {
+            y = round(b * sqrt(1 - x * x / (a * a)));
+            painter.drawPoint(xc + x, yc - y);
+            painter.drawPoint(xc - x, yc - y);
+            painter.drawPoint(xc - x, yc + y);
+            painter.drawPoint(xc + x, yc + y);
+        }
+    }
+}
+
+void draw_param_ellipse(double xc, double yc, double a, double b, QPainter &painter, QPen pen)
+{
+    painter.setPen(pen);
+    double x, y;
+    double max_r = (a > b) ? a : b;
+    for (double t = 0; t <= M_PI_2; t += 1 / max_r)
+    {
+        x = a * cos(t);
+        y = b * sin(t);
+        painter.drawPoint(xc + x, yc - y);
+        painter.drawPoint(xc - x, yc - y);
+        painter.drawPoint(xc - x, yc + y);
+        painter.drawPoint(xc + x, yc + y);
+    }
+}
+
 
