@@ -10,6 +10,7 @@ void create_ellipse_spectr(double xc, double yc, double a, double b, int step, i
 void draw_canon_circle(double xc, double yc, double R, QPainter &painter, QPen pen);
 void draw_param_circle(double xc, double yc, double R, QPainter &painter, QPen pen);
 void draw_brezenham_circle(double xc, double yc, double R, QPainter &painter, QPen pen);
+void draw_brezenham_ellipse(double xc, double yc, double a, double b, QPainter &painter, QPen pen);
 void draw_canon_ellipse(double xc, double yc, double a, double b, QPainter &painter, QPen pen);
 void draw_param_ellipse(double xc, double yc, double a, double b, QPainter &painter, QPen pen);
 #endif // ALGORITHMS_H

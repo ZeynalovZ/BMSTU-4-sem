@@ -137,6 +137,7 @@ void MainWindow::on_draw_button_clicked()
             switch (algorithm_index)
             {
             case BREZENHAM:
+                draw_brezenham_ellipse(xc, yc, a, b, *painter, QPen(color,line_width,Qt::SolidLine));
                 break;
             case CANON:
                 draw_canon_ellipse(xc, yc, a, b, *painter, QPen(color,line_width,Qt::SolidLine));
@@ -271,7 +272,7 @@ void MainWindow::on_ellipse_spectr_button_clicked()
         switch (algorithm_index)
         {
         case BREZENHAM:
-
+            create_ellipse_spectr(xc, yc, ae, be, ne, step, *painter, QPen(color,line_width,Qt::SolidLine), draw_brezenham_ellipse, LIB);
             break;
         case CANON:
             create_ellipse_spectr(xc, yc, ae, be, ne, step, *painter, QPen(color,line_width,Qt::SolidLine), draw_canon_ellipse, LIB);

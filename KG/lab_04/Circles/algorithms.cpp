@@ -110,7 +110,7 @@ void draw_brezenham_circle(double xc, double yc, double R, QPainter &painter, QP
         painter.drawPoint(xc - x, yc + y);
         painter.drawPoint(xc + x, yc + y);
 
-        if (d <0)
+        if (d < 0)
         {
             d1 = 2 * d + 2 * y - 1;
             if (d1 < 0)
@@ -144,6 +144,62 @@ void draw_brezenham_circle(double xc, double yc, double R, QPainter &painter, QP
             {
                 y = y - 1;
                 d = d - 2 * y + 1;
+            }
+        }
+    }
+}
+
+void draw_brezenham_ellipse(double xc, double yc, double a, double b, QPainter &painter, QPen pen)
+{
+    painter.setPen(pen);
+    int x = 0, y = b;
+    int y_end = 0;
+    int a2 = a * a;
+    int b2 = b * b;
+    int d1, d2;
+    int d = a2 + b2 - 2 * a2 * y;
+    while (y >= y_end)
+    {
+        painter.drawPoint(xc + x, yc - y);
+        painter.drawPoint(xc - x, yc - y);
+        painter.drawPoint(xc - x, yc + y);
+        painter.drawPoint(xc + x, yc + y);
+
+        if (d < 0)
+        {
+            d1 = 2 * d + 2 * a2 * y - 1;
+            if (d1 < 0)
+            {
+                x = x + 1;
+                d = d + 2 * b2 * x + b2;
+            }
+            else
+            {
+                x = x + 1;
+                y = y - 1;
+                d = d + 2 * b2 * x + b2 + a2 - 2 * a2 * y;
+
+            }
+        }
+        else if (d == 0)
+        {
+            x = x + 1;
+            y = y - 1;
+            d = d + 2 * b2 * x + b2 + a2 - 2 * a2 * y;
+        }
+        else
+        {
+            d2 = 2 * d - 2 * b2 * x - 1;
+            if (d2 < 0)
+            {
+                x = x + 1;
+                y = y - 1;
+                d = d + 2 * b2 * x + b2 + a2 - 2 * a2 * y;
+            }
+            else
+            {
+                y = y - 1;
+                d = d - 2 * a2 * y + a2;
             }
         }
     }
