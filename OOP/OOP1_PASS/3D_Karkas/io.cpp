@@ -1,6 +1,6 @@
 #include "errors.h"
 #include "points.h"
-#include "functions.h"
+#include "func.h"
 #include "edges.h"
 #include "io.h"
 #include <QDebug>
@@ -142,10 +142,11 @@ int read_model_from_file(model_t &model, parameters_t &parameters)
     else
     {
         free_all(p_tmp, e_tmp);
-        code_error = ERR_ALLOCATE;
+        code_error = ERR_MEMORY;
         fclose(file);
-        return code_errors;
+        return code_error;
     }
+    return code_error;
 }
 
 
@@ -163,6 +164,8 @@ int save_changes(model_t &model, parameters_t &parameters)
     f = file_openning_save(parameters.filename);
     if (f)
     {
+        int n = get_count_of_points(model);
+        int m = get_count_of_edges(model);
         fprintf(f, "%d %d\n", n, m);
         for (int i = 0; i < n; i++)
         {

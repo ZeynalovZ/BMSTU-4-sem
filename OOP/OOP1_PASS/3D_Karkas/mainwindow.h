@@ -9,6 +9,7 @@
 #include "points.h"
 #include "io.h"
 #include "model.h"
+#include "painter_widget.h"
 namespace Ui {
 class MainWindow;
 }
@@ -44,9 +45,11 @@ private:
     parameters_t parameters;
     Ui::MainWindow *ui;
     QGraphicsScene *scene;
+    painter_t painter;
     void set_view(points_t *points, edges_t *edges, int n, int m);
     double get_input(QString string_input);
     double get_input_for_scale(QString string_input);
+    void show_error(int code_error);
 };
 
 #endif // MAINWINDOW_H

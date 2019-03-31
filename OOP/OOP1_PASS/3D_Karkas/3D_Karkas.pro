@@ -1,6 +1,6 @@
 #-------------------------------------------------
 #
-# Project created by QtCreator 2019-03-20T22:25:10
+# Project created by QtCreator 2019-03-31T18:17:58
 #
 #-------------------------------------------------
 
@@ -26,27 +26,29 @@ DEFINES += QT_DEPRECATED_WARNINGS
 SOURCES += \
         main.cpp \
         mainwindow.cpp \
-        io.cpp \
-    my_controller.cpp \
     model.cpp \
-    functions.cpp
+    my_controller.cpp \
+    io.cpp \
+    func.cpp
 
 HEADERS += \
         mainwindow.h \
-    edges.h \
-    errors.h \
-    io.h \
-    points.h \
-    my_controller.h \
     model.h \
-    functions.h
+    my_controller.h \
+    points.h \
+    io.h \
+    func.h \
+    errors.h \
+    edges.h \
+    painter_widget.h
 
 FORMS += \
         mainwindow.ui
 
 DISTFILES += \
+    pyramid.txt \
+    kub.txt \
     in.txt \
-    ../build-3D_Karkas-Desktop_Qt_MinGW_w64_64bit_MSYS2-Debug/in.txt \
-    ../build-3D_Karkas-Desktop_Qt_MinGW_w64_64bit_MSYS2-Debug/kub.txt \
-    wrong_entry.txt \
+    in.txt \
+    kub.txt \
     pyramid.txt

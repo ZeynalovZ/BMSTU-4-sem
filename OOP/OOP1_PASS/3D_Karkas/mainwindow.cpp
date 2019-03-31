@@ -4,24 +4,23 @@
 #include "errors.h"
 #include "edges.h"
 #include "points.h"
-#include "functions.h"
+#include "func.h"
 #include <math.h>
 #include <QDebug>
 #include <QMessageBox>
 #define X 1231
 #define Y 531
 
-// Error message in new func for more control
-
 MainWindow::MainWindow(QWidget *parent) :
     QMainWindow(parent),
     ui(new Ui::MainWindow)
 {
-    ui->setupUi(this);
 
+    ui->setupUi(this);
     scene = new QGraphicsScene(this);
     ui->graphicsView->setScene(scene);
-
+    this->setWindowTitle("Вьювер каркасной модели");
+    this->setWindowIcon(QIcon("icon4.png"));
     QRegExp check_file  ("[0-9a-z_]+\\.[a-z]+") ;
     QRegExpValidator *file_validator = new QRegExpValidator(check_file, this);
     // for int "[0-9]+$"
@@ -72,8 +71,6 @@ MainWindow::~MainWindow()
 {
     delete ui;
 }
-
-
 void MainWindow::on_changed()
 {
     if (ui->line_input_txt->hasAcceptableInput())
@@ -134,7 +131,7 @@ void MainWindow::on_download_clicked()
     char *str = BA.data();
 
     parameters.filename = strdup(str);
-    code_error = controller(parameters, scene, LOAD);
+    code_error = controller(parameters, *scene, LOAD);
     if (code_error == OK)
     {
         // Модель из файла успешно считана
@@ -143,48 +140,9 @@ void MainWindow::on_download_clicked()
     }
     else
     {
-        QString message = "";
-        switch (code_error)
-        {
-        case ERR_OPEN:
-            message = "Не удалось найти такой файл!";
-            break;
-        case ERR_READ:
-            message = "Не удалось прочесть данные из файла, проверьте содержимое!";
-            break;
-        case ERR_MEMORY:
-            message = "Произошла системная ошибка, перезапустите приложение или обратитесь в техническую поддержку!";
-            break;
-        default:
-            break;
-        }
-        if (message != "")
-                QMessageBox::information(this, "Ошибка", message);
-
+        show_error(code_error);
     }
 }
-/*
-void MainWindow::set_view(points_t *points, edges_t *edges, int n, int m)
-{
-    points_2d p_res[n];
-    scene->addLine(X / 2, Y - Y, X / 2, Y);
-    scene->addLine(X - X, Y / 2, X, Y / 2);
-    scene->addEllipse(center.x, center.y, 2, 2);
-    for (int i = 0; i < n; i++)
-    {
-        //int z1 = sqrt(2) / 2 * points[i].z;
-        double sx = center.x + points[i].x;
-        double sy = center.y + points[i].y;
-        p_res[i].x = sx;
-        p_res[i].y = sy;
-        scene->addEllipse(sx, sy, 1, 1);
-    }
-    for (int i = 0; i < m; i++)
-    {
-        scene->addLine(p_res[edges[i].first].x, p_res[edges[i].first].y,p_res[edges[i].second].x, p_res[edges[i].second].y);
-    }
-}
-*/
 double MainWindow::get_input(QString string_input)
 {
     double num = 0;
@@ -209,6 +167,33 @@ double MainWindow::get_input_for_scale(QString string_input)
     return num;
 }
 
+void MainWindow::show_error(int code_error)
+{
+    QString message = "";
+    switch (code_error)
+    {
+    case ERR_OPEN:
+        message = "Не удалось найти такой файл!";
+        break;
+    case ERR_READ:
+        message = "Не удалось прочесть данные из файла, проверьте содержимое!";
+        break;
+    case ERR_MEMORY:
+        message = "Произошла системная ошибка, перезапустите приложение или обратитесь в техническую поддержку!";
+        break;
+    case ERR_SAVE:
+        message = "Не удалось записать данные в файл, попробуйте еще раз! Если ошибка повторяется, обратитесь в техническую поддержку!";
+        break;
+    case NO_NEEDED_PARAM:
+        message = "Упс!";
+        break;
+    default:
+        break;
+    }
+    if (message != "")
+            QMessageBox::information(this, "Ошибка", message);
+}
+
 
 void MainWindow::on_pushButton_clicked()
 {
@@ -225,17 +210,21 @@ void MainWindow::on_rotate_clicked()
     parameters.angle = angle;
     if (ui->radio_X->isChecked())
     {
-        code_error = controller(parameters, scene, ROTATE_X);
+        code_error = controller(parameters, *scene, ROTATE_X);
     }
     else if (ui->radio_Y->isChecked())
     {
-        code_error = controller(parameters, scene, ROTATE_Y);
+        code_error = controller(parameters, *scene, ROTATE_Y);
     }
     else if (ui->radio_Z->isChecked())
     {
-        code_error = controller(parameters, scene, ROTATE_Z);
+        code_error = controller(parameters, *scene, ROTATE_Z);
     }
-    qDebug() << code_error << "is code error";
+    if (code_error != OK)
+    {
+        show_error(code_error);
+    }
+
 }
 
 void MainWindow::on_transfer_clicked()
@@ -251,7 +240,11 @@ void MainWindow::on_transfer_clicked()
     parameters.dx = dx;
     parameters.dy = dy;
     parameters.dz = dz;
-    code_error = controller(parameters, scene, TRANSFORM);
+    code_error = controller(parameters, *scene, TRANSFORM);
+    if (code_error != OK)
+    {
+        show_error(code_error);
+    }
 }
 
 void MainWindow::on_scale_clicked()
@@ -267,7 +260,11 @@ void MainWindow::on_scale_clicked()
     parameters.kx = kx;
     parameters.ky = ky;
     parameters.kz = kz;
-    code_error = controller(parameters, scene, SCALE);
+    code_error = controller(parameters, *scene, SCALE);
+    if (code_error != OK)
+    {
+        show_error(code_error);
+    }
 }
 
 void MainWindow::on_upload_clicked()
@@ -277,11 +274,10 @@ void MainWindow::on_upload_clicked()
     QByteArray BA = filename.toLatin1();
     char *str = BA.data();
     parameters.filename = strdup(str);
-    code_error = controller(parameters, scene, SAVE);
+    code_error = controller(parameters, *scene, SAVE);
     if (code_error != OK)
     {
-        QString message = "";
-        message = "Не удалось сохранить в файл!";
-        QMessageBox::information(this, "Ошибка", message);
+        show_error(code_error);
     }
 }
+
