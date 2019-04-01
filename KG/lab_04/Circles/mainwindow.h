@@ -42,6 +42,7 @@ private slots:
 
     void on_ellipse_spectr_button_clicked();
 
+
 private:
     Ui::MainWindow *ui;
     //QGraphicsScene *scene;

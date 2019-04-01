@@ -13,4 +13,7 @@ void draw_brezenham_circle(double xc, double yc, double R, QPainter &painter, QP
 void draw_brezenham_ellipse(double xc, double yc, double a, double b, QPainter &painter, QPen pen);
 void draw_canon_ellipse(double xc, double yc, double a, double b, QPainter &painter, QPen pen);
 void draw_param_ellipse(double xc, double yc, double a, double b, QPainter &painter, QPen pen);
+void draw_midpoint_ellipse(double xc, double yc, double a, double b, QPainter &painter, QPen pen);
+void draw_midpoint_circle(double xc, double yc, double R, QPainter &painter, QPen pen);
+
 #endif // ALGORITHMS_H

@@ -14,7 +14,8 @@ MainWindow::MainWindow(QWidget *parent) :
     scene = new QPixmap(851, 691);
     scene->fill(QColor("transparent"));
     painter = new QPainter(scene);
-
+    this->setWindowTitle("Разложение окружностей и эллипсов в растр");
+    this->setWindowIcon(QIcon("circle.PNG"));
 
     QPalette Pal(palette());
     Pal.setColor(QPalette::Background, Qt::black);
@@ -64,6 +65,9 @@ void MainWindow::clear_circle_input()
 
 void MainWindow::on_draw_button_clicked()
 {
+    QColor color1 = color;
+    if (ui->radiowhite->isChecked())
+        color1 = Qt::white;
     int algorithm_index = ui->comboBox->currentIndex();
     bool ok1 = true, ok2 = true, ok3 = true, ok4 = true;
     if (ui->radio_circle->isChecked())
@@ -88,19 +92,19 @@ void MainWindow::on_draw_button_clicked()
             switch (algorithm_index)
             {
             case BREZENHAM:
-                draw_brezenham_circle(xc, yc, R, *painter, QPen(color,line_width,Qt::SolidLine));
+                draw_brezenham_circle(xc, yc, R, *painter, QPen(color1,line_width,Qt::SolidLine));
                 break;
             case CANON:
-                draw_canon_circle(xc, yc, R, *painter, QPen(color,line_width,Qt::SolidLine));
+                draw_canon_circle(xc, yc, R, *painter, QPen(color1,line_width,Qt::SolidLine));
                 break;
             case PARAM:
-                draw_param_circle(xc, yc, R, *painter, QPen(color,line_width,Qt::SolidLine));
+                draw_param_circle(xc, yc, R, *painter, QPen(color1,line_width,Qt::SolidLine));
                 break;
             case MIDDLEPOINT:
-
+                draw_midpoint_circle(xc, yc, R, *painter, QPen(color1,line_width,Qt::SolidLine));
                 break;
             case LIBRARY:
-                draw_library_circle(xc - R, yc - R, R * 2, *painter, QPen(color,line_width,Qt::SolidLine));
+                draw_library_circle(xc - R, yc - R, R * 2, *painter, QPen(color1,line_width,Qt::SolidLine));
                 ui->draw_label->setPixmap(*scene);
                 break;
             default:
@@ -137,15 +141,16 @@ void MainWindow::on_draw_button_clicked()
             switch (algorithm_index)
             {
             case BREZENHAM:
-                draw_brezenham_ellipse(xc, yc, a, b, *painter, QPen(color,line_width,Qt::SolidLine));
+                draw_brezenham_ellipse(xc, yc, a, b, *painter, QPen(color1,line_width,Qt::SolidLine));
                 break;
             case CANON:
-                draw_canon_ellipse(xc, yc, a, b, *painter, QPen(color,line_width,Qt::SolidLine));
+                draw_canon_ellipse(xc, yc, a, b, *painter, QPen(color1,line_width,Qt::SolidLine));
                 break;
             case PARAM:
-                draw_param_ellipse(xc, yc, a, b, *painter, QPen(color,line_width,Qt::SolidLine));
+                draw_param_ellipse(xc, yc, a, b, *painter, QPen(color1,line_width,Qt::SolidLine));
                 break;
             case MIDDLEPOINT:
+                draw_midpoint_ellipse(xc, yc, a, b, *painter, QPen(color1,line_width,Qt::SolidLine));
                 break;
             case LIBRARY:
                 draw_library_ellipse(xc - a, yc - b, a * 2, b * 2, *painter, QPen(color,line_width,Qt::SolidLine));
@@ -177,12 +182,16 @@ void MainWindow::on_pushButton_3_clicked()
 // change color style button
 void MainWindow::on_pushButton_clicked()
 {
-    color = QColorDialog::getColor(Qt::yellow, this );
-    QPalette Pal(palette());
-    Pal.setColor(QPalette::Background, color);
-    ui->label->setAutoFillBackground(true);
-    ui->label->setPalette(Pal);
-    ui->label->show();
+    if (ui->radiochoosen->isChecked())
+    {
+        color = QColorDialog::getColor(Qt::yellow, this );
+        QPalette Pal(palette());
+        Pal.setColor(QPalette::Background, color);
+        ui->label->setAutoFillBackground(true);
+        ui->label->setPalette(Pal);
+        ui->label->show();
+    }
+
 }
 // line width changer button
 void MainWindow::on_pushButton_2_clicked()
@@ -203,6 +212,9 @@ void MainWindow::on_pushButton_2_clicked()
 
 void MainWindow::on_circle_spectr_button_clicked()
 {
+    QColor color1 = color;
+    if (ui->radiowhite->isChecked())
+        color1 = Qt::white;
     int algorithm_index = ui->comboBox->currentIndex();
     bool ok1 = true, ok2 = true, ok3 = true, ok4 = true, ok5 = true;
     QString xc1 = ui->Xcc_2->text();
@@ -223,20 +235,21 @@ void MainWindow::on_circle_spectr_button_clicked()
         switch (algorithm_index)
         {
         case BREZENHAM:
-            create_circle_spectr(xc, yc, R, dR, N, *painter, QPen(color,line_width,Qt::SolidLine), draw_brezenham_circle, LIB);
+            create_circle_spectr(xc, yc, R, dR, N, *painter, QPen(color1,line_width,Qt::SolidLine), draw_brezenham_circle, LIB);
             break;
         case CANON:
-            create_circle_spectr(xc, yc, R, dR, N, *painter, QPen(color,line_width,Qt::SolidLine), draw_canon_circle, LIB);
+            create_circle_spectr(xc, yc, R, dR, N, *painter, QPen(color1,line_width,Qt::SolidLine), draw_canon_circle, LIB);
             break;
         case PARAM:
-            create_circle_spectr(xc, yc, R, dR, N, *painter, QPen(color,line_width,Qt::SolidLine), draw_param_circle, LIB);
+            create_circle_spectr(xc, yc, R, dR, N, *painter, QPen(color1,line_width,Qt::SolidLine), draw_param_circle, LIB);
             break;
         case MIDDLEPOINT:
+            create_circle_spectr(xc, yc, R, dR, N, *painter, QPen(color1,line_width,Qt::SolidLine), draw_midpoint_circle, LIB);
             break;
         case LIBRARY:
             // here Library method is choosing
             LIB = true;
-            create_circle_spectr(xc, yc, R, dR, N, *painter, QPen(color,line_width,Qt::SolidLine), draw_library_circle, LIB);
+            create_circle_spectr(xc, yc, R, dR, N, *painter, QPen(color1,line_width,Qt::SolidLine), draw_library_circle, LIB);
             break;
         default:
             break;
@@ -252,6 +265,9 @@ void MainWindow::on_circle_spectr_button_clicked()
 
 void MainWindow::on_ellipse_spectr_button_clicked()
 {
+    QColor color1 = color;
+    if (ui->radiowhite->isChecked())
+        color1 = Qt::white;
     int algorithm_index = ui->comboBox->currentIndex();
     bool ok1 = true, ok2 = true, ok3 = true, ok4 = true, ok5 = true, ok6 = true;
     QString xc1 = ui->Xce_2->text();
@@ -266,26 +282,28 @@ void MainWindow::on_ellipse_spectr_button_clicked()
     double be = be1.toDouble(&ok4);
     double ne = Ne1.toDouble(&ok5);
     double step = step1.toDouble(&ok6);
+
     if (ok1 && ok2 && ok3 && ok4 && ok5 && ok6)
     {
         bool LIB = false;
         switch (algorithm_index)
         {
         case BREZENHAM:
-            create_ellipse_spectr(xc, yc, ae, be, ne, step, *painter, QPen(color,line_width,Qt::SolidLine), draw_brezenham_ellipse, LIB);
+            create_ellipse_spectr(xc, yc, ae, be, step, ne, *painter, QPen(color1,line_width,Qt::SolidLine), draw_brezenham_ellipse, LIB);
             break;
         case CANON:
-            create_ellipse_spectr(xc, yc, ae, be, ne, step, *painter, QPen(color,line_width,Qt::SolidLine), draw_canon_ellipse, LIB);
+            create_ellipse_spectr(xc, yc, ae, be, step, ne, *painter, QPen(color1,line_width,Qt::SolidLine), draw_canon_ellipse, LIB);
             break;
         case PARAM:
-            create_ellipse_spectr(xc, yc, ae, be, ne, step, *painter, QPen(color,line_width,Qt::SolidLine), draw_param_ellipse, LIB);
+            create_ellipse_spectr(xc, yc, ae, be, step, ne, *painter, QPen(color1,line_width,Qt::SolidLine), draw_param_ellipse, LIB);
             break;
         case MIDDLEPOINT:
+            create_ellipse_spectr(xc, yc, ae, be, step, ne, *painter, QPen(color1,line_width,Qt::SolidLine), draw_midpoint_ellipse, LIB);
             break;
         case LIBRARY:
             // here Library method is choosing
             LIB = true;
-            create_ellipse_spectr(xc, yc, ae, be, ne, step, *painter, QPen(color,line_width,Qt::SolidLine), draw_library_ellipse, LIB);
+            create_ellipse_spectr(xc, yc, ae, be, step, ne, *painter, QPen(color1,line_width,Qt::SolidLine), draw_library_ellipse, LIB);
             break;
         default:
             break;

@@ -29,8 +29,8 @@
     <widget class="QPushButton" name="pushButton">
      <property name="geometry">
       <rect>
-       <x>90</x>
-       <y>90</y>
+       <x>240</x>
+       <y>100</y>
        <width>81</width>
        <height>31</height>
       </rect>
@@ -42,8 +42,8 @@
     <widget class="QLabel" name="label">
      <property name="geometry">
       <rect>
-       <x>30</x>
-       <y>90</y>
+       <x>180</x>
+       <y>100</y>
        <width>31</width>
        <height>31</height>
       </rect>
@@ -88,7 +88,7 @@
      <property name="geometry">
       <rect>
        <x>30</x>
-       <y>70</y>
+       <y>50</y>
        <width>141</width>
        <height>16</height>
       </rect>
@@ -108,6 +108,35 @@
      </property>
      <property name="text">
       <string>Задать</string>
+     </property>
+    </widget>
+    <widget class="QRadioButton" name="radiowhite">
+     <property name="geometry">
+      <rect>
+       <x>30</x>
+       <y>70</y>
+       <width>84</width>
+       <height>19</height>
+      </rect>
+     </property>
+     <property name="text">
+      <string>Цвет фона</string>
+     </property>
+    </widget>
+    <widget class="QRadioButton" name="radiochoosen">
+     <property name="geometry">
+      <rect>
+       <x>30</x>
+       <y>100</y>
+       <width>121</width>
+       <height>19</height>
+      </rect>
+     </property>
+     <property name="text">
+      <string>Выбранный цвет</string>
+     </property>
+     <property name="checked">
+      <bool>true</bool>
      </property>
     </widget>
    </widget>
@@ -328,7 +357,7 @@
      </rect>
     </property>
     <property name="currentIndex">
-     <number>0</number>
+     <number>1</number>
     </property>
     <widget class="QWidget" name="tab_1">
      <attribute name="title">

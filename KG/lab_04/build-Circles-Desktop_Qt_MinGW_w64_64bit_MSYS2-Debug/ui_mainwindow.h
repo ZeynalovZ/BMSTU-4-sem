@@ -42,6 +42,8 @@ public:
     QSpinBox *spinBox;
     QLabel *label_3;
     QPushButton *pushButton_2;
+    QRadioButton *radiowhite;
+    QRadioButton *radiochoosen;
     QGroupBox *groupBox;
     QRadioButton *radio_circle;
     QRadioButton *radio_ellipse;
@@ -89,10 +91,10 @@ public:
         groupBox_4->setGeometry(QRect(870, 270, 391, 151));
         pushButton = new QPushButton(groupBox_4);
         pushButton->setObjectName(QStringLiteral("pushButton"));
-        pushButton->setGeometry(QRect(90, 90, 81, 31));
+        pushButton->setGeometry(QRect(240, 100, 81, 31));
         label = new QLabel(groupBox_4);
         label->setObjectName(QStringLiteral("label"));
-        label->setGeometry(QRect(30, 90, 31, 31));
+        label->setGeometry(QRect(180, 100, 31, 31));
         label->setStyleSheet(QStringLiteral(""));
         label_2 = new QLabel(groupBox_4);
         label_2->setObjectName(QStringLiteral("label_2"));
@@ -104,10 +106,17 @@ public:
         spinBox->setValue(1);
         label_3 = new QLabel(groupBox_4);
         label_3->setObjectName(QStringLiteral("label_3"));
-        label_3->setGeometry(QRect(30, 70, 141, 16));
+        label_3->setGeometry(QRect(30, 50, 141, 16));
         pushButton_2 = new QPushButton(groupBox_4);
         pushButton_2->setObjectName(QStringLiteral("pushButton_2"));
         pushButton_2->setGeometry(QRect(210, 30, 80, 21));
+        radiowhite = new QRadioButton(groupBox_4);
+        radiowhite->setObjectName(QStringLiteral("radiowhite"));
+        radiowhite->setGeometry(QRect(30, 70, 84, 19));
+        radiochoosen = new QRadioButton(groupBox_4);
+        radiochoosen->setObjectName(QStringLiteral("radiochoosen"));
+        radiochoosen->setGeometry(QRect(30, 100, 121, 19));
+        radiochoosen->setChecked(true);
         groupBox = new QGroupBox(centralWidget);
         groupBox->setObjectName(QStringLiteral("groupBox"));
         groupBox->setGeometry(QRect(870, 20, 391, 241));
@@ -223,7 +232,7 @@ public:
 
         retranslateUi(MainWindow);
 
-        tabWidget->setCurrentIndex(0);
+        tabWidget->setCurrentIndex(1);
 
 
         QMetaObject::connectSlotsByName(MainWindow);
@@ -238,6 +247,8 @@ public:
         label_2->setText(QApplication::translate("MainWindow", "\320\242\320\276\320\273\321\211\320\270\320\275\320\260 \320\273\320\270\320\275\320\270\320\270:", nullptr));
         label_3->setText(QApplication::translate("MainWindow", "\320\222\321\213\320\261\320\265\321\200\320\270\321\202\320\265 \321\206\320\262\320\265\321\202 \321\200\320\270\321\201\320\276\320\262\320\260\320\275\320\270\321\217:", nullptr));
         pushButton_2->setText(QApplication::translate("MainWindow", "\320\227\320\260\320\264\320\260\321\202\321\214", nullptr));
+        radiowhite->setText(QApplication::translate("MainWindow", "\320\246\320\262\320\265\321\202 \321\204\320\276\320\275\320\260", nullptr));
+        radiochoosen->setText(QApplication::translate("MainWindow", "\320\222\321\213\320\261\321\200\320\260\320\275\320\275\321\213\320\271 \321\206\320\262\320\265\321\202", nullptr));
         groupBox->setTitle(QApplication::translate("MainWindow", "\320\236\321\202\321\200\320\270\321\201\320\276\320\262\321\211\320\270\320\272", nullptr));
         radio_circle->setText(QApplication::translate("MainWindow", "\320\236\320\272\321\200\321\203\320\266\320\275\320\276\321\201\321\202\321\214", nullptr));
         radio_ellipse->setText(QApplication::translate("MainWindow", "\320\255\320\273\320\273\320\270\320\277\321\201", nullptr));
