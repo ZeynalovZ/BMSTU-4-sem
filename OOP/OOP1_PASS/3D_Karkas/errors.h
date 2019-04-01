@@ -6,4 +6,5 @@
 #define ERR_MEMORY -3
 #define ERR_SAVE -4
 #define NO_NEEDED_PARAM -5
+#define WARNING -6
 #endif // ERRORS_H

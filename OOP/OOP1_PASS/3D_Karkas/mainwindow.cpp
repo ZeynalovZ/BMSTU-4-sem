@@ -20,7 +20,7 @@ MainWindow::MainWindow(QWidget *parent) :
     scene = new QGraphicsScene(this);
     ui->graphicsView->setScene(scene);
     this->setWindowTitle("Вьювер каркасной модели");
-    this->setWindowIcon(QIcon("icon4.png"));
+    this->setWindowIcon(QIcon("icon1.png"));
     QRegExp check_file  ("[0-9a-z_]+\\.[a-z]+") ;
     QRegExpValidator *file_validator = new QRegExpValidator(check_file, this);
     // for int "[0-9]+$"
@@ -123,20 +123,23 @@ void MainWindow::on_changed()
 
 void MainWindow::on_download_clicked()
 {
-
+    if (file_success == 1)
+    {
+        scene->clear();
+        scene->addLine(X / 2, Y - Y, X / 2, Y);
+        scene->addLine(X - X, Y / 2, X, Y / 2);
+    }
 
     int code_error = OK;
     QString filename = ui->line_input_txt->text();
     QByteArray BA = filename.toLatin1();
     char *str = BA.data();
-
     parameters.filename = strdup(str);
     code_error = controller(parameters, *scene, LOAD);
     if (code_error == OK)
     {
         // Модель из файла успешно считана
         file_success = 1;
-        //set_view(points, edges, n, m);
     }
     else
     {
@@ -197,6 +200,7 @@ void MainWindow::show_error(int code_error)
 
 void MainWindow::on_pushButton_clicked()
 {
+
     scene->clear();
 }
 

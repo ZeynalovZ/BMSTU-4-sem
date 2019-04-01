@@ -50,33 +50,38 @@ int controller(parameters_t parametrs, QGraphicsScene &scene, int action)
     switch (action) {
     case LOAD:
         code_error = read_model_from_file(model, parametrs);
+        set_view(model, scene);
         break;
     case SAVE:
         code_error = save_changes(model, parametrs);
+        set_view(model, scene);
         break;
     case ROTATE_X:
         code_error = rotate_x(model, parametrs);
+        set_view(model, scene);
         break;
     case ROTATE_Y:
         code_error = rotate_y(model, parametrs);
+        set_view(model, scene);
         break;
     case ROTATE_Z:
         code_error = rotate_z(model, parametrs);
+        set_view(model, scene);
         break;
     case SCALE:
         code_error = scale(model, parametrs);
+        set_view(model, scene);
         break;
     case TRANSFORM:
         code_error = transform_point(model, parametrs);
+        set_view(model, scene);
+        break;
+    case DRAW:
+        set_view(model, scene);
         break;
     default:
         code_error = NO_NEEDED_PARAM;
         break;
-    }
-    if (code_error == OK)
-    {
-        scene.clear();
-        set_view(model, scene);
     }
     return code_error;
 }

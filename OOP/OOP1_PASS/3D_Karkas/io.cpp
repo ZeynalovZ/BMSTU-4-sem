@@ -6,17 +6,6 @@
 #include <QDebug>
 #include <stdlib.h>
 
-static void free_all(points_t *points, edges_t *edges)
-{
-    if (points)
-    {
-        free(points);
-    }
-    if (edges)
-    {
-        free(edges);
-    }
-}
 
 static int read_counts_from_file(FILE *file, int *n, int *m)
 {
@@ -72,85 +61,92 @@ static int read_edges_from_file(FILE *file, edges_t *edges, int m)
     return OK;
 }
 
-FILE* file_openning_read(char *filename)
+int file_openning_read(FILE **file, char *filename)
 {
-    FILE *file;
-    file = fopen(filename, "r");
-    if (file)
-        return file;
+    *file = fopen(filename, "r");
+    if (*file)
+    {
+        return OK;
+    }
     else
-        return NULL;
+        return ERR_OPEN;
 }
 
-FILE* file_openning_save(char *filename)
+int file_openning_save(FILE **file, char *filename)
 {
-    FILE *file;
-    file = fopen(filename, "w");
-    if (file)
-        return file;
+    *file = fopen(filename, "w");
+    if (*file)
+        return OK;
     else
-        return NULL;
+        return ERR_OPEN;
 }
 
-int read_model_from_file(model_t &model, parameters_t &parameters)
-{
-    int code_error = OK;
 
-    FILE *file = file_openning_read(parameters.filename);
-    points_t *p_tmp = NULL;
-    edges_t *e_tmp = NULL;
-    int tmp_count_of_points = 0;
-    int tmp_count_of_edges = 0;
-    if (file == NULL)
+void clear_model(model_t model)
+{
+    if (model.edges != NULL)
+        free(model.edges);
+    if (model.points != NULL)
+        free(model.points);
+}
+
+void copy_model(model_t &dist, model_t source)
+{
+    dist = source;
+}
+
+int read_model(model_t &model, FILE *file)
+{
+    int code_error = read_counts_from_file(file, &model.count_of_points, &model.count_of_edges);
+
+    if (code_error != OK) return code_error;
+
+    model.points = (points_t*)malloc(model.count_of_points * sizeof(points_t));
+    model.edges = (edges_t*)malloc(model.count_of_edges * sizeof(edges_t));
+
+    if (model.points != NULL && model.edges != NULL) return code_error;
+
     {
-        code_error = ERR_OPEN;
-        return code_error;
-    }
-    code_error = read_counts_from_file(file, &tmp_count_of_points, &tmp_count_of_edges);
-    if (code_error != OK)
-    {
-        fclose(file);
-        return code_error;
-    }
-    p_tmp = (points_t*)malloc(tmp_count_of_points * sizeof(points_t));
-    e_tmp = (edges_t*)malloc(tmp_count_of_edges * sizeof(edges_t));
-    if (p_tmp != NULL && e_tmp != NULL)
-    {
-        code_error = read_points_from_file(file, p_tmp, tmp_count_of_points);
+        code_error = read_points_from_file(file, model.points, model.count_of_points);
         if (code_error != OK)
         {
-            free_all(p_tmp, e_tmp);
-            fclose(file);
+            clear_model(model);
             return code_error;
         }
-        code_error = read_edges_from_file(file, e_tmp, tmp_count_of_edges);
+        code_error = read_edges_from_file(file, model.edges, model.count_of_edges);
         if (code_error != OK)
         {
-            free_all(p_tmp, e_tmp);
-            fclose(file);
+            clear_model(model);
             return code_error;
-        }
-        else
-        {
-            model.points = p_tmp;
-            model.edges = e_tmp;
-            model.count_of_points = tmp_count_of_points;
-            model.count_of_edges = tmp_count_of_edges;
-            fclose(file);
         }
     }
     else
     {
-        free_all(p_tmp, e_tmp);
+        clear_model(model);
         code_error = ERR_MEMORY;
-        fclose(file);
         return code_error;
     }
     return code_error;
 }
 
+int read_model_from_file(model_t &model, parameters_t &parameters)
+{
+    FILE *file;
+    int code_error = file_openning_read(&file, parameters.filename);
 
+    if (code_error != OK) return code_error;
 
+    model_t tmp = init();
+    code_error = read_model(tmp, file);
+    fclose(file);
+    if (code_error == OK)
+    {
+        clear_model(model);
+        copy_model(model, tmp);
+    }
+
+    return code_error;
+}
 
 int save_changes(model_t &model, parameters_t &parameters)
 {
@@ -161,8 +157,8 @@ int save_changes(model_t &model, parameters_t &parameters)
         return code_error;
     }
     FILE *f;
-    f = file_openning_save(parameters.filename);
-    if (f)
+    code_error = file_openning_save(&f, parameters.filename);
+    if (code_error == OK)
     {
         int n = get_count_of_points(model);
         int m = get_count_of_edges(model);

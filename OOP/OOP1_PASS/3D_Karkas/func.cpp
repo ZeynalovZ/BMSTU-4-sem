@@ -1,5 +1,6 @@
 #include "func.h"
 #include "math.h"
+#include "errors.h"
 
 // Функции обертки
 double get_x_point(model_t model)
@@ -77,6 +78,10 @@ int rotate_x(model_t &model, parameters_t &parameters)
     cosa = cos(angle * M_PI / 180);
     sina = sin(angle * M_PI / 180);
     int n = get_count_of_points(model);
+    if (angle == 0)
+    {
+        return WARNING;
+    }
     for (int i = 0; i < n; i++)
     {
         y = get_y_index_point(model, i) * cosa - get_z_index_point(model, i) * sina;
@@ -84,16 +89,20 @@ int rotate_x(model_t &model, parameters_t &parameters)
         fill_y_index_point(model, i, y);
         fill_z_index_point(model, i, z);
     }
-    return 0;
+    return OK;
 }
 
 int rotate_y(model_t &model, parameters_t &parameters)
 {
-    float sina, cosa;
-    double z, x;
     double angle = get_angle(parameters);
-    cosa = cos(angle * M_PI / 180);
-    sina = sin(angle * M_PI / 180);
+    if (angle == 0)
+    {
+        return WARNING;
+    }
+
+    float cosa = cos(angle * M_PI / 180);
+    float sina = sin(angle * M_PI / 180);
+    double z, x;
     int n = get_count_of_points(model);
     for (int i = 0; i < n; i++)
     {
@@ -102,7 +111,7 @@ int rotate_y(model_t &model, parameters_t &parameters)
         fill_x_index_point(model, i, x);
         fill_z_index_point(model, i, z);
     }
-    return 0;
+    return OK;
 }
 
 int rotate_z(model_t &model, parameters_t &parameters)
@@ -110,6 +119,10 @@ int rotate_z(model_t &model, parameters_t &parameters)
     float sina, cosa;
     double x, y;
     double angle = get_angle(parameters);
+    if (angle == 0)
+    {
+        return WARNING;
+    }
     cosa = cos(angle * M_PI / 180);
     sina = sin(angle * M_PI / 180);
     int n = get_count_of_points(model);
@@ -120,7 +133,7 @@ int rotate_z(model_t &model, parameters_t &parameters)
         fill_x_index_point(model, i, x);
         fill_y_index_point(model, i, y);
     }
-    return 0;
+    return OK;
 }
 
 int transform_point(model_t &model, parameters_t &parameters)
@@ -135,7 +148,7 @@ int transform_point(model_t &model, parameters_t &parameters)
         //points[i].y += dy;
         //points[i].z += dz;
     }
-    return 0;
+    return OK;
 }
 
 int scale(model_t &model, parameters_t &parameters)
@@ -150,5 +163,5 @@ int scale(model_t &model, parameters_t &parameters)
         //points[i].y = points[i].y * ky;
         //points[i].z = points[i].z * kz;
     }
-    return 0;
+    return OK;
 }
