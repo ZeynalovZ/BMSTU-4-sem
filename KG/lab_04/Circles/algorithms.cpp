@@ -42,16 +42,17 @@ void create_ellipse_spectr(double xc, double yc, double a, double b, int step, i
 {
     double delta = 0;
     qDebug() << N << " is N";
+    double koef = b / a;
     for (int i = 0; i < N; i++)
     {
         //painter.drawEllipse(xc - R - delta / 2, yc - R - delta / 2 , R + delta, R + delta);
         if (LIB == true)
         {
-            func(xc - a - delta, yc - b - delta, a * 2 + delta * 2, b * 2 + delta * 2, painter, pen);
+            func(xc - a - delta, yc - b - delta * koef, a * 2 + delta * 2, b * 2 + delta * koef * 2, painter, pen);
         }
         else
         {
-            func(xc, yc, a + delta, b + delta, painter, pen);
+            func(xc, yc, a + delta, b + delta * koef, painter, pen);
         }
 
         //scene->addEllipse(xc - R - delta / 2, yc - R - delta / 2, R * 2 + delta , R * 2 + delta, pen);
@@ -89,8 +90,8 @@ void draw_param_circle(double xc, double yc, double R, QPainter &painter, QPen p
     double x, y;
     for (double t = 0; t <= M_PI_2; t += 1 / R)
     {
-        x = R * cos(t);
-        y = R * sin(t);
+        x = round(R * cos(t));
+        y = round(R * sin(t));
         painter.drawPoint(xc + x, yc - y);
         painter.drawPoint(xc - x, yc - y);
         painter.drawPoint(xc - x, yc + y);
@@ -239,8 +240,8 @@ void draw_param_ellipse(double xc, double yc, double a, double b, QPainter &pain
     double max_r = (a > b) ? a : b;
     for (double t = 0; t <= M_PI_2; t += 1 / max_r)
     {
-        x = a * cos(t);
-        y = b * sin(t);
+        x = round(a * cos(t));
+        y = round(b * sin(t));
         painter.drawPoint(xc + x, yc - y);
         painter.drawPoint(xc - x, yc - y);
         painter.drawPoint(xc - x, yc + y);

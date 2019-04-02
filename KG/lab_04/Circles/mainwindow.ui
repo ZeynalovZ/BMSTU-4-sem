@@ -224,7 +224,7 @@
      <property name="geometry">
       <rect>
        <x>20</x>
-       <y>150</y>
+       <y>160</y>
        <width>341</width>
        <height>22</height>
       </rect>
@@ -313,7 +313,7 @@
        <x>143</x>
        <y>20</y>
        <width>20</width>
-       <height>131</height>
+       <height>121</height>
       </rect>
      </property>
      <property name="orientation">
@@ -331,6 +331,19 @@
      </property>
      <property name="placeholderText">
       <string>b</string>
+     </property>
+    </widget>
+    <widget class="QLabel" name="label_4">
+     <property name="geometry">
+      <rect>
+       <x>20</x>
+       <y>140</y>
+       <width>121</width>
+       <height>16</height>
+      </rect>
+     </property>
+     <property name="text">
+      <string>Выберите алгоритм:</string>
      </property>
     </widget>
    </widget>
@@ -562,7 +575,7 @@
      <x>0</x>
      <y>0</y>
      <width>1290</width>
-     <height>20</height>
+     <height>19</height>
     </rect>
    </property>
   </widget>
