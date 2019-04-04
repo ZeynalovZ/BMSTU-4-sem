@@ -118,6 +118,13 @@ void MainWindow::on_changed()
             ui->upload->setEnabled(false);
         }
     }
+    else
+    {
+        ui->transfer->setEnabled(false);
+        ui->scale->setEnabled(false);
+        ui->rotate->setEnabled(false);
+        ui->upload->setEnabled(false);
+    }
 
 }
 
@@ -126,8 +133,6 @@ void MainWindow::on_download_clicked()
     if (file_success == 1)
     {
         scene->clear();
-        scene->addLine(X / 2, Y - Y, X / 2, Y);
-        scene->addLine(X - X, Y / 2, X, Y / 2);
     }
 
     int code_error = OK;
@@ -136,8 +141,10 @@ void MainWindow::on_download_clicked()
     char *str = BA.data();
     parameters.filename = strdup(str);
     code_error = controller(parameters, *scene, LOAD);
+    qDebug() << code_error << "is code error";
     if (code_error == OK)
     {
+        code_error = controller(parameters, *scene, DRAW);
         // Модель из файла успешно считана
         file_success = 1;
     }
@@ -200,8 +207,11 @@ void MainWindow::show_error(int code_error)
 
 void MainWindow::on_pushButton_clicked()
 {
-
+    file_success = 0;
+    on_changed();
     scene->clear();
+    scene->addLine(X / 2, Y - Y, X / 2, Y);
+    scene->addLine(X - X, Y / 2, X, Y / 2);
 }
 
 
@@ -228,6 +238,10 @@ void MainWindow::on_rotate_clicked()
     {
         show_error(code_error);
     }
+    else
+    {
+        code_error = controller(parameters, *scene, DRAW);
+    }
 
 }
 
@@ -245,9 +259,14 @@ void MainWindow::on_transfer_clicked()
     parameters.dy = dy;
     parameters.dz = dz;
     code_error = controller(parameters, *scene, TRANSFORM);
+
     if (code_error != OK)
     {
         show_error(code_error);
+    }
+    else
+    {
+        code_error = controller(parameters, *scene, DRAW);
     }
 }
 
@@ -265,9 +284,14 @@ void MainWindow::on_scale_clicked()
     parameters.ky = ky;
     parameters.kz = kz;
     code_error = controller(parameters, *scene, SCALE);
+
     if (code_error != OK)
     {
         show_error(code_error);
+    }
+    else
+    {
+        code_error = controller(parameters, *scene, DRAW);
     }
 }
 
@@ -279,9 +303,14 @@ void MainWindow::on_upload_clicked()
     char *str = BA.data();
     parameters.filename = strdup(str);
     code_error = controller(parameters, *scene, SAVE);
+    code_error = controller(parameters, *scene, DRAW);
     if (code_error != OK)
     {
         show_error(code_error);
+    }
+    else
+    {
+        code_error = controller(parameters, *scene, DRAW);
     }
 }
 

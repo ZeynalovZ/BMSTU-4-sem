@@ -72,20 +72,18 @@ int get_second_index_edge(model_t &model, int i)
 
 int rotate_x(model_t &model, parameters_t &parameters)
 {
-    float sina, cosa;
-    double z, y;
     double angle = get_angle(parameters);
-    cosa = cos(angle * M_PI / 180);
-    sina = sin(angle * M_PI / 180);
-    int n = get_count_of_points(model);
     if (angle == 0)
     {
         return WARNING;
     }
+    double cosa = cos(angle * M_PI / 180);
+    double sina = sin(angle * M_PI / 180);
+    int n = get_count_of_points(model);
     for (int i = 0; i < n; i++)
     {
-        y = get_y_index_point(model, i) * cosa - get_z_index_point(model, i) * sina;
-        z = get_y_index_point(model, i) * sina + get_z_index_point(model, i) * cosa;
+        double y = get_y_index_point(model, i) * cosa - get_z_index_point(model, i) * sina;
+        double z = get_y_index_point(model, i) * sina + get_z_index_point(model, i) * cosa;
         fill_y_index_point(model, i, y);
         fill_z_index_point(model, i, z);
     }
@@ -99,15 +97,13 @@ int rotate_y(model_t &model, parameters_t &parameters)
     {
         return WARNING;
     }
-
-    float cosa = cos(angle * M_PI / 180);
-    float sina = sin(angle * M_PI / 180);
-    double z, x;
+    double cosa = cos(angle * M_PI / 180);
+    double sina = sin(angle * M_PI / 180);
     int n = get_count_of_points(model);
     for (int i = 0; i < n; i++)
     {
-        x = get_x_index_point(model, i) * cosa - get_z_index_point(model, i) * sina;
-        z = get_x_index_point(model, i) * sina + get_z_index_point(model, i) * cosa;
+        double x = get_x_index_point(model, i) * cosa - get_z_index_point(model, i) * sina;
+        double z = get_x_index_point(model, i) * sina + get_z_index_point(model, i) * cosa;
         fill_x_index_point(model, i, x);
         fill_z_index_point(model, i, z);
     }
@@ -116,20 +112,18 @@ int rotate_y(model_t &model, parameters_t &parameters)
 
 int rotate_z(model_t &model, parameters_t &parameters)
 {
-    float sina, cosa;
-    double x, y;
     double angle = get_angle(parameters);
     if (angle == 0)
     {
         return WARNING;
     }
-    cosa = cos(angle * M_PI / 180);
-    sina = sin(angle * M_PI / 180);
+    double cosa = cos(angle * M_PI / 180);
+    double sina = sin(angle * M_PI / 180);
     int n = get_count_of_points(model);
     for (int i = 0; i < n; i++)
     {
-        x = get_x_index_point(model, i) * cosa - get_y_index_point(model, i) * sina;
-        y = get_x_index_point(model, i) * sina + get_y_index_point(model, i) * cosa;
+        double x = get_x_index_point(model, i) * cosa - get_y_index_point(model, i) * sina;
+        double y = get_x_index_point(model, i) * sina + get_y_index_point(model, i) * cosa;
         fill_x_index_point(model, i, x);
         fill_y_index_point(model, i, y);
     }
@@ -144,9 +138,6 @@ int transform_point(model_t &model, parameters_t &parameters)
         fill_x_index_point(model, i, get_x_index_point(model, i) + parameters.dx);
         fill_y_index_point(model, i, get_y_index_point(model, i) + parameters.dy);
         fill_z_index_point(model, i, get_z_index_point(model, i) + parameters.dz);
-        //points[i].x += dx;
-        //points[i].y += dy;
-        //points[i].z += dz;
     }
     return OK;
 }
@@ -159,9 +150,6 @@ int scale(model_t &model, parameters_t &parameters)
         fill_x_index_point(model, i, get_x_index_point(model, i) * parameters.kx);
         fill_y_index_point(model, i, get_y_index_point(model, i) * parameters.ky);
         fill_z_index_point(model, i, get_z_index_point(model, i) * parameters.kz);
-        //points[i].x = points[i].x * kx;
-        //points[i].y = points[i].y * ky;
-        //points[i].z = points[i].z * kz;
     }
     return OK;
 }

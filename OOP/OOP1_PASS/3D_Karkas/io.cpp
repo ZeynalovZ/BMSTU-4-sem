@@ -7,11 +7,43 @@
 #include <stdlib.h>
 
 
-static int read_counts_from_file(FILE *file, int *n, int *m)
+static FILE* get_file_from_stream_t(stream_t &stream)
 {
-    if (file)
+    return stream.file;
+}
+
+static int read_counts(FILE *file, int &n, int &m)
+{
+    if (fscanf(file, "%d %d", &n, &m) != 2)
     {
-        if (fscanf(file, "%d %d", n, m) != 2)
+        return ERR_READ;
+    }
+    return OK;
+}
+
+static int read_points(points_t *points, FILE *file, int i)
+{
+    if (fscanf(file, "%lf %lf %lf", &points[i].x, &points[i].y, &points[i].z) != 3)
+    {
+        return ERR_READ;
+    }
+    return OK;
+}
+
+static int read_edges(edges_t *edges, FILE *file, int i)
+{
+    if (fscanf(file, "%d->%d", &edges[i].first, &edges[i].second) != 2)
+    {
+        return ERR_READ;
+    }
+    return OK;
+}
+
+static int read_counts_from_file(int *n, int *m, stream_t &stream)
+{
+    if (get_file_from_stream_t(stream))
+    {
+        if (read_counts(get_file_from_stream_t(stream), *n, *m) != OK)
         {
             return ERR_READ;
         }
@@ -23,13 +55,15 @@ static int read_counts_from_file(FILE *file, int *n, int *m)
     return OK;
 }
 
-static int read_points_from_file(FILE *file, points_t *points, int n)
+
+
+static int read_points_from_file(points_t *points, int n, stream_t &stream)
 {
-    if (file)
+    if (get_file_from_stream_t(stream))
     {
         for (int i = 0; i < n; i++)
         {
-            if (fscanf(file, "%lf %lf %lf", &points[i].x, &points[i].y, &points[i].z) != 3)
+            if (read_points(points, get_file_from_stream_t(stream), i) != OK)
             {
                 return ERR_READ;
             }
@@ -42,13 +76,14 @@ static int read_points_from_file(FILE *file, points_t *points, int n)
     return OK;
 }
 
-static int read_edges_from_file(FILE *file, edges_t *edges, int m)
+// Обертка для fscanf
+static int read_edges_from_file(edges_t *edges, int m, stream_t &stream)
 {
-    if (file)
+    if (get_file_from_stream_t(stream))
     {
         for (int i = 0; i < m; i++)
         {
-            if (fscanf(file, "%d->%d", &edges[i].first, &edges[i].second) != 2)
+            if (read_edges(edges, get_file_from_stream_t(stream), i) != OK)
             {
                 return ERR_READ;
             }
@@ -61,10 +96,10 @@ static int read_edges_from_file(FILE *file, edges_t *edges, int m)
     return OK;
 }
 
-int file_openning_read(FILE **file, char *filename)
+static int file_openning_read(stream_t &stream, char *filename)
 {
-    *file = fopen(filename, "r");
-    if (*file)
+    stream.file = fopen(filename, "r");
+    if (stream.file)
     {
         return OK;
     }
@@ -72,17 +107,17 @@ int file_openning_read(FILE **file, char *filename)
         return ERR_OPEN;
 }
 
-int file_openning_save(FILE **file, char *filename)
+static int file_openning_save(stream_t &stream, char *filename)
 {
-    *file = fopen(filename, "w");
-    if (*file)
+    stream.file = fopen(filename, "w");
+    if (stream.file)
         return OK;
     else
         return ERR_OPEN;
 }
 
 
-void clear_model(model_t model)
+static void clear_model(model_t model)
 {
     if (model.edges != NULL)
         free(model.edges);
@@ -90,55 +125,80 @@ void clear_model(model_t model)
         free(model.points);
 }
 
-void copy_model(model_t &dist, model_t source)
+static void copy_model(model_t &dist, model_t source)
 {
     dist = source;
 }
 
-int read_model(model_t &model, FILE *file)
+
+static int create_model(model_t &model)
 {
-    int code_error = read_counts_from_file(file, &model.count_of_points, &model.count_of_edges);
-
-    if (code_error != OK) return code_error;
-
     model.points = (points_t*)malloc(model.count_of_points * sizeof(points_t));
     model.edges = (edges_t*)malloc(model.count_of_edges * sizeof(edges_t));
 
-    if (model.points != NULL && model.edges != NULL) return code_error;
+    if (model.points == NULL || model.edges == NULL) return ERR_MEMORY;
 
+    return OK;
+}
+
+static int check_input(model_t &model)
+{
+    for (int i = 0; i < model.count_of_edges; i++)
     {
-        code_error = read_points_from_file(file, model.points, model.count_of_points);
-        if (code_error != OK)
-        {
-            clear_model(model);
-            return code_error;
-        }
-        code_error = read_edges_from_file(file, model.edges, model.count_of_edges);
-        if (code_error != OK)
-        {
-            clear_model(model);
-            return code_error;
-        }
+        // if count of points is more than indexes
+        if (model.count_of_points <= model.edges[i].first || model.count_of_points <= model.edges[i].second)
+            return ERR_READ;
     }
-    else
+    return OK;
+}
+
+static int read_model(model_t &model, stream_t &stream)
+{
+    int code_error = read_counts_from_file(&model.count_of_points, &model.count_of_edges, stream);
+
+    if (code_error != OK) return code_error;
+
+    code_error = create_model(model);
+
+    if (code_error != OK) return code_error;
+
+    code_error = read_points_from_file(model.points, model.count_of_points, stream);
+    if (code_error != OK)
     {
         clear_model(model);
-        code_error = ERR_MEMORY;
         return code_error;
     }
+    code_error = read_edges_from_file(model.edges, model.count_of_edges, stream);
+    if (code_error != OK)
+    {
+        clear_model(model);
+        return code_error;
+    }
+    code_error = check_input(model);
+    if (code_error != OK)
+    {
+        clear_model(model);
+        return code_error;
+    }
+
     return code_error;
+}
+
+void close_stream(stream_t &stream)
+{
+    fclose(stream.file);
 }
 
 int read_model_from_file(model_t &model, parameters_t &parameters)
 {
-    FILE *file;
-    int code_error = file_openning_read(&file, parameters.filename);
+    stream_t stream;
+    int code_error = file_openning_read(stream, parameters.filename);
 
     if (code_error != OK) return code_error;
 
     model_t tmp = init();
-    code_error = read_model(tmp, file);
-    fclose(file);
+    code_error = read_model(tmp, stream);
+    close_stream(stream);
     if (code_error == OK)
     {
         clear_model(model);
@@ -146,6 +206,22 @@ int read_model_from_file(model_t &model, parameters_t &parameters)
     }
 
     return code_error;
+}
+
+
+static void print_counts(FILE *file, int n, int m)
+{
+    fprintf(file, "%d %d", n, m);
+}
+
+static void print_points(model_t &model, FILE *file, int i)
+{
+    fprintf(file, "%lf %lf %lf\n", get_x_index_point(model, i), get_y_index_point(model, i), get_z_index_point(model, i));
+}
+
+static void print_edges(model_t &model, FILE *file, int i)
+{
+    fprintf(file, "%d->%d\n", get_first_index_edge(model, i), get_second_index_edge(model, i));
 }
 
 int save_changes(model_t &model, parameters_t &parameters)
@@ -156,22 +232,22 @@ int save_changes(model_t &model, parameters_t &parameters)
         code_error = ERR_SAVE;
         return code_error;
     }
-    FILE *f;
-    code_error = file_openning_save(&f, parameters.filename);
+    stream_t stream;
+    code_error = file_openning_save(stream, parameters.filename);
     if (code_error == OK)
     {
         int n = get_count_of_points(model);
         int m = get_count_of_edges(model);
-        fprintf(f, "%d %d\n", n, m);
+        print_counts(get_file_from_stream_t(stream), n, m);
         for (int i = 0; i < n; i++)
         {
-            fprintf(f, "%lf %lf %lf\n", get_x_index_point(model, i), get_y_index_point(model, i), get_z_index_point(model, i));
+            print_points(model, get_file_from_stream_t(stream), i);
         }
         for (int i = 0; i < m; i++)
         {
-            fprintf(f, "%d->%d\n", get_first_index_edge(model, i), get_second_index_edge(model, i));
+            print_edges(model, get_file_from_stream_t(stream), i);
         }
-        fclose(f);
+        close_stream(stream);
     }
     else
     {
