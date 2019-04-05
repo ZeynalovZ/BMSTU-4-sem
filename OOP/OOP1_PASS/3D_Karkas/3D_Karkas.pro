@@ -35,12 +35,9 @@ HEADERS += \
         mainwindow.h \
     model.h \
     my_controller.h \
-    points.h \
     io.h \
     func.h \
-    errors.h \
-    edges.h \
-    painter_widget.h
+    errors.h
 
 FORMS += \
         mainwindow.ui

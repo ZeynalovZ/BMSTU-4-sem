@@ -3,13 +3,10 @@
 
 #include <QMainWindow>
 #include <QGraphicsScene>
-#include "edges.h"
 #include "my_controller.h"
 #include <string.h>
-#include "points.h"
 #include "io.h"
 #include "model.h"
-#include "painter_widget.h"
 namespace Ui {
 class MainWindow;
 }

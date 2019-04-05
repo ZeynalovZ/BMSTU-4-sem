@@ -1,9 +1,31 @@
 #ifndef MODEL_H
 #define MODEL_H
 #define MAX_FILE_LENGHT
-#include "points.h"
-#include "edges.h"
 #include <iostream>
+
+#include <QGraphicsScene>
+typedef struct PAINTER painter_t;
+struct PAINTER
+{
+    QGraphicsScene *scene;
+};
+
+typedef struct POINTS points_t;
+struct POINTS
+{
+    double x;
+    double y;
+    double z;
+};
+
+typedef struct EDGES edges_t;
+struct EDGES
+{
+    int first;
+    int second;
+};
+
+
 typedef struct MODEL model_t;
 struct MODEL
 {
@@ -11,6 +33,14 @@ struct MODEL
     edges_t *edges;
     int count_of_points;
     int count_of_edges;
+};
+
+
+typedef struct POINTS_2D points_2d;
+struct POINTS_2D
+{
+    double x;
+    double y;
 };
 
 typedef struct PARAM parameters_t;

@@ -2,8 +2,6 @@
 #include "ui_mainwindow.h"
 #include "io.h"
 #include "errors.h"
-#include "edges.h"
-#include "points.h"
 #include "func.h"
 #include <math.h>
 #include <QDebug>

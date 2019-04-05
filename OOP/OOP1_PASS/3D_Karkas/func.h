@@ -1,8 +1,7 @@
 #ifndef FUNC_H
 #define FUNC_H
-#include "points.h"
-#include "edges.h"
 #include "model.h"
+#include <QGraphicsScene>
 int rotate_x(model_t &model, parameters_t &parameters);
 int rotate_y(model_t &model, parameters_t &parameters);
 int rotate_z(model_t &model, parameters_t &parameters);
@@ -18,4 +17,5 @@ double get_y_index_point(model_t &model, int i);
 double get_z_index_point(model_t &model, int i);
 int get_first_index_edge(model_t &model, int i);
 int get_second_index_edge(model_t &model, int i);
+void set_view(model_t model, QGraphicsScene &scene);
 #endif // FUNC_H
