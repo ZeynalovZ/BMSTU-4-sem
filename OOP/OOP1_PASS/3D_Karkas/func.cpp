@@ -1,9 +1,9 @@
 #include "func.h"
 #include "math.h"
 #include "errors.h"
+#define TO_RAD_180 180
 #define X 1231
 #define Y 531
-
 
 // Функция обертка для получения кол-ва точек
 int get_count_of_points(model_t model)
@@ -68,8 +68,8 @@ int rotate_x(model_t &model, parameters_t &parameters)
     {
         return WARNING;
     }
-    double cosa = cos(angle * M_PI / 180);
-    double sina = sin(angle * M_PI / 180);
+    double cosa = cos(angle * M_PI / TO_RAD_180);
+    double sina = sin(angle * M_PI / TO_RAD_180);
     int n = get_count_of_points(model);
     for (int i = 0; i < n; i++)
     {
@@ -88,8 +88,8 @@ int rotate_y(model_t &model, parameters_t &parameters)
     {
         return WARNING;
     }
-    double cosa = cos(angle * M_PI / 180);
-    double sina = sin(angle * M_PI / 180);
+    double cosa = cos(angle * M_PI / TO_RAD_180);
+    double sina = sin(angle * M_PI / TO_RAD_180);
     int n = get_count_of_points(model);
     for (int i = 0; i < n; i++)
     {
@@ -108,8 +108,8 @@ int rotate_z(model_t &model, parameters_t &parameters)
     {
         return WARNING;
     }
-    double cosa = cos(angle * M_PI / 180);
-    double sina = sin(angle * M_PI / 180);
+    double cosa = cos(angle * M_PI / TO_RAD_180);
+    double sina = sin(angle * M_PI / TO_RAD_180);
     int n = get_count_of_points(model);
     for (int i = 0; i < n; i++)
     {

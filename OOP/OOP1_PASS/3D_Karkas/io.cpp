@@ -54,26 +54,28 @@ static int read_counts_from_file(int *n, int *m, stream_t &stream)
 // Функция чтения точек из файла
 static int read_points_from_file(points_t *points, int n, stream_t &stream)
 {
+    int code_error = OK;
     if (get_file_from_stream_t(stream))
     {
-        for (int i = 0; i < n; i++)
-            if (read_points(points, get_file_from_stream_t(stream), i) != OK) return ERR_READ;
+        for (int i = 0; i < n && code_error == OK; i++)
+            if (read_points(points, get_file_from_stream_t(stream), i) != OK) code_error = ERR_READ;
     }
     else
-        return ERR_READ;
-    return OK;
+        code_error = ERR_READ;
+    return code_error;
 }
 // Функция чтения ребер из файла
 static int read_edges_from_file(edges_t *edges, int m, stream_t &stream)
 {
+    int code_error = OK;
     if (get_file_from_stream_t(stream))
     {
-        for (int i = 0; i < m; i++)
-            if (read_edges(edges, get_file_from_stream_t(stream), i) != OK) return ERR_READ;
+        for (int i = 0; i < m && code_error == OK; i++)
+            if (read_edges(edges, get_file_from_stream_t(stream), i) != OK) code_error = ERR_READ;
     }
     else
-        return ERR_READ;
-    return OK;
+        code_error = ERR_READ;
+    return code_error;
 }
 // Функция обертка для открытия потока (чтение)
 static int file_openning_read(stream_t &stream, char *filename)
@@ -143,12 +145,10 @@ static int read_model(model_t &model, stream_t &stream)
     if (code_error != OK) return code_error;
 
     code_error = read_points_from_file(model.points, model.count_of_points, stream);
-    if (code_error != OK)
+    if (code_error == OK)
     {
-        clear_model(model);
-        return code_error;
+        code_error = read_edges_from_file(model.edges, model.count_of_edges, stream);
     }
-    code_error = read_edges_from_file(model.edges, model.count_of_edges, stream);
     if (code_error != OK)
     {
         clear_model(model);

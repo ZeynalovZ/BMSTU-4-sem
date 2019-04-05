@@ -37,7 +37,8 @@ HEADERS += \
     my_controller.h \
     io.h \
     func.h \
-    errors.h
+    errors.h \
+    my_painter.h
 
 FORMS += \
         mainwindow.ui

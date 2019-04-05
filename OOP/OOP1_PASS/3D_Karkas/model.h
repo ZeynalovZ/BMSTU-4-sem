@@ -3,13 +3,6 @@
 #define MAX_FILE_LENGHT
 #include <iostream>
 
-#include <QGraphicsScene>
-typedef struct PAINTER painter_t;
-struct PAINTER
-{
-    QGraphicsScene *scene;
-};
-
 typedef struct POINTS points_t;
 struct POINTS
 {
