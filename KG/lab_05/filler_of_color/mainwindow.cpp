@@ -4,6 +4,10 @@
 #include <QMouseEvent>
 #include <QColorDialog>
 #include <QMessageBox>
+#include <QPixmapCache>
+#include <iostream>
+#include <windows.h>
+using namespace std;
 
 #define OFFSET_X_MOUSE 10
 #define OFFSET_Y_MOUSE 45
@@ -15,13 +19,12 @@ MainWindow::MainWindow(QWidget *parent) :
     ui->draw_label->setPalette(color_background);
     ui->draw_label->setMouseTracking(true);
     this->setMouseTracking(true);
-
     scene = new QPixmap(851, 691);
     scene->fill(QColor("transparent"));
     scene->fill(QColor(Qt::white));
     painter = new QPainter(scene);
-    painter->setPen(QPen(Qt::blue));
-    painter->drawLine(50, 300, 599, 300);
+    //painter->setPen(QPen(Qt::blue));
+    //painter->drawLine(50, 300, 599, 300);
     painter->setPen(QPen(Qt::black));
     ui->draw_label->setPixmap(*scene);
 
@@ -34,6 +37,10 @@ MainWindow::MainWindow(QWidget *parent) :
     Pal.setColor(QPalette::Background, Qt::red);
     ui->shading_color->setAutoFillBackground(true);
     ui->shading_color->setPalette(Pal);
+    color_shading = QColor(Qt::red);
+
+    color_background = QColor(Qt::white);
+    color_border = QColor(Qt::black);
 
     Pal.setColor(QPalette::Background, Qt::white);
     ui->background_color->setAutoFillBackground(true);
@@ -87,12 +94,12 @@ void MainWindow::mousePressEvent(QMouseEvent *event)
                 if (prev_x != -1 && prev_y != -1)
                 {
                     painter->drawLine(prev_x - OFFSET_X_MOUSE, prev_y - OFFSET_Y_MOUSE, x - OFFSET_X_MOUSE, y - OFFSET_Y_MOUSE);
+                    edge.x1 = prev_x - OFFSET_X_MOUSE;
+                    edge.y1 = prev_y - OFFSET_Y_MOUSE;
+                    edge.x2 = x - OFFSET_X_MOUSE;
+                    edge.y2 = y - OFFSET_Y_MOUSE;
                 }
 
-                edge.x1 = prev_x - OFFSET_X_MOUSE;
-                edge.y1 = prev_y - OFFSET_Y_MOUSE;
-                edge.x2 = x - OFFSET_X_MOUSE;
-                edge.y2 = y - OFFSET_Y_MOUSE;
 
                 prev_x = x;
                 prev_y = y;
@@ -104,11 +111,11 @@ void MainWindow::mousePressEvent(QMouseEvent *event)
                 if (prev_x != -1 && prev_y != -1)
                 {
                     painter->drawLine(prev_x - OFFSET_X_MOUSE, prev_y - OFFSET_Y_MOUSE, first_x - OFFSET_X_MOUSE, first_y - OFFSET_Y_MOUSE);
-
                     edge.x1 = prev_x - OFFSET_X_MOUSE;
                     edge.y1 = prev_y - OFFSET_Y_MOUSE;
                     edge.x2 = first_x - OFFSET_X_MOUSE;
                     edge.y2 = first_y - OFFSET_Y_MOUSE;
+
 
                     prev_x = -1;
                     prev_y = -1;
@@ -118,8 +125,7 @@ void MainWindow::mousePressEvent(QMouseEvent *event)
                 }
             }
             edges.append(edge);
-            ui->draw_label->setPixmap(*scene);
-            // добавить алгоритм сканирования
+
             /* Тут запрет на рисование, после замыкания !!!!!!!!!!!!
             if (x == first_x && y == first_y)
             {
@@ -127,7 +133,7 @@ void MainWindow::mousePressEvent(QMouseEvent *event)
             }
             */
         }
-
+        ui->draw_label->setPixmap(*scene);
     }
     else
     {
@@ -142,13 +148,6 @@ void MainWindow::mousePressEvent(QMouseEvent *event)
 
     }
 
-}
-
-void MainWindow::mouseMoveEvent(QMouseEvent *event)
-{
-    double x = event->x();
-    double y = event->y();
-    qDebug() << x << y;
 }
 MainWindow::~MainWindow()
 {
@@ -179,7 +178,7 @@ void MainWindow::on_make_line_button_clicked()
     QString y1_s = ui->lineEdit_2_y->text();
     double x = x1_s.toDouble(&ok1);
     double y = y1_s.toDouble(&ok2);
-
+    edge_t edge;
     if (ui->with_keyboard_radio->isChecked())
     {
         if (ok1 && ok2)
@@ -188,11 +187,16 @@ void MainWindow::on_make_line_button_clicked()
             painter->drawEllipse(x, y, 1, 1);
             if (prev_x != -1 && prev_y != -1)
             {
+                edge.x1 = prev_x - OFFSET_X_MOUSE;
+                edge.y1 = prev_y - OFFSET_X_MOUSE;
+                edge.x2 = x;
+                edge.y2 = y;
                 painter->drawLine(prev_x - OFFSET_X_MOUSE, prev_y - OFFSET_Y_MOUSE, x, y);
             }
             // Для того, чтобы при переключении способов рисования, можно было продолжить отрисовку
             prev_x = x + OFFSET_X_MOUSE;
             prev_y = y + OFFSET_Y_MOUSE;
+
             ui->draw_label->setPixmap(*scene);
             if (flag_first_touched == false)
             {
@@ -200,6 +204,7 @@ void MainWindow::on_make_line_button_clicked()
                 first_y = y + OFFSET_Y_MOUSE;
                 flag_first_touched = true;
             }
+            edges.append(edge);
         }
         else
         {
@@ -244,7 +249,6 @@ void MainWindow::on_background_button_clicked()
     ui->background_color->setPalette(Pal);
     ui->background_color->show();
 }
-// TODO добавить ввод ребер с клавиатуры
 
 void MainWindow::on_clear_button_clicked()
 {
@@ -263,13 +267,19 @@ void MainWindow::on_clear_button_clicked()
 
 void MainWindow::on_make_line_button_2_clicked()
 {
+    edge_t edge;
     if (prev_x != -1 && prev_y != -1)
     {
+        edge.x1 = prev_x - OFFSET_X_MOUSE;
+        edge.x2 = first_x - OFFSET_X_MOUSE;
+        edge.y1 = prev_y - OFFSET_X_MOUSE;
+        edge.y2 = first_y - OFFSET_X_MOUSE;
         painter->drawLine(prev_x - OFFSET_X_MOUSE, prev_y - OFFSET_Y_MOUSE, first_x - OFFSET_X_MOUSE, first_y - OFFSET_Y_MOUSE);
         //flag_first_attained = true;
         prev_x = -1;
         prev_y = -1;
         flag_first_touched = false;
+        edges.append(edge);
     }
     ui->draw_label->setPixmap(*scene);
 }
@@ -280,12 +290,13 @@ void MainWindow::on_pushButton_clicked()
     // needed at least 2 points
     if (edges.size() > 2)
     {
+
         double x_max = 0;
         double y_min = edges[1].y1;
         double y_max = 0;
         for (int i = 1; i < edges.size(); i++)
         {
-            qDebug() << edges[i].x1 << edges[i].y1 << edges[i].x2 << edges[i].y2;
+            qDebug() << i << ")" << edges[i].x1 << edges[i].y1 << edges[i].x2 << edges[i].y2;
             if (edges[i].x1 > x_max)
                 x_max = edges[i].x1;
 
@@ -295,22 +306,71 @@ void MainWindow::on_pushButton_clicked()
             if (edges[i].y1 < y_min && edges[i].y1 > 0)
                 y_min = edges[i].y1;
         }
-        qDebug() << x_max << "x_max" << y_max << "y_max" << y_min << "y_min";
-        painter->setPen(QPen(color_border));
-        //painter->drawLine(200, y_min, x_max, y_min);
-        //painter->drawLine(200, y_max, x_max, y_max);
-        painter->drawLine(x_max, y_min, x_max, y_max);
-        ui->draw_label->setPixmap(*scene);
+        painter->setPen(QPen(color_background));
+        //painter->drawLine(x_max, y_min, x_max, y_max);
+        //ui->draw_label->setPixmap(*scene);
 
-        for (int i = 1; i < edges.size(); i++)
+        for (int i = 0; i < edges.size(); i++)
         {
-            double dx = edges[i].x2 - edges[i].x1;
-            double dy = edges[i].y2 - edges[i].y1;
+
+            QImage image = scene->toImage();
+
+            double x1e = edges[i].x1;
+            double x2e = edges[i].x2;
+            double y1e = edges[i].y1;
+            double y2e = edges[i].y2;
+
+            // Если горизонтальная
+            if (y2e == y1e)
+                continue;
+
+            if (y1e > y2e)
+            {
+                swap(y1e, y2e);
+                swap(x1e, x2e);
+            }
+
+            double y = y1e;
+            double end_y = y2e;
+            double dx = x2e - x1e;
+            double dy = y2e - y1e;
             double k = dx / dy;
-            // тут два цикла по у и по х
-            // определить коэф наклона и двигаться до границы каждый раз инвертируя цвет
-            // Все
+            double start_x = x1e;
+            while (y < end_y)
+            {
+                double x = start_x;
+                while (x < x_max)
+                {
+                    QColor color = image.pixelColor(QPoint(x, y));
+                    if (color != color_border)
+                    {
+                        if (color == color_background)
+                        {
+                            painter->setPen(QColor(color_shading));
+                        }
+                        else if (color == color_shading)
+                        {
+                            painter->setPen(QColor(color_background));
+                        }
+                    }
+                    painter->drawPoint(x, y);
+                    x++;
+                }
+
+                start_x += k;
+                y++;
+                if (ui->with_delay_radio->isChecked())
+                {
+                    repaint();
+                }
+                ui->draw_label->setPixmap(*scene);
+
+            }
         }
     }
+    QColor tmp = QColor(color_background);
+    color_background = QColor(color_shading);
+    color_shading = QColor(tmp);
+
 
 }

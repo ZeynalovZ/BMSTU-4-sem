@@ -27,7 +27,6 @@ public:
     explicit MainWindow(QWidget *parent = 0);
     ~MainWindow();
     void mousePressEvent(QMouseEvent *event);
-    void mouseMoveEvent(QMouseEvent *event);
     double prev_x = -1;
     double prev_y = -1;
     double first_x;
@@ -58,7 +57,7 @@ private:
     QPainter *painter;
     QImage img;
     QPoint position;
-    QColor color_background = Qt::white;
+    QColor color_background;
     QColor color_border;
     QColor color_shading;
     QVector <edge_t> edges;
