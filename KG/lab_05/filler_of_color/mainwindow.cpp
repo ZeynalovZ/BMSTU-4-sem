@@ -7,6 +7,7 @@
 #include <QPixmapCache>
 #include <iostream>
 #include <windows.h>
+#include <math.h>
 using namespace std;
 
 #define OFFSET_X_MOUSE 10
@@ -81,7 +82,7 @@ void MainWindow::mousePressEvent(QMouseEvent *event)
             {
                 if (event->modifiers() == Qt::ShiftModifier)
                 {
-                    if (abs(prev_x - x) < abs(prev_y - prev_x))
+                    if (fabs(prev_x - x) < fabs(prev_y - prev_x))
                     {
                         x = prev_x;
                     }
@@ -255,8 +256,9 @@ void MainWindow::on_clear_button_clicked()
     delete painter;
     delete scene;
     edges.clear();
+    ui->draw_label->clear();
     scene = new QPixmap(851, 691);
-    scene->fill(QColor("transparent"));
+    scene->fill(QColor(color_background));
     painter = new QPainter(scene);
     ui->draw_label->setPixmap(*scene);
     prev_x = -1;
@@ -296,7 +298,6 @@ void MainWindow::on_pushButton_clicked()
         double y_max = 0;
         for (int i = 1; i < edges.size(); i++)
         {
-            qDebug() << i << ")" << edges[i].x1 << edges[i].y1 << edges[i].x2 << edges[i].y2;
             if (edges[i].x1 > x_max)
                 x_max = edges[i].x1;
 
@@ -306,12 +307,13 @@ void MainWindow::on_pushButton_clicked()
             if (edges[i].y1 < y_min && edges[i].y1 > 0)
                 y_min = edges[i].y1;
         }
-        painter->setPen(QPen(color_background));
+
         //painter->drawLine(x_max, y_min, x_max, y_max);
         //ui->draw_label->setPixmap(*scene);
 
-        for (int i = 0; i < edges.size(); i++)
+        for (int i = 1; i < edges.size(); i++)
         {
+
 
             QImage image = scene->toImage();
 
@@ -341,22 +343,20 @@ void MainWindow::on_pushButton_clicked()
                 double x = start_x;
                 while (x < x_max)
                 {
+                    painter->setPen(QPen(color_border));
                     QColor color = image.pixelColor(QPoint(x, y));
-                    if (color != color_border)
+
+                    if (color == color_background)
                     {
-                        if (color == color_background)
-                        {
-                            painter->setPen(QColor(color_shading));
-                        }
-                        else if (color == color_shading)
-                        {
-                            painter->setPen(QColor(color_background));
-                        }
+                        painter->setPen(QColor(color_shading));
+                    }
+                    else if (color == color_shading)
+                    {
+                        painter->setPen(QColor(color_background));
                     }
                     painter->drawPoint(x, y);
                     x++;
                 }
-
                 start_x += k;
                 y++;
                 if (ui->with_delay_radio->isChecked())
@@ -364,13 +364,13 @@ void MainWindow::on_pushButton_clicked()
                     repaint();
                 }
                 ui->draw_label->setPixmap(*scene);
-
             }
         }
     }
+    /*
     QColor tmp = QColor(color_background);
     color_background = QColor(color_shading);
     color_shading = QColor(tmp);
-
+    */
 
 }

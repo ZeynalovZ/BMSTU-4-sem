@@ -126,7 +126,7 @@
       <string>Замкнуть</string>
      </property>
     </widget>
-    <widget class="QWidget" name="">
+    <widget class="QWidget" name="layoutWidget">
      <property name="geometry">
       <rect>
        <x>10</x>
@@ -178,32 +178,16 @@
      <property name="geometry">
       <rect>
        <x>10</x>
-       <y>30</y>
+       <y>40</y>
        <width>211</width>
        <height>31</height>
       </rect>
      </property>
      <property name="text">
-      <string>Внешняя граница ( максимум 1 шт)</string>
+      <string> граница </string>
      </property>
      <property name="checked">
       <bool>true</bool>
-     </property>
-    </widget>
-    <widget class="QRadioButton" name="internal_border">
-     <property name="enabled">
-      <bool>false</bool>
-     </property>
-     <property name="geometry">
-      <rect>
-       <x>10</x>
-       <y>60</y>
-       <width>151</width>
-       <height>31</height>
-      </rect>
-     </property>
-     <property name="text">
-      <string>Внутренняя граница</string>
      </property>
     </widget>
    </widget>
@@ -412,7 +396,7 @@
      <x>0</x>
      <y>0</y>
      <width>1221</width>
-     <height>20</height>
+     <height>18</height>
     </rect>
    </property>
    <widget class="QMenu" name="menu">
