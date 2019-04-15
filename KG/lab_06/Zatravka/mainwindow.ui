@@ -1074,7 +1074,7 @@
     <property name="title">
      <string>Параметры отрисовщика</string>
     </property>
-    <widget class="QRadioButton" name="with_delay_radio">
+    <widget class="QRadioButton" name="without_delay_radio">
      <property name="geometry">
       <rect>
        <x>10</x>
@@ -1089,13 +1089,13 @@
       </font>
      </property>
      <property name="text">
-      <string>Без задержки</string>
+      <string>C задержкой</string>
      </property>
      <property name="checked">
       <bool>true</bool>
      </property>
     </widget>
-    <widget class="QRadioButton" name="without_delay_radio">
+    <widget class="QRadioButton" name="with_delay_radio">
      <property name="geometry">
       <rect>
        <x>10</x>
@@ -1110,7 +1110,7 @@
       </font>
      </property>
      <property name="text">
-      <string>С задержкой</string>
+      <string>Без задержки</string>
      </property>
     </widget>
     <widget class="Line" name="line">

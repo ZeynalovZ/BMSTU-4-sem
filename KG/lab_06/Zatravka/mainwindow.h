@@ -3,6 +3,7 @@
 
 #include <QMainWindow>
 #include <QPixmap>
+#include <QStack>
 
 typedef struct EDGE edge_t;
 struct EDGE
@@ -13,6 +14,12 @@ struct EDGE
     double y2;
 };
 
+typedef struct POINT1 points_t;
+struct POINT1
+{
+    double x;
+    double y;
+};
 namespace Ui {
 class MainWindow;
 }
@@ -26,6 +33,7 @@ public:
     ~MainWindow();
     void mousePressEvent(QMouseEvent *event);
     void mouseMoveEvent(QMouseEvent *event);
+    void find_next_pixel(QStack<points_t> &stack, int &x_left, int &x_right, const int &y);
     // -1 means start status
     double prev_x = -1;
     double prev_y = -1;
@@ -45,7 +53,13 @@ private slots:
 
     void on_filing_color_button_clicked();
 
+
+
     void on_fill_button_clicked();
+
+
+
+
 
     void on_clear_button_clicked();
 
@@ -59,5 +73,7 @@ private:
     QVector <edge_t> edges;
 
 };
+
+
 
 #endif // MAINWINDOW_H
