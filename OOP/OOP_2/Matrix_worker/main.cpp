@@ -9,6 +9,11 @@ using namespace std;
 #define ERR_MEM -1
 int main()
 {
+    try
+    {
+
+    }
+
     Matrix<int> mtr(5, 5);
     mtr.print_matrix();
 
