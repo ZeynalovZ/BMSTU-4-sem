@@ -261,12 +261,12 @@ void MainWindow::find_next_pixel(QStack<points_t> &stack, int &x_left, int &x_ri
             }
         }
         x_temp = x;
-        /*
-        while ((x < x_right) && img.pixelColor(x, y) == border_color && img.pixelColor(x, y) == filling_color)
+
+        while ((x < x_right) && (img.pixelColor(x, y) == border_color || img.pixelColor(x, y) == filling_color))
         {
             x++;
         }
-        */
+
         if (x == x_temp)
         {
             x++;
@@ -333,6 +333,7 @@ void MainWindow::on_fill_button_clicked()
             }
             if (ui->without_delay_radio->isChecked())
             {
+                Sleep(20);
                 repaint();
 
             }
