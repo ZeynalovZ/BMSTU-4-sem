@@ -5,7 +5,7 @@
 template <typename T>
 Matrix<T>::Matrix(unsigned int n, unsigned int m)
 {
-    if (n == 0 || m == 0) throw mtr_wrong_sizes_exception();
+    if (n == 0 || m == 0) throw mtr_wrong_sizes_exception("on line 8 in \"matrix_implementation\"");
     this->elements_count = n * m;
     this->n = n;
     this->m = m;
@@ -17,7 +17,7 @@ Matrix<T>::Matrix(unsigned int n, unsigned int m)
     }
     catch (std::bad_alloc)
     {
-        throw memory_allocate_exception();
+        throw memory_allocate_exception("on line 20 in \"matrix_implementation\"");
     }
 }
 
@@ -34,7 +34,7 @@ Matrix<T>::Matrix(const Matrix<T> &mtr):base_container()
     }
     catch(std::bad_alloc)
     {
-        throw memory_allocate_exception();
+        throw memory_allocate_exception("on line 37 in \"matrix_implementation\"");
     }
     for (unsigned int i = 0; i < this->n; ++i)
     {
@@ -52,11 +52,11 @@ Matrix<T>::Matrix(Matrix<T>&& mtr)
     this->elements_count = mtr.size();
     try
     {
-        this->mtr = new T[n*m];
+        this->mtr = new T[n * m];
     }
     catch (std::bad_alloc)
     {
-        throw memory_allocate_exception();
+        throw memory_allocate_exception("on line 59 in \"matrix_implementation\"");
     }
 
     for (unsigned int i = 0; i < n; ++i)
@@ -65,6 +65,26 @@ Matrix<T>::Matrix(Matrix<T>&& mtr)
         {
             this->mtr[i * m + j] = mtr.mtr[i * m + j];
         }
+    }
+}
+
+template<typename T>
+Matrix<T>::Matrix(unsigned int n, unsigned int m, T **matrix)
+{
+    if (n == 0 || m == 0) throw mtr_wrong_sizes_exception("on line 74 in \"matrix_implementation\"");
+    this->elements_count = n * m;
+    this->n = n;
+    this->m = m;
+
+    try
+    {
+        this->mtr = new T[elements_count];
+        this->auto_fill();
+        *matrix = this->mtr;
+    }
+    catch (std::bad_alloc)
+    {
+        throw memory_allocate_exception("on line 87 in \"matrix_implementation\"");
     }
 }
 
@@ -81,11 +101,11 @@ Matrix<T>::Matrix(std::initializer_list<std::initializer_list<T>> lst)
     }
     catch (std::bad_alloc)
     {
-        throw memory_allocate_exception();
+        throw memory_allocate_exception("on line 104 in \"matrix_implementation\"");
     }
     for (unsigned int i = 0; iter_i != lst.end(); i++, iter_i++)
     {
-        if (this->m != iter_i->size()) throw mtr_size_exception();
+        if (this->m != iter_i->size()) throw mtr_size_exception("on line 108 in \"matrix_implementation\"");
         else
         {
             auto iter_j = iter_i->begin();
@@ -102,7 +122,7 @@ const T& Matrix<T>::get_value_by_indexes(unsigned int i, unsigned int j) const
 {
     if (i >= this->n || j >= this->m)
     {
-        throw mtr_index_out_exception();
+        throw mtr_index_out_exception("on line 125 in \"matrix_implementation\"");
     }
     else
     {
@@ -112,7 +132,7 @@ const T& Matrix<T>::get_value_by_indexes(unsigned int i, unsigned int j) const
         }
         else
         {
-            throw memory_allocate_exception();
+            throw memory_allocate_exception("on line 135 in \"matrix_implementation\"");
         }
     }
 }
@@ -122,7 +142,7 @@ void Matrix<T>::set_value_by_indexes(unsigned int i, unsigned int j, const T &va
 {
     if (i >= this->n || j >= this->m)
     {
-        throw mtr_index_out_exception();
+        throw mtr_index_out_exception("on line 145 in \"matrix_implementation\"");
     }
     else
     {
@@ -132,7 +152,7 @@ void Matrix<T>::set_value_by_indexes(unsigned int i, unsigned int j, const T &va
         }
         else
         {
-            throw memory_allocate_exception();
+            throw memory_allocate_exception("on line 155 in \"matrix_implementation\"");
         }
     }
 }
@@ -151,7 +171,7 @@ Matrix<T>& Matrix<T>::operator =(const Matrix<T> &mtr)
     }
     catch (std::bad_alloc)
     {
-        throw memory_allocate_exception();
+        throw memory_allocate_exception("on line 174 in \"matrix_implementation\"");
     }
     if (this->m == m_mtr && this->n == n_mtr)
     {
@@ -165,10 +185,43 @@ Matrix<T>& Matrix<T>::operator =(const Matrix<T> &mtr)
     }
     else
     {
-        throw mtr_wrong_sizes_exception();
+        throw mtr_wrong_sizes_exception("on line 188 in \"matrix_implementation\"");
     }
     return *this;
 }
+template<typename T>
+Matrix<T> &Matrix<T>::operator =(Matrix<T> &&mtr)
+{
+    unsigned int n_mtr = mtr.get_n();
+    unsigned int m_mtr = mtr.get_m();
+    this->n = n_mtr;
+    this->m = m_mtr;
+    this->elements_count = mtr.elements_count;
+    try
+    {
+        this->mtr = new T[n * m];
+    }
+    catch (std::bad_alloc)
+    {
+        throw memory_allocate_exception("on line 206 in \"matrix_implementation\"");
+    }
+    if (this->m == m_mtr && this->n == n_mtr)
+    {
+        for (unsigned int i = 0; i < n_mtr; i++)
+        {
+            for (unsigned int j = 0; j < m_mtr; j++)
+            {
+                this->mtr[i * m + j] = mtr.mtr[i * m + j];
+            }
+        }
+    }
+    else
+    {
+        throw mtr_wrong_sizes_exception("on line 220 in \"matrix_implementation\"");
+    }
+    return *this;
+}
+
 
 template<typename T>
 Matrix<T> &Matrix<T>::operator +=(const Matrix<T> &mtr)
@@ -187,7 +240,7 @@ Matrix<T> &Matrix<T>::operator +=(const Matrix<T> &mtr)
     }
     else
     {
-        throw mtr_wrong_sizes_exception();
+        throw mtr_wrong_sizes_exception("on line 243 in \"matrix_implementation\"");
     }
     return *this;
 }
@@ -208,7 +261,7 @@ Matrix<T> &Matrix<T>::operator -=(const Matrix<T> &mtr)
     }
     else
     {
-        throw mtr_wrong_sizes_exception();
+        throw mtr_wrong_sizes_exception("on line 264 in \"matrix_implementation\"");
     }
     return *this;
 }
@@ -233,7 +286,7 @@ Matrix<_T> operator +(const Matrix<_T> &mtr1, const Matrix<_T> &mtr2)
     }
     else
     {
-        throw mtr_wrong_sizes_exception();
+        throw mtr_wrong_sizes_exception("on line 289 in \"matrix_implementation\"");
     }
 }
 template<typename _T>
@@ -270,7 +323,7 @@ Matrix<_T> operator -(const Matrix<_T> &mtr1, const Matrix<_T> &mtr2)
     }
     else
     {
-        throw mtr_wrong_sizes_exception();
+        throw mtr_wrong_sizes_exception("on line 326 in \"matrix_implementation\"");
     }
 }
 
@@ -315,7 +368,7 @@ Matrix<_T> operator *(const Matrix<_T> &mtr1, const Matrix<_T> &mtr2)
     }
     else
     {
-        throw mtr_wrong_sizes_exception();
+        throw mtr_wrong_sizes_exception("on line 371 in \"matrix_implementation\"");
     }
 }
 
@@ -354,7 +407,7 @@ Matrix<_T> operator /(const Matrix<_T> &mtr1, _T num)
 template<typename T>
 T Matrix<T>::operator()(unsigned int i, unsigned int j) const
 {
-    if (this->n <= i || this->m <= j) throw mtr_index_out_exception();
+    if (this->n <= i || this->m <= j) throw mtr_index_out_exception("on line 410 in \"matrix_implementation\"");
 
     return this->mtr[i * this->m + j];
 }
@@ -363,7 +416,7 @@ T Matrix<T>::operator()(unsigned int i, unsigned int j) const
 template<typename T>
 T &Matrix<T>::operator ()(unsigned int i, unsigned int j)
 {
-    if (this->n <= i || this->m <= j) throw mtr_index_out_exception();
+    if (this->n <= i || this->m <= j) throw mtr_index_out_exception("on line 419 in \"matrix_implementation\"");
 
     return this->mtr[i * this->m + j];
 }
@@ -371,14 +424,14 @@ T &Matrix<T>::operator ()(unsigned int i, unsigned int j)
 template<typename T>
 T &Matrix<T>::operator [](unsigned int i)
 {
-    if (this->n <= i ) throw mtr_index_out_exception();
+    if (this->n <= i ) throw mtr_index_out_exception("on line 427 in \"matrix_implementation\"");
 
     return this->mtr[i];
 }
 template<typename T>
 T Matrix<T>::operator [](unsigned int i) const
 {
-    if (this->n <= i) throw mtr_index_out_exception();
+    if (this->n <= i) throw mtr_index_out_exception("on line 434 in \"matrix_implementation\"");
 
     return this->mtr[i];
 }
@@ -393,7 +446,7 @@ T Matrix<T>::get_gauss_determinant()
     int pos_m = 0;
     T determinant = 1;
     double eps = 0.000001;
-    if (n != m) throw mtr_wrong_sizes_exception();
+    if (n != m) throw mtr_wrong_sizes_exception("on line 449 in \"matrix_implementation\"");
     for (unsigned int i = 0; i < n - 1; i++)
     {
         max = mtr[i * m + i];
@@ -442,7 +495,7 @@ T Matrix<T>::get_gauss_determinant()
 template<typename T>
 void Matrix<T>::create_identity_matrix()
 {
-    if (n != m) throw mtr_wrong_sizes_exception();
+    if (n != m) throw mtr_wrong_sizes_exception("on line 498 in \"matrix_implementation\"");
     for (unsigned int i = 0; i < n; i++)
     {
         for (unsigned int j = 0; j < m; j++)
@@ -478,7 +531,7 @@ Matrix<T>& Matrix<T>::transposition()
     }
     else
     {
-        throw mtr_wrong_sizes_exception();
+        throw mtr_wrong_sizes_exception("on line 534 in \"matrix_implementation\"");
     }
 
 }

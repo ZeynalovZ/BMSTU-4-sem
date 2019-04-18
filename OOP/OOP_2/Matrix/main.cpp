@@ -55,7 +55,7 @@ int main()
     mtr6.print_matrix();
 
     // get by indexes
-    int value1 = mtr6(0, 0);
+    int value1 = mtr6(0, 00);
     std::cout << value1 << " Is outputed mtr[6,6]" << std::endl << std::endl;
     Matrix<int> mtr7 = mtr6.transposition();
     cout << mtr7;

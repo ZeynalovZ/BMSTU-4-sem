@@ -3,6 +3,9 @@
 # include <memory>
 #include "base_container.h"
 #include "excepctions.h"
+#include "base_iterator.h"
+#include "matrix_iterator.h"
+#include "const_matrix_iterator.h"
 // в этом пока не вижу смысла !
 using namespace container_core;
 
@@ -11,7 +14,7 @@ class Matrix : public container_core::base_container
 {
 public:
     Matrix(unsigned int n, unsigned int m);
-    //Matrix(unsigned int n, unsigned int m, T** matrix = nullptr);
+    Matrix(unsigned int n, unsigned int m, T** matrix);
     Matrix(const Matrix<T> &mtr);
     Matrix(Matrix<T>&& mtr);
     Matrix(std::initializer_list<std::initializer_list<T>> lst);
@@ -19,13 +22,12 @@ public:
     ~Matrix();
 
     Matrix<T>& operator =(const Matrix<T> &mtr);
-    //Matrix<T>& operator =(Matrix<T>&& mtr);
+    Matrix<T>& operator =(Matrix<T> &&mtr);
     Matrix<T>& operator =(std::initializer_list<std::initializer_list<T>> lst);
 
     unsigned int get_n() const;
     unsigned int get_m() const;
     const T& get_value_by_indexes(unsigned int i, unsigned int j) const;
-    //T& get_value_by_indexes(unsigned int i, unsigned int j);
     T& operator ()(unsigned int i, unsigned int j);
     T operator ()(unsigned int i, unsigned int j) const;
     T& operator [](unsigned int i);
@@ -50,15 +52,12 @@ public:
     template<typename _T>
     friend Matrix<_T> operator /(const Matrix<_T>& mtr1, _T num);
 
-    template<typename _T>
-    friend std::ostream& operator <<(std::ostream& os, const Matrix<_T>& matr);
-
-
-
     Matrix<T>& operator +=(const Matrix<T>& mtr);
     Matrix<T>& operator -=(const Matrix<T>& mtr);
 
-//      Перегрузить вместо этого <<
+    template<typename _T>
+    friend std::ostream& operator <<(std::ostream& os, const Matrix<_T>& matr);
+
     void print_matrix();
     void create_identity_matrix();
 
@@ -73,26 +72,12 @@ public:
 
     bool is_square();
 
-    // Добавить класс для Спросить у Тассова
-
 private:
     unsigned int n;
     unsigned int m;
     T* mtr;
     void auto_fill();
 };
-
-
-
-
-
-
-
-
-
-
-
-
 
 
 #include "matrix_implementation.h"
