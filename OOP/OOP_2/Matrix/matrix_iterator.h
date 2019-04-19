@@ -13,8 +13,6 @@ public:
     const ValueType &operator *() const;
     const ValueType *operator ->() const;
 
-    //friend class csl::matrix<ValueType>;
-
     matrix_iterator(ValueType *);
 private:
 };

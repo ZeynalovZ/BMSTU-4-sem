@@ -1,6 +1,7 @@
 #ifndef MATRIX_ITERATOR_IMPLEMENTATION_H
 #define MATRIX_ITERATOR_IMPLEMENTATION_H
 #include "matrix_iterator.h"
+#include "base_iterator.h"
 using namespace iterator_core;
 template<typename ValueType>
 ValueType& matrix_iterator<ValueType>::operator *()

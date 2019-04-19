@@ -58,7 +58,14 @@ public:
     template<typename _T>
     friend std::ostream& operator <<(std::ostream& os, const Matrix<_T>& matr);
 
+    matrix_iterator<T> begin();
+    matrix_iterator<T> end();
+
+    const_matrix_iterator<T> begin() const;
+    const_matrix_iterator<T> end() const;
+
     void print_matrix();
+
     void create_identity_matrix();
 
     template <typename _T>
@@ -71,6 +78,31 @@ public:
     void set_value_by_indexes(unsigned int i, unsigned int j, const T& value) const;
 
     bool is_square();
+    template <typename _T>
+    class Array
+    {
+    public:
+        Array() = delete;
+        Array(_T *array1, unsigned int size1)
+            :array(array1), size(size1){}
+
+        Array<_T> operator[](unsigned int index)
+        {
+            if (index >= this->n) throw mtr_index_out_exception();
+
+            return Array<_T>(this->mtr + index * this->m, this->m);
+        }
+
+        Array<_T> operator[](unsigned int index) const
+        {
+            if (index >= this->n) throw mtr_index_out_exception();
+
+            return Array<_T>(this->mtr + index * this->m, this->m);
+        }
+    private:
+        unsigned int size;
+        _T *array = nullptr;
+    };
 
 private:
     unsigned int n;
@@ -82,3 +114,21 @@ private:
 
 #include "matrix_implementation.h"
 #endif // MATRIX_H
+
+
+
+
+
+
+/*
+_T operator [](unsigned int index) const
+{
+    if (index >= elements_count) throw mtr_index_out_exception();
+    return this->mtr[index];
+}
+_T& operator [](unsigned int index)
+{
+    if (index >= elements_count) throw mtr_index_out_exception();
+    return *(this->mtr[index]);
+}
+*/

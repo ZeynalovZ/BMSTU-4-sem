@@ -70,6 +70,13 @@ int main()
     Matrix<int> mtr9(5, 5);
     mtr9.create_identity_matrix();
     std::cout << mtr9;
+    /*
+    auto iter = mtr9.begin();
+    for (; iter != mtr9.end(); iter++)
+    {
+        std::cout << 1 << " ";
+    }
+    */
     return 0;
 }
 

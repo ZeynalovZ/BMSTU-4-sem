@@ -2,6 +2,8 @@
 #define MATRIX_IMPLEMENTATION_H
 #include "matrix.h"
 #include <math.h>
+#include "matrix_iterator.h"
+#include "const_matrix_iterator.h"
 template <typename T>
 Matrix<T>::Matrix(unsigned int n, unsigned int m)
 {
@@ -535,7 +537,31 @@ Matrix<T>& Matrix<T>::transposition()
     }
 
 }
+/*
+template<typename T>
+matrix_iterator<T> Matrix<T>::begin()
+{
+    return matrix_iterator<T>(this->mtr);
+}
 
+template<typename T>
+matrix_iterator<T> Matrix<T>::end()
+{
+    return matrix_iterator<T>(this->mtr + n * m);
+}
+
+template<typename T>
+const_matrix_iterator<T> Matrix<T>::begin() const
+{
+    return const_matrix_iterator<T>(mtr);
+}
+
+template<typename T>
+const_matrix_iterator<T> Matrix<T>::end() const
+{
+    return const_matrix_iterator<T>(mtr + n * m);
+}
+*/
 template<typename T>
 bool Matrix<T>::is_square()
 {
