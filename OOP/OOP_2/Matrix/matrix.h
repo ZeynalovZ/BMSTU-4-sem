@@ -7,6 +7,8 @@
 #include "matrix_iterator.h"
 #include "const_matrix_iterator.h"
 // в этом пока не вижу смысла !
+// в exceptions добавить конкатенацию итогого сообщения
+// избавиться максимально от friend
 using namespace container_core;
 
 template <typename T>
@@ -29,15 +31,15 @@ public:
     unsigned int get_m() const;
     const T& get_value_by_indexes(unsigned int i, unsigned int j) const;
     T& operator ()(unsigned int i, unsigned int j);
-    T operator ()(unsigned int i, unsigned int j) const;
+    const T& operator ()(unsigned int i, unsigned int j) const;
     T& operator [](unsigned int i);
-    T operator [](unsigned int i) const;
+    const T& operator [](unsigned int i) const;
 
 
     template<typename _T>
-    friend Matrix<_T> operator -(const Matrix<_T>& mtr1, const Matrix<_T>& mtr2);
+    Matrix<_T> operator -(const Matrix<_T>& mtr1);
     template<typename _T>
-    friend Matrix<_T> operator -(const Matrix<_T>& mtr1, _T num);
+    const Matrix<_T> operator -(const Matrix<_T>& mtr1, const _T& num);
 
     template<typename _T>
     friend Matrix<_T> operator +(const Matrix<_T>& mtr1, const Matrix<_T>& mtr2);
@@ -64,9 +66,9 @@ public:
     const_matrix_iterator<T> begin() const;
     const_matrix_iterator<T> end() const;
 
-    void print_matrix();
+   // virtual void print_matrix();
 
-    void create_identity_matrix();
+    static Matrix<T> create_identity_matrix();
 
     template <typename _T>
     Matrix<_T> create_inverse_matrix();
@@ -75,7 +77,7 @@ public:
 
     Matrix<T>& transposition();
 
-    void set_value_by_indexes(unsigned int i, unsigned int j, const T& value) const;
+    void set_value_by_indexes(unsigned int i, unsigned int j, const T& value);
 
     bool is_square();
     template <typename _T>
