@@ -18,6 +18,7 @@
 #include <QtWidgets/QLabel>
 #include <QtWidgets/QLineEdit>
 #include <QtWidgets/QMainWindow>
+#include <QtWidgets/QMenu>
 #include <QtWidgets/QMenuBar>
 #include <QtWidgets/QPushButton>
 #include <QtWidgets/QRadioButton>
@@ -38,7 +39,6 @@ public:
     QLabel *label_2;
     QLabel *label_3;
     QPushButton *add_point_button;
-    QPushButton *close_point_button;
     QPushButton *cut_button;
     QPushButton *clear_button;
     QLabel *label_6;
@@ -52,7 +52,9 @@ public:
     QGroupBox *groupBox_6;
     QRadioButton *line_radio;
     QRadioButton *cutter_radio;
+    QPushButton *delete_cutter_button;
     QMenuBar *menuBar;
+    QMenu *menu;
     QToolBar *mainToolBar;
     QStatusBar *statusBar;
 
@@ -152,7 +154,7 @@ public:
         label_3->setFont(font1);
         add_point_button = new QPushButton(groupBox_4);
         add_point_button->setObjectName(QStringLiteral("add_point_button"));
-        add_point_button->setGeometry(QRect(30, 90, 111, 31));
+        add_point_button->setGeometry(QRect(90, 80, 111, 31));
         QPalette palette1;
         palette1.setBrush(QPalette::Active, QPalette::WindowText, brush);
         palette1.setBrush(QPalette::Active, QPalette::Button, brush2);
@@ -206,9 +208,9 @@ public:
         add_point_button->setPalette(palette1);
         add_point_button->setFont(font);
         add_point_button->setCursor(QCursor(Qt::PointingHandCursor));
-        close_point_button = new QPushButton(groupBox_4);
-        close_point_button->setObjectName(QStringLiteral("close_point_button"));
-        close_point_button->setGeometry(QRect(170, 90, 111, 31));
+        cut_button = new QPushButton(centralWidget);
+        cut_button->setObjectName(QStringLiteral("cut_button"));
+        cut_button->setGeometry(QRect(930, 490, 121, 51));
         QPalette palette2;
         palette2.setBrush(QPalette::Active, QPalette::WindowText, brush);
         palette2.setBrush(QPalette::Active, QPalette::Button, brush2);
@@ -255,12 +257,12 @@ public:
         palette2.setBrush(QPalette::Disabled, QPalette::AlternateBase, brush2);
         palette2.setBrush(QPalette::Disabled, QPalette::ToolTipBase, brush6);
         palette2.setBrush(QPalette::Disabled, QPalette::ToolTipText, brush);
-        close_point_button->setPalette(palette2);
-        close_point_button->setFont(font);
-        close_point_button->setCursor(QCursor(Qt::PointingHandCursor));
-        cut_button = new QPushButton(centralWidget);
-        cut_button->setObjectName(QStringLiteral("cut_button"));
-        cut_button->setGeometry(QRect(930, 490, 121, 51));
+        cut_button->setPalette(palette2);
+        cut_button->setFont(font);
+        cut_button->setCursor(QCursor(Qt::PointingHandCursor));
+        clear_button = new QPushButton(centralWidget);
+        clear_button->setObjectName(QStringLiteral("clear_button"));
+        clear_button->setGeometry(QRect(1070, 490, 121, 51));
         QPalette palette3;
         palette3.setBrush(QPalette::Active, QPalette::WindowText, brush);
         palette3.setBrush(QPalette::Active, QPalette::Button, brush2);
@@ -307,12 +309,35 @@ public:
         palette3.setBrush(QPalette::Disabled, QPalette::AlternateBase, brush2);
         palette3.setBrush(QPalette::Disabled, QPalette::ToolTipBase, brush6);
         palette3.setBrush(QPalette::Disabled, QPalette::ToolTipText, brush);
-        cut_button->setPalette(palette3);
-        cut_button->setFont(font);
-        cut_button->setCursor(QCursor(Qt::PointingHandCursor));
-        clear_button = new QPushButton(centralWidget);
-        clear_button->setObjectName(QStringLiteral("clear_button"));
-        clear_button->setGeometry(QRect(1070, 490, 121, 51));
+        clear_button->setPalette(palette3);
+        clear_button->setFont(font);
+        clear_button->setCursor(QCursor(Qt::PointingHandCursor));
+        label_6 = new QLabel(centralWidget);
+        label_6->setObjectName(QStringLiteral("label_6"));
+        label_6->setGeometry(QRect(510, 590, 241, 21));
+        QFont font2;
+        font2.setFamily(QStringLiteral("Blade Runner Movie Font"));
+        font2.setPointSize(16);
+        font2.setBold(true);
+        font2.setItalic(true);
+        font2.setWeight(75);
+        label_6->setFont(font2);
+        label_6->setStyleSheet(QStringLiteral(""));
+        groupBox_5 = new QGroupBox(centralWidget);
+        groupBox_5->setObjectName(QStringLiteral("groupBox_5"));
+        groupBox_5->setGeometry(QRect(930, 310, 291, 171));
+        groupBox_5->setFont(font);
+        line_color_label = new QLabel(groupBox_5);
+        line_color_label->setObjectName(QStringLiteral("line_color_label"));
+        line_color_label->setGeometry(QRect(20, 40, 31, 31));
+        line_color_label->setStyleSheet(QStringLiteral(""));
+        cutter_color_label = new QLabel(groupBox_5);
+        cutter_color_label->setObjectName(QStringLiteral("cutter_color_label"));
+        cutter_color_label->setGeometry(QRect(20, 80, 31, 31));
+        cutter_color_label->setStyleSheet(QStringLiteral(""));
+        line_color_button = new QPushButton(groupBox_5);
+        line_color_button->setObjectName(QStringLiteral("line_color_button"));
+        line_color_button->setGeometry(QRect(80, 40, 201, 31));
         QPalette palette4;
         palette4.setBrush(QPalette::Active, QPalette::WindowText, brush);
         palette4.setBrush(QPalette::Active, QPalette::Button, brush2);
@@ -359,35 +384,12 @@ public:
         palette4.setBrush(QPalette::Disabled, QPalette::AlternateBase, brush2);
         palette4.setBrush(QPalette::Disabled, QPalette::ToolTipBase, brush6);
         palette4.setBrush(QPalette::Disabled, QPalette::ToolTipText, brush);
-        clear_button->setPalette(palette4);
-        clear_button->setFont(font);
-        clear_button->setCursor(QCursor(Qt::PointingHandCursor));
-        label_6 = new QLabel(centralWidget);
-        label_6->setObjectName(QStringLiteral("label_6"));
-        label_6->setGeometry(QRect(510, 590, 241, 21));
-        QFont font2;
-        font2.setFamily(QStringLiteral("Blade Runner Movie Font"));
-        font2.setPointSize(16);
-        font2.setBold(true);
-        font2.setItalic(true);
-        font2.setWeight(75);
-        label_6->setFont(font2);
-        label_6->setStyleSheet(QStringLiteral(""));
-        groupBox_5 = new QGroupBox(centralWidget);
-        groupBox_5->setObjectName(QStringLiteral("groupBox_5"));
-        groupBox_5->setGeometry(QRect(930, 290, 291, 171));
-        groupBox_5->setFont(font);
-        line_color_label = new QLabel(groupBox_5);
-        line_color_label->setObjectName(QStringLiteral("line_color_label"));
-        line_color_label->setGeometry(QRect(20, 40, 31, 31));
-        line_color_label->setStyleSheet(QStringLiteral(""));
-        cutter_color_label = new QLabel(groupBox_5);
-        cutter_color_label->setObjectName(QStringLiteral("cutter_color_label"));
-        cutter_color_label->setGeometry(QRect(20, 80, 31, 31));
-        cutter_color_label->setStyleSheet(QStringLiteral(""));
-        line_color_button = new QPushButton(groupBox_5);
-        line_color_button->setObjectName(QStringLiteral("line_color_button"));
-        line_color_button->setGeometry(QRect(80, 40, 201, 31));
+        line_color_button->setPalette(palette4);
+        line_color_button->setFont(font);
+        line_color_button->setCursor(QCursor(Qt::PointingHandCursor));
+        cutter_color_button = new QPushButton(groupBox_5);
+        cutter_color_button->setObjectName(QStringLiteral("cutter_color_button"));
+        cutter_color_button->setGeometry(QRect(80, 80, 201, 31));
         QPalette palette5;
         palette5.setBrush(QPalette::Active, QPalette::WindowText, brush);
         palette5.setBrush(QPalette::Active, QPalette::Button, brush2);
@@ -434,12 +436,12 @@ public:
         palette5.setBrush(QPalette::Disabled, QPalette::AlternateBase, brush2);
         palette5.setBrush(QPalette::Disabled, QPalette::ToolTipBase, brush6);
         palette5.setBrush(QPalette::Disabled, QPalette::ToolTipText, brush);
-        line_color_button->setPalette(palette5);
-        line_color_button->setFont(font);
-        line_color_button->setCursor(QCursor(Qt::PointingHandCursor));
-        cutter_color_button = new QPushButton(groupBox_5);
-        cutter_color_button->setObjectName(QStringLiteral("cutter_color_button"));
-        cutter_color_button->setGeometry(QRect(80, 80, 201, 31));
+        cutter_color_button->setPalette(palette5);
+        cutter_color_button->setFont(font);
+        cutter_color_button->setCursor(QCursor(Qt::PointingHandCursor));
+        outline_color_button = new QPushButton(groupBox_5);
+        outline_color_button->setObjectName(QStringLiteral("outline_color_button"));
+        outline_color_button->setGeometry(QRect(80, 120, 201, 31));
         QPalette palette6;
         palette6.setBrush(QPalette::Active, QPalette::WindowText, brush);
         palette6.setBrush(QPalette::Active, QPalette::Button, brush2);
@@ -486,12 +488,29 @@ public:
         palette6.setBrush(QPalette::Disabled, QPalette::AlternateBase, brush2);
         palette6.setBrush(QPalette::Disabled, QPalette::ToolTipBase, brush6);
         palette6.setBrush(QPalette::Disabled, QPalette::ToolTipText, brush);
-        cutter_color_button->setPalette(palette6);
-        cutter_color_button->setFont(font);
-        cutter_color_button->setCursor(QCursor(Qt::PointingHandCursor));
-        outline_color_button = new QPushButton(groupBox_5);
-        outline_color_button->setObjectName(QStringLiteral("outline_color_button"));
-        outline_color_button->setGeometry(QRect(80, 120, 201, 31));
+        outline_color_button->setPalette(palette6);
+        outline_color_button->setFont(font);
+        outline_color_button->setCursor(QCursor(Qt::PointingHandCursor));
+        outline_color_label = new QLabel(groupBox_5);
+        outline_color_label->setObjectName(QStringLiteral("outline_color_label"));
+        outline_color_label->setGeometry(QRect(20, 120, 31, 31));
+        outline_color_label->setStyleSheet(QStringLiteral(""));
+        groupBox_6 = new QGroupBox(centralWidget);
+        groupBox_6->setObjectName(QStringLiteral("groupBox_6"));
+        groupBox_6->setGeometry(QRect(930, 150, 291, 151));
+        groupBox_6->setFont(font);
+        line_radio = new QRadioButton(groupBox_6);
+        line_radio->setObjectName(QStringLiteral("line_radio"));
+        line_radio->setGeometry(QRect(10, 30, 271, 19));
+        line_radio->setFont(font);
+        line_radio->setChecked(true);
+        cutter_radio = new QRadioButton(groupBox_6);
+        cutter_radio->setObjectName(QStringLiteral("cutter_radio"));
+        cutter_radio->setGeometry(QRect(10, 50, 281, 101));
+        cutter_radio->setFont(font);
+        delete_cutter_button = new QPushButton(centralWidget);
+        delete_cutter_button->setObjectName(QStringLiteral("delete_cutter_button"));
+        delete_cutter_button->setGeometry(QRect(980, 550, 161, 51));
         QPalette palette7;
         palette7.setBrush(QPalette::Active, QPalette::WindowText, brush);
         palette7.setBrush(QPalette::Active, QPalette::Button, brush2);
@@ -538,30 +557,15 @@ public:
         palette7.setBrush(QPalette::Disabled, QPalette::AlternateBase, brush2);
         palette7.setBrush(QPalette::Disabled, QPalette::ToolTipBase, brush6);
         palette7.setBrush(QPalette::Disabled, QPalette::ToolTipText, brush);
-        outline_color_button->setPalette(palette7);
-        outline_color_button->setFont(font);
-        outline_color_button->setCursor(QCursor(Qt::PointingHandCursor));
-        outline_color_label = new QLabel(groupBox_5);
-        outline_color_label->setObjectName(QStringLiteral("outline_color_label"));
-        outline_color_label->setGeometry(QRect(20, 120, 31, 31));
-        outline_color_label->setStyleSheet(QStringLiteral(""));
-        groupBox_6 = new QGroupBox(centralWidget);
-        groupBox_6->setObjectName(QStringLiteral("groupBox_6"));
-        groupBox_6->setGeometry(QRect(930, 150, 291, 131));
-        groupBox_6->setFont(font);
-        line_radio = new QRadioButton(groupBox_6);
-        line_radio->setObjectName(QStringLiteral("line_radio"));
-        line_radio->setGeometry(QRect(10, 30, 141, 19));
-        line_radio->setFont(font);
-        line_radio->setChecked(true);
-        cutter_radio = new QRadioButton(groupBox_6);
-        cutter_radio->setObjectName(QStringLiteral("cutter_radio"));
-        cutter_radio->setGeometry(QRect(10, 80, 281, 19));
-        cutter_radio->setFont(font);
+        delete_cutter_button->setPalette(palette7);
+        delete_cutter_button->setFont(font);
+        delete_cutter_button->setCursor(QCursor(Qt::PointingHandCursor));
         MainWindow->setCentralWidget(centralWidget);
         menuBar = new QMenuBar(MainWindow);
         menuBar->setObjectName(QStringLiteral("menuBar"));
         menuBar->setGeometry(QRect(0, 0, 1232, 20));
+        menu = new QMenu(menuBar);
+        menu->setObjectName(QStringLiteral("menu"));
         MainWindow->setMenuBar(menuBar);
         mainToolBar = new QToolBar(MainWindow);
         mainToolBar->setObjectName(QStringLiteral("mainToolBar"));
@@ -569,6 +573,8 @@ public:
         statusBar = new QStatusBar(MainWindow);
         statusBar->setObjectName(QStringLiteral("statusBar"));
         MainWindow->setStatusBar(statusBar);
+
+        menuBar->addAction(menu->menuAction());
 
         retranslateUi(MainWindow);
 
@@ -579,11 +585,10 @@ public:
     {
         MainWindow->setWindowTitle(QApplication::translate("MainWindow", "MainWindow", nullptr));
         draw_label->setText(QString());
-        groupBox_4->setTitle(QApplication::translate("MainWindow", "\320\224\320\276\320\261\320\260\320\262\320\270\321\202\321\214 \320\262\320\265\321\200\321\210\320\270\320\275\321\203", nullptr));
+        groupBox_4->setTitle(QApplication::translate("MainWindow", "\320\224\320\276\320\261\320\260\320\262\320\270\321\202\321\214 \321\202\320\276\321\207\320\272\321\203", nullptr));
         label_2->setText(QApplication::translate("MainWindow", "X:", nullptr));
         label_3->setText(QApplication::translate("MainWindow", "Y:", nullptr));
         add_point_button->setText(QApplication::translate("MainWindow", "\320\224\320\276\320\261\320\260\320\262\320\270\321\202\321\214 ", nullptr));
-        close_point_button->setText(QApplication::translate("MainWindow", "\320\227\320\260\320\274\320\272\320\275\321\203\321\202\321\214", nullptr));
         cut_button->setText(QApplication::translate("MainWindow", "\320\236\321\202\321\201\320\265\321\207\321\214", nullptr));
         clear_button->setText(QApplication::translate("MainWindow", "\320\236\321\207\320\270\321\201\321\202\320\270\321\202\321\214", nullptr));
         label_6->setText(QApplication::translate("MainWindow", "Powered by ZZ \302\251\302\256", nullptr));
@@ -595,8 +600,13 @@ public:
         outline_color_button->setText(QApplication::translate("MainWindow", "\320\222\321\213\320\261\321\200\320\260\321\202\321\214 \321\206\320\262\320\265\321\202 \320\276\321\202\321\200\320\265\320\267\320\272\320\260 \320\262\320\275\320\265", nullptr));
         outline_color_label->setText(QString());
         groupBox_6->setTitle(QApplication::translate("MainWindow", "\320\237\320\260\321\200\320\260\320\274\320\265\321\202\321\200\321\213 \320\262\320\262\320\276\320\264\320\260", nullptr));
-        line_radio->setText(QApplication::translate("MainWindow", "\320\236\321\202\321\200\320\265\320\267\320\276\320\272", nullptr));
-        cutter_radio->setText(QApplication::translate("MainWindow", "\320\236\321\202\321\201\320\265\320\272\320\260\321\202\320\265\320\273\321\214", nullptr));
+        line_radio->setText(QApplication::translate("MainWindow", "\320\236\321\202\321\200\320\265\320\267\320\276\320\272 (2 \321\202\320\276\321\207\320\272\320\270)", nullptr));
+        cutter_radio->setText(QApplication::translate("MainWindow", "\320\236\321\202\321\201\320\265\320\272\320\260\321\202\320\265\320\273\321\214 (\320\237\321\200\321\217\320\274\320\276\321\203\320\263\320\276\320\273\321\214\320\275\321\213\320\271)\n"
+"\320\277\320\276 \320\264\320\262\321\203\320\274 \321\202\320\276\321\207\320\272\320\260\320\274 \n"
+"(\320\262\320\265\321\200\321\205\320\275\321\217\321\217 \320\262\320\265\321\200\321\210\320\270\320\275\320\260,\n"
+"\320\275\320\270\320\266\320\275\321\217\321\217 \320\277\321\200\320\276\321\202\320\270\320\262\320\276\320\277\320\276\320\273\320\276\320\266\320\275\320\260\321\217  \320\262\320\265\321\200\321\210\320\270\320\275\320\260)", nullptr));
+        delete_cutter_button->setText(QApplication::translate("MainWindow", "\320\243\320\264\320\260\320\273\320\270\321\202\321\214 \320\276\321\202\321\201\320\265\320\272\320\260\321\202\320\265\320\273\321\214", nullptr));
+        menu->setTitle(QApplication::translate("MainWindow", "\320\270\320\275\321\204\320\276\321\200\320\274\320\260\321\206\320\270\321\217", nullptr));
     } // retranslateUi
 
 };

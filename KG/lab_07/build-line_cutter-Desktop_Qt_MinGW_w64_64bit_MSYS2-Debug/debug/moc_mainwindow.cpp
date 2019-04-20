@@ -21,8 +21,8 @@ QT_BEGIN_MOC_NAMESPACE
 QT_WARNING_PUSH
 QT_WARNING_DISABLE_DEPRECATED
 struct qt_meta_stringdata_MainWindow_t {
-    QByteArrayData data[9];
-    char stringdata0[208];
+    QByteArrayData data[10];
+    char stringdata0[240];
 };
 #define QT_MOC_LITERAL(idx, ofs, len) \
     Q_STATIC_BYTE_ARRAY_DATA_HEADER_INITIALIZER_WITH_OFFSET(len, \
@@ -39,7 +39,8 @@ QT_MOC_LITERAL(4, 70, 30), // "on_cutter_color_button_clicked"
 QT_MOC_LITERAL(5, 101, 28), // "on_line_color_button_clicked"
 QT_MOC_LITERAL(6, 130, 23), // "on_clear_button_clicked"
 QT_MOC_LITERAL(7, 154, 31), // "on_outline_color_button_clicked"
-QT_MOC_LITERAL(8, 186, 21) // "on_cut_button_clicked"
+QT_MOC_LITERAL(8, 186, 21), // "on_cut_button_clicked"
+QT_MOC_LITERAL(9, 208, 31) // "on_delete_cutter_button_clicked"
 
     },
     "MainWindow\0on_add_point_button_clicked\0"
@@ -48,7 +49,8 @@ QT_MOC_LITERAL(8, 186, 21) // "on_cut_button_clicked"
     "on_line_color_button_clicked\0"
     "on_clear_button_clicked\0"
     "on_outline_color_button_clicked\0"
-    "on_cut_button_clicked"
+    "on_cut_button_clicked\0"
+    "on_delete_cutter_button_clicked"
 };
 #undef QT_MOC_LITERAL
 
@@ -58,7 +60,7 @@ static const uint qt_meta_data_MainWindow[] = {
        7,       // revision
        0,       // classname
        0,    0, // classinfo
-       7,   14, // methods
+       8,   14, // methods
        0,    0, // properties
        0,    0, // enums/sets
        0,    0, // constructors
@@ -66,15 +68,17 @@ static const uint qt_meta_data_MainWindow[] = {
        0,       // signalCount
 
  // slots: name, argc, parameters, tag, flags
-       1,    0,   49,    2, 0x08 /* Private */,
-       3,    0,   50,    2, 0x08 /* Private */,
-       4,    0,   51,    2, 0x08 /* Private */,
-       5,    0,   52,    2, 0x08 /* Private */,
-       6,    0,   53,    2, 0x08 /* Private */,
-       7,    0,   54,    2, 0x08 /* Private */,
-       8,    0,   55,    2, 0x08 /* Private */,
+       1,    0,   54,    2, 0x08 /* Private */,
+       3,    0,   55,    2, 0x08 /* Private */,
+       4,    0,   56,    2, 0x08 /* Private */,
+       5,    0,   57,    2, 0x08 /* Private */,
+       6,    0,   58,    2, 0x08 /* Private */,
+       7,    0,   59,    2, 0x08 /* Private */,
+       8,    0,   60,    2, 0x08 /* Private */,
+       9,    0,   61,    2, 0x08 /* Private */,
 
  // slots: parameters
+    QMetaType::Void,
     QMetaType::Void,
     QMetaType::Void,
     QMetaType::Void,
@@ -99,6 +103,7 @@ void MainWindow::qt_static_metacall(QObject *_o, QMetaObject::Call _c, int _id, 
         case 4: _t->on_clear_button_clicked(); break;
         case 5: _t->on_outline_color_button_clicked(); break;
         case 6: _t->on_cut_button_clicked(); break;
+        case 7: _t->on_delete_cutter_button_clicked(); break;
         default: ;
         }
     }
@@ -130,13 +135,13 @@ int MainWindow::qt_metacall(QMetaObject::Call _c, int _id, void **_a)
     if (_id < 0)
         return _id;
     if (_c == QMetaObject::InvokeMetaMethod) {
-        if (_id < 7)
+        if (_id < 8)
             qt_static_metacall(this, _c, _id, _a);
-        _id -= 7;
+        _id -= 8;
     } else if (_c == QMetaObject::RegisterMethodArgumentMetaType) {
-        if (_id < 7)
+        if (_id < 8)
             *reinterpret_cast<int*>(_a[0]) = -1;
-        _id -= 7;
+        _id -= 8;
     }
     return _id;
 }
