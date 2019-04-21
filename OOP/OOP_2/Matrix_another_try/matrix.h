@@ -2,12 +2,10 @@
 #define MATRIX_H
 # include <memory>
 #include "base_container.h"
-#include "excepctions.h"
+#include "exceptions.h"
 #include "base_iterator.h"
 #include <time.h>
 #include <typeinfo>
-#include "const_matrix_iterator.h"
-#include "matrix_iterator.h"
 // в этом пока не вижу смысла !
 
 template <typename T>
@@ -48,16 +46,18 @@ public:
 
     template<typename _T>
     friend std::ostream& operator <<(std::ostream& os, const Matrix<_T>& matr);
-
+/*
     matrix_iterator<T> begin();
     matrix_iterator<T> end();
     const_matrix_iterator<T> begin() const;
     const_matrix_iterator<T> end() const;
-
+*/
     Matrix<T> &create_identity_matrix();
     Matrix<T> &create_inverse_matrix();
-    Matrix<T> &transposition();
+
     T get_gauss_determinant();
+
+    Matrix<T> &transposition();
 
     void set_value_by_indexes(unsigned int i, unsigned int j, const T& value);
 
@@ -94,11 +94,16 @@ public:
 
 
 private:
-    void auto_fill();
     unsigned int n;
     unsigned int m;
     T* mtr;
+    void auto_fill();
 };
+
+
+
+
+
 
 #include "matrix_implementation.h"
 #endif // MATRIX_H

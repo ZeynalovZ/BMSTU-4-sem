@@ -81,5 +81,4 @@ bool base_iterator<ValueType>::operator !=(const base_iterator<ValueType>& iter)
 {
     return this->ptr != iter.ptr;
 }
-
 #endif // BASE_ITERATOR_IMPLEMENTATION_H

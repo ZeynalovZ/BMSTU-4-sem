@@ -5,9 +5,7 @@
 template <typename T>
 Matrix<T>::Matrix(unsigned int n, unsigned int m)
 {
-    time_t t_time;
-    t_time = time(NULL);
-    if (n == 0 || m == 0) throw mtr_wrong_sizes_exception(__FILE__, typeid(*this).name(), __LINE__ - 4, ctime(&t_time), "MTR WRONG SIZES");
+    if (n == 0 || m == 0) throw mtr_wrong_sizes_exception("on line 8 in \"matrix_implementation\"");
     this->elements_count = n * m;
     this->n = n;
     this->m = m;
@@ -19,15 +17,13 @@ Matrix<T>::Matrix(unsigned int n, unsigned int m)
     }
     catch (std::bad_alloc)
     {
-        throw memory_allocate_exception(__FILE__, typeid(*this).name(), __LINE__ - 4, ctime(&t_time), "Allocation error");
+        throw memory_allocate_exception("on line 20 in \"matrix_implementation\"");
     }
 }
 
 template <typename T>
 Matrix<T>::Matrix(const Matrix<T> &mtr):base_container()
 {
-    time_t t_time;
-    t_time = time(NULL);
     this->n = mtr.get_n();
     this->m = mtr.get_m();
     this->elements_count = mtr.size();
@@ -38,7 +34,7 @@ Matrix<T>::Matrix(const Matrix<T> &mtr):base_container()
     }
     catch(std::bad_alloc)
     {
-        throw memory_allocate_exception(__FILE__, typeid(*this).name(), __LINE__ - 4, ctime(&t_time), "Allocation error");
+        throw memory_allocate_exception("on line 37 in \"matrix_implementation\"");
     }
     for (unsigned int i = 0; i < this->n; ++i)
     {
@@ -51,8 +47,6 @@ Matrix<T>::Matrix(const Matrix<T> &mtr):base_container()
 template<typename T>
 Matrix<T>::Matrix(Matrix<T>&& mtr)
 {
-    time_t t_time;
-    t_time = time(NULL);
     this->n = mtr.get_n();
     this->m = mtr.get_m();
     this->elements_count = mtr.size();
@@ -62,7 +56,7 @@ Matrix<T>::Matrix(Matrix<T>&& mtr)
     }
     catch (std::bad_alloc)
     {
-        throw memory_allocate_exception(__FILE__, typeid(*this).name(), __LINE__ - 4, ctime(&t_time), "Allocation error");
+        throw memory_allocate_exception("on line 59 in \"matrix_implementation\"");
     }
 
     for (unsigned int i = 0; i < n; ++i)
@@ -77,9 +71,7 @@ Matrix<T>::Matrix(Matrix<T>&& mtr)
 template<typename T>
 Matrix<T>::Matrix(unsigned int n, unsigned int m, T **matrix)
 {
-    time_t t_time;
-    t_time = time(NULL);
-    if (n == 0 || m == 0) throw mtr_wrong_sizes_exception(__FILE__, typeid(*this).name(), __LINE__ - 4, ctime(&t_time), "MTR SIZES COULDN'T BE ZERO");
+    if (n == 0 || m == 0) throw mtr_wrong_sizes_exception("on line 74 in \"matrix_implementation\"");
     this->elements_count = n * m;
     this->n = n;
     this->m = m;
@@ -92,15 +84,13 @@ Matrix<T>::Matrix(unsigned int n, unsigned int m, T **matrix)
     }
     catch (std::bad_alloc)
     {
-        throw memory_allocate_exception(__FILE__, typeid(*this).name(), __LINE__ - 4, ctime(&t_time), "ALLOCATION ERROR");
+        throw memory_allocate_exception("on line 87 in \"matrix_implementation\"");
     }
 }
 
 template<typename T>
 Matrix<T>::Matrix(std::initializer_list<std::initializer_list<T>> lst)
 {
-    time_t t_time;
-    t_time = time(NULL);
     this->n = lst.size();
     this->m = lst.begin()->size();
     this->elements_count = n * m;
@@ -111,11 +101,11 @@ Matrix<T>::Matrix(std::initializer_list<std::initializer_list<T>> lst)
     }
     catch (std::bad_alloc)
     {
-        throw memory_allocate_exception(__FILE__, typeid(*this).name(), __LINE__ - 4, ctime(&t_time), "ALLOCATION ERROR");
+        throw memory_allocate_exception("on line 104 in \"matrix_implementation\"");
     }
     for (unsigned int i = 0; iter_i != lst.end(); i++, iter_i++)
     {
-        if (this->m != iter_i->size()) throw mtr_size_exception(__FILE__, typeid(*this).name(), __LINE__ - 4, ctime(&t_time), "MTR SIZES MUST BE THE SAME");
+        if (this->m != iter_i->size()) throw mtr_size_exception("on line 108 in \"matrix_implementation\"");
         else
         {
             auto iter_j = iter_i->begin();
@@ -130,11 +120,9 @@ Matrix<T>::Matrix(std::initializer_list<std::initializer_list<T>> lst)
 template<typename T>
 const T& Matrix<T>::get_value_by_indexes(unsigned int i, unsigned int j) const
 {
-    time_t t_time;
-    t_time = time(NULL);
     if (i >= this->n || j >= this->m)
     {
-        throw mtr_index_out_exception(__FILE__, typeid(*this).name(), __LINE__ - 4, ctime(&t_time), "INDEX OUT OF RANGE");
+        throw mtr_index_out_exception("on line 125 in \"matrix_implementation\"");
     }
     else
     {
@@ -144,7 +132,7 @@ const T& Matrix<T>::get_value_by_indexes(unsigned int i, unsigned int j) const
         }
         else
         {
-            throw memory_allocate_exception(__FILE__, typeid(*this).name(), __LINE__ - 4, ctime(&t_time), "ALLOCATION ERROR");
+            throw memory_allocate_exception("on line 135 in \"matrix_implementation\"");
         }
     }
 }
@@ -152,11 +140,9 @@ const T& Matrix<T>::get_value_by_indexes(unsigned int i, unsigned int j) const
 template<typename T>
 void Matrix<T>::set_value_by_indexes(unsigned int i, unsigned int j, const T &value)
 {
-    time_t t_time;
-    t_time = time(NULL);
     if (i >= this->n || j >= this->m)
     {
-        throw mtr_index_out_exception(__FILE__, typeid(*this).name(), __LINE__ - 4, ctime(&t_time), "INDEX OUT OF RANGE");
+        throw mtr_index_out_exception("on line 145 in \"matrix_implementation\"");
     }
     else
     {
@@ -166,7 +152,7 @@ void Matrix<T>::set_value_by_indexes(unsigned int i, unsigned int j, const T &va
         }
         else
         {
-            throw memory_allocate_exception(__FILE__, typeid(*this).name(), __LINE__ - 4, ctime(&t_time), "ALLOCATION ERROR");
+            throw memory_allocate_exception("on line 155 in \"matrix_implementation\"");
         }
     }
 }
@@ -174,8 +160,6 @@ void Matrix<T>::set_value_by_indexes(unsigned int i, unsigned int j, const T &va
 template<typename T>
 Matrix<T>& Matrix<T>::operator =(const Matrix<T> &mtr)
 {
-    time_t t_time;
-    t_time = time(NULL);
     unsigned int n_mtr = mtr.get_n();
     unsigned int m_mtr = mtr.get_m();
     this->n = n_mtr;
@@ -187,7 +171,7 @@ Matrix<T>& Matrix<T>::operator =(const Matrix<T> &mtr)
     }
     catch (std::bad_alloc)
     {
-        throw memory_allocate_exception(__FILE__, typeid(*this).name(), __LINE__ - 4, ctime(&t_time), "ALLOCATION ERROR");
+        throw memory_allocate_exception("on line 174 in \"matrix_implementation\"");
     }
     if (this->m == m_mtr && this->n == n_mtr)
     {
@@ -201,15 +185,13 @@ Matrix<T>& Matrix<T>::operator =(const Matrix<T> &mtr)
     }
     else
     {
-        throw mtr_wrong_sizes_exception(__FILE__, typeid(*this).name(), __LINE__ - 4, ctime(&t_time), "MTR SIZES SHOULD BE EQUAL");
+        throw mtr_wrong_sizes_exception("on line 188 in \"matrix_implementation\"");
     }
     return *this;
 }
 template<typename T>
 Matrix<T> &Matrix<T>::operator =(Matrix<T> &&mtr)
 {
-    time_t t_time;
-    t_time = time(NULL);
     unsigned int n_mtr = mtr.get_n();
     unsigned int m_mtr = mtr.get_m();
     this->n = n_mtr;
@@ -221,7 +203,7 @@ Matrix<T> &Matrix<T>::operator =(Matrix<T> &&mtr)
     }
     catch (std::bad_alloc)
     {
-        throw memory_allocate_exception(__FILE__, typeid(*this).name(), __LINE__ - 4, ctime(&t_time), "ALLOCATION ERROR");
+        throw memory_allocate_exception("on line 206 in \"matrix_implementation\"");
     }
     if (this->m == m_mtr && this->n == n_mtr)
     {
@@ -235,7 +217,7 @@ Matrix<T> &Matrix<T>::operator =(Matrix<T> &&mtr)
     }
     else
     {
-        throw mtr_wrong_sizes_exception(__FILE__, typeid(*this).name(), __LINE__ - 4, ctime(&t_time), "MTR SIZES SHOULD BE EQUAL");
+        throw mtr_wrong_sizes_exception("on line 220 in \"matrix_implementation\"");
     }
     return *this;
 }
@@ -244,8 +226,6 @@ Matrix<T> &Matrix<T>::operator =(Matrix<T> &&mtr)
 template<typename T>
 Matrix<T> &Matrix<T>::operator +=(const Matrix<T> &mtr)
 {
-    time_t t_time;
-    t_time = time(NULL);
     unsigned int n_mtr = mtr.get_n();
     unsigned int m_mtr = mtr.get_m();
     if (this->m == m_mtr && this->n == n_mtr)
@@ -260,15 +240,13 @@ Matrix<T> &Matrix<T>::operator +=(const Matrix<T> &mtr)
     }
     else
     {
-        throw mtr_wrong_sizes_exception(__FILE__, typeid(*this).name(), __LINE__ - 4, ctime(&t_time), "MTR SIZES SHOULD BE EQUAL");
+        throw mtr_wrong_sizes_exception("on line 243 in \"matrix_implementation\"");
     }
     return *this;
 }
 template<typename T>
 Matrix<T> &Matrix<T>::operator -=(const Matrix<T> &mtr)
 {
-    time_t t_time;
-    t_time = time(NULL);
     unsigned int n_mtr = mtr.get_n();
     unsigned int m_mtr = mtr.get_m();
     if (this->m == m_mtr && this->n == n_mtr)
@@ -283,7 +261,7 @@ Matrix<T> &Matrix<T>::operator -=(const Matrix<T> &mtr)
     }
     else
     {
-        throw mtr_wrong_sizes_exception(__FILE__, typeid(*this).name(), __LINE__ - 4, ctime(&t_time), "MTR SIZES SHOULD BE EQUAL");
+        throw mtr_wrong_sizes_exception("on line 264 in \"matrix_implementation\"");
     }
     return *this;
 }
@@ -292,8 +270,6 @@ Matrix<T> &Matrix<T>::operator -=(const Matrix<T> &mtr)
 template<typename T>
 Matrix<T> Matrix<T>::operator +(const Matrix<T> &mtr1)
 {
-    time_t t_time;
-    t_time = time(NULL);
     if (mtr1.get_n() == this->n && mtr1.get_n() == this->m)
     {
 
@@ -309,14 +285,12 @@ Matrix<T> Matrix<T>::operator +(const Matrix<T> &mtr1)
     }
     else
     {
-        throw mtr_wrong_sizes_exception(__FILE__, typeid(*this).name(), __LINE__ - 4, ctime(&t_time), "MTR SIZES SHOULD BE EQUAL");
+        throw mtr_wrong_sizes_exception("on line 289 in \"matrix_implementation\"");
     }
 }
 template<typename T>
 const Matrix<T> Matrix<T>::operator +(const T& num)
 {
-    time_t t_time;
-    t_time = time(NULL);
     Matrix<T> res = Matrix<T>(n, m);
     for (unsigned int i = 0; i < n; i++)
     {
@@ -331,8 +305,6 @@ const Matrix<T> Matrix<T>::operator +(const T& num)
 template <typename T>
 Matrix<T> Matrix<T>::operator -(const Matrix<T> &mtr1)
 {
-    time_t t_time;
-    t_time = time(NULL);
     if (mtr1.get_n() == this->n && mtr1.get_n() == this->m)
     {
         Matrix<T> res = Matrix<T>(mtr1.get_n(), mtr1.get_m());
@@ -348,15 +320,13 @@ Matrix<T> Matrix<T>::operator -(const Matrix<T> &mtr1)
     }
     else
     {
-        throw mtr_wrong_sizes_exception(__FILE__, typeid(*this).name(), __LINE__ - 4, ctime(&t_time), "MTR SIZES SHOULD BE EQUAL");
+        throw mtr_wrong_sizes_exception("on line 326 in \"matrix_implementation\"");
     }
 }
 
 template<typename T>
 const Matrix<T> Matrix<T>::operator -(const T &num)
 {
-    time_t t_time;
-    t_time = time(NULL);
     Matrix<T> res = Matrix<T>(n, m);
     for (unsigned int i = 0; i < n; i++)
     {
@@ -371,8 +341,6 @@ const Matrix<T> Matrix<T>::operator -(const T &num)
 template <typename T>
 Matrix<T> Matrix<T>::operator *(const Matrix<T> &mtr1)
 {
-    time_t t_time;
-    t_time = time(NULL);
     if (mtr1.get_m() == this->m)
     {
         unsigned int n = this->n;
@@ -395,7 +363,7 @@ Matrix<T> Matrix<T>::operator *(const Matrix<T> &mtr1)
     }
     else
     {
-        throw mtr_wrong_sizes_exception(__FILE__, typeid(*this).name(), __LINE__ - 4, ctime(&t_time), "MTR SIZES SHOULD BE EQUAL");
+        throw mtr_wrong_sizes_exception("on line 371 in \"matrix_implementation\"");
     }
 }
 
@@ -430,9 +398,7 @@ Matrix<T> Matrix<T>::operator /(const T& num)
 template<typename T>
 const T& Matrix<T>::operator()(unsigned int i, unsigned int j) const
 {
-    time_t t_time;
-    t_time = time(NULL);
-    if (this->n <= i || this->m <= j) throw mtr_index_out_exception(__FILE__, typeid(*this).name(), __LINE__ - 4, ctime(&t_time), "INDEX OUT OF RANGE");
+    if (this->n <= i || this->m <= j) throw mtr_index_out_exception("on line 410 in \"matrix_implementation\"");
 
     return this->mtr[i * this->m + j];
 }
@@ -441,9 +407,7 @@ const T& Matrix<T>::operator()(unsigned int i, unsigned int j) const
 template<typename T>
 T &Matrix<T>::operator ()(unsigned int i, unsigned int j)
 {
-    time_t t_time;
-    t_time = time(NULL);
-    if (this->n <= i || this->m <= j) throw mtr_index_out_exception(__FILE__, typeid(*this).name(), __LINE__ - 4, ctime(&t_time), "INDEX OUT OF RANGE");
+    if (this->n <= i || this->m <= j) throw mtr_index_out_exception("on line 419 in \"matrix_implementation\"");
 
     return this->mtr[i * this->m + j];
 }
@@ -451,8 +415,6 @@ T &Matrix<T>::operator ()(unsigned int i, unsigned int j)
 template<typename T>
 T Matrix<T>::get_gauss_determinant()
 {
-    time_t t_time;
-    t_time = time(NULL);
     double del = 1;
     double max = this->mtr[0];
     int max_pos = 0;
@@ -460,7 +422,7 @@ T Matrix<T>::get_gauss_determinant()
     int pos_m = 0;
     T determinant = 1;
     double eps = 0.000001;
-    if (n != m) throw mtr_wrong_sizes_exception(__FILE__, typeid(*this).name(), __LINE__ - 4, ctime(&t_time), "MTR SIZES SHOULD BE EQUAL");
+    if (n != m) throw mtr_wrong_sizes_exception("on line 449 in \"matrix_implementation\"");
     for (unsigned int i = 0; i < n - 1; i++)
     {
         max = mtr[i * m + i];
@@ -510,9 +472,7 @@ T Matrix<T>::get_gauss_determinant()
 template<typename T>
 Matrix<T> &Matrix<T>::create_identity_matrix()
 {
-    time_t t_time;
-    t_time = time(NULL);
-    if (n != m) throw mtr_wrong_sizes_exception(__FILE__, typeid(*this).name(), __LINE__ - 4, ctime(&t_time), "MTR SIZES SHOULD BE EQUAL");
+    if (n != m) throw mtr_wrong_sizes_exception("on line 498 in \"matrix_implementation\"");
     for (unsigned int i = 0; i < n; i++)
     {
         for (unsigned int j = 0; j < m; j++)
@@ -534,8 +494,6 @@ Matrix<T> &Matrix<T>::create_identity_matrix()
 template<typename T>
 Matrix<T>& Matrix<T>::transposition()
 {
-    time_t t_time;
-    t_time = time(NULL);
     if (this->get_m() == this->get_n())
     {
         for (unsigned int i = 0; i < 4; i++)
@@ -551,11 +509,35 @@ Matrix<T>& Matrix<T>::transposition()
     }
     else
     {
-        throw mtr_wrong_sizes_exception(__FILE__, typeid(*this).name(), __LINE__ - 4, ctime(&t_time), "MTR SIZES SHOULD BE EQUAL");
+        throw mtr_wrong_sizes_exception("on line 534 in \"matrix_implementation\"");
     }
 
 }
+/*
+template<typename T>
+matrix_iterator<T> Matrix<T>::begin()
+{
+    return matrix_iterator<T>(this->mtr);
+}
 
+template<typename T>
+matrix_iterator<T> Matrix<T>::end()
+{
+    return matrix_iterator<T>(this->mtr + n * m);
+}
+
+template<typename T>
+const_matrix_iterator<T> Matrix<T>::begin() const
+{
+    return const_matrix_iterator<T>(mtr);
+}
+
+template<typename T>
+const_matrix_iterator<T> Matrix<T>::end() const
+{
+    return const_matrix_iterator<T>(mtr + n * m);
+}
+*/
 template<typename T>
 bool Matrix<T>::is_square()
 {
@@ -590,6 +572,23 @@ Matrix<T>::~Matrix()
     this->n = 0;
     this->m = 0;
 }
+/*
+template <typename T>
+void Matrix<T>::print_matrix()
+{
+    std::cout << "Matrix is\n" << std::endl;
+    if (n == 0 || m == 0) std::cout << "n or m is zero!\n";
+    for (unsigned int i = 0; i < this->n; i++)
+    {
+        for (unsigned int j = 0; j < this->m; j++)
+        {
+            std::cout << mtr[i * m + j] << " ";
+        }
+        std::cout << std::endl;
+    }
+    std::cout << std::endl;
+}
+*/
 template<typename T>
 void Matrix<T>::auto_fill()
 {
@@ -611,31 +610,6 @@ std::ostream& operator <<(std::ostream& os, const Matrix<_T>& matr)
     os << std::endl;
     return os;
 }
-/*
-template<typename T>
-matrix_iterator<T> Matrix<T>::begin()
-{
-    return matrix_iterator<T>(mtr);
-}
-
-template<typename T>
-matrix_iterator<T> Matrix<T>::end()
-{
-    return matrix_iterator<T>(mtr + n * m);
-}
-
-template<typename T>
-const_matrix_iterator<T> Matrix<T>::begin() const
-{
-    return const_matrix_iterator<T>(mtr);
-}
-
-template<typename T>
-const_matrix_iterator<T> Matrix<T>::end() const
-{
-    return const_matrix_iterator<T>(mtr + n * m);
-}
-*/
 
 #endif // MATRIX_IMPLEMENTATION_H
 /*
@@ -652,47 +626,5 @@ const T &Matrix<T>::operator [](unsigned int i) const
     if (this->n <= i) throw mtr_index_out_exception("on line 434 in \"matrix_implementation\"");
 
     return this->mtr[i];
-}
-*/
-/*
-template <typename T>
-void Matrix<T>::print_matrix()
-{
-    std::cout << "Matrix is\n" << std::endl;
-    if (n == 0 || m == 0) std::cout << "n or m is zero!\n";
-    for (unsigned int i = 0; i < this->n; i++)
-    {
-        for (unsigned int j = 0; j < this->m; j++)
-        {
-            std::cout << mtr[i * m + j] << " ";
-        }
-        std::cout << std::endl;
-    }
-    std::cout << std::endl;
-}
-*/
-/*
-template<typename T>
-matrix_iterator<T> Matrix<T>::begin()
-{
-    return matrix_iterator<T>(this->mtr);
-}
-
-template<typename T>
-matrix_iterator<T> Matrix<T>::end()
-{
-    return matrix_iterator<T>(this->mtr + n * m);
-}
-
-template<typename T>
-const_matrix_iterator<T> Matrix<T>::begin() const
-{
-    return const_matrix_iterator<T>(mtr);
-}
-
-template<typename T>
-const_matrix_iterator<T> Matrix<T>::end() const
-{
-    return const_matrix_iterator<T>(mtr + n * m);
 }
 */

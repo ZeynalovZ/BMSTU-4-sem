@@ -99,7 +99,7 @@ int main()
     try
     {
         Matrix<int> mtr1 ({{1, 2}, {2, 5}});
-        Matrix<int> mtr2 ({{2, 5}, {1, 2}, {2, 5}});
+        Matrix<int> mtr2 ({{2, 5}, {1, 2}});
         Matrix<int> mtr3 = mtr2 + mtr1;
         cout << mtr3;
     }
@@ -107,7 +107,6 @@ int main()
     {
         std::cout << exception.what();
     }
-
     // get by indexes
 
 
