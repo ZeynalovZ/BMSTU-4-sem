@@ -14,7 +14,7 @@
 #define WINDOW_HEIGHT 561
 #define WINDOW_BEGIN 0
 #define BITS_COUNT 4
-#define EPS 0.0001
+#define EPS sqrt(2)
 MainWindow::MainWindow(QWidget *parent) :
     QMainWindow(parent),
     ui(new Ui::MainWindow)
@@ -297,10 +297,10 @@ void set_bits(QVector<double> rect, QPoint point, int *array)
 {
     double x = point.x();
     double y = point.y();
-    x < rect[0] ? array[0] = 1 : array[0] = 0;
-    x > rect[1] ? array[1] = 1 : array[1] = 0;
-    y > rect[3] ? array[2] = 1 : array[2] = 0;
-    y < rect[2] ? array[3] = 1 : array[3] = 0;
+    x < rect[0] ? array[3] = 1 : array[3] = 0;
+    x > rect[1] ? array[2] = 1 : array[2] = 0;
+    y < rect[2] ? array[1] = 1 : array[1] = 0;
+    y > rect[3] ? array[0] = 1 : array[0] = 0;
 }
 
 int get_sum(int *array, int size)
@@ -317,7 +317,7 @@ int get_p(int *array1, int *array2,  int size)
     int p = 0;
     for (int i = 0; i < size; i++)
     {
-        p += array1[i] * array2[i];
+        p += round((array1[i] * array2[i]) / 2);
     }
     return p;
 }
@@ -332,56 +332,87 @@ void MainWindow::on_cut_button_clicked()
         {
             // lines[i] = P1 and lines[i + 1] = P2 // P1, P2 - points
             int i = 1; // шаг отсечения
+            QPoint P1 = lines[j];
+            QPoint P2 = lines[j + 1];
+            qDebug() << P1 << P2;
             int T1[BITS_COUNT];
             int T2[BITS_COUNT];
             int S1, S2; // Summ of BITS T1 and BITS T2
-            set_bits(rect, lines[j], T1);
-            set_bits(rect, lines[j + 1], T2);
-            for (int i = 0; i < 4; i++)
+            while (1)
             {
-                qDebug() << T1[i];
-            }
-            qDebug() << "second";
-            for (int i = 0; i < 4; i++)
-            {
-                qDebug() << T2[i];
-            }
-            S1 = get_sum(T1, BITS_COUNT);
-            S2 = get_sum(T2, BITS_COUNT);
-            qDebug() << S1 << "S1";
-            qDebug() << S2 << "S2";
-            if (S1 == 0 && S2 == 0)
-            {
-                ;// Визуализация
-            }
-            else
-            {
-                double P = get_p(T1, T2, BITS_COUNT);
+                set_bits(rect, P1, T1);
+                set_bits(rect, P2, T2);
+
+                S1 = get_sum(T1, BITS_COUNT);
+                S2 = get_sum(T2, BITS_COUNT);
+
+                qDebug() <<"T1" <<T1[0] << T1[1] << T1[2] << T1[3];
+                qDebug() <<"T2" <<T2[0] << T2[1] << T2[2] << T2[3];
+                QPoint R;
+                QPoint temp_memory;
+                if (S1 == 0 && S2 == 0)
+                {
+                    qDebug() << P1 << P2;
+                    painter->setPen(outline_color);
+                    painter->drawLine(P1, P2);
+                    ui->draw_label->setPixmap(*scene);
+                    break;
+                }
+                int P = get_p(T1, T2, BITS_COUNT);
                 if (P == 0)
                 {
-                    QPoint R = lines[j];
+                    R = P1;
                     if (i > 2)
                     {
-                        double P = get_p(T1, T2, BITS_COUNT);
-                        if (P == 0)
+                        int Pr = get_p(T1, T2, BITS_COUNT);
+                        if (Pr == 0)
                         {
-                            ;// визуализация;
+                            qDebug() << P1 << P2;
+                            painter->setPen(outline_color);
+                            painter->drawLine(P1, P2);// визуализация;
+                            ui->draw_label->setPixmap(*scene);
+                            break;
                         }
                         else
                         {
-                            ;// конец;
+                            break;// конец; видимо continue для след отрезка (где конец) break;
                         }
-
+                    }
+                    // 8.3 Проверка точки P2 на наиболее удаленную от P1
+                    if (S2 == 0)
+                    {
+                        // 8.12
+                        P1 = P2;
+                        P2 = R;
+                        i++;
+                        qDebug() << "this1";
+                        continue;
                     }
                 }
                 else
                 {
-                    ;// Конец
+                    break;// Конец break;
                 }
+
+                while (fabs(P1.x() - P2.x()) >= EPS && fabs(P1.y() - P2.y()) >= EPS)
+                {
+
+                    QPoint Pm = QPoint((P1.x() + P2.x()) / 2, (P1.y() + P2.y()) / 2);
+                    temp_memory = P1;
+                    P1 = Pm;
+                    set_bits(rect, P1, T1);
+                    int pr = get_p(T1, T2, BITS_COUNT);
+                    if (pr != 0)
+                    {
+                        P1 = temp_memory;
+                        P2 = Pm;
+                    }
+                }
+                P1 = P2;
+                P2 = R;
+                i++;
+                qDebug() << "this2";
             }
-
-
-
         }
     }
     else
