@@ -21,9 +21,6 @@ int main()
         Matrix<int> mtr2(mtr1);
         cout << mtr2;
 
-
-
-
         std::cout << "==================\n";
 
         mtr2 += mtr1;
@@ -41,8 +38,7 @@ int main()
         std::cout << "Is square? - " << (yes_or_not ? "yes" : "not") << std::endl;
 
         Matrix <int> mtr4({{1, 2},
-                           {2, 4},
-                           {5, 6}});
+                           {2, 4}});
         cout << mtr4;
 
         Matrix <int> mtr5({{1, 2},
@@ -98,6 +94,20 @@ int main()
     }
     try
     {
+        Matrix<int> mtr4(2, 2);
+        mtr4.create_identity_matrix();
+        Matrix<int> mtr5(2, 2);
+        mtr5.auto_fill();
+        cout << mtr5;
+        mtr5 += mtr4;
+        cout << mtr5 - mtr4;
+
+        auto iter = mtr5.begin();
+        for (; iter != mtr5.end(); iter++)
+        {
+            std::cout << *iter << " ";
+        }
+
         Matrix<int> mtr1 ({{1, 2}, {2, 5}});
         Matrix<int> mtr2 ({{2, 5}, {1, 2}, {2, 5}});
         Matrix<int> mtr3 = mtr2 + mtr1;

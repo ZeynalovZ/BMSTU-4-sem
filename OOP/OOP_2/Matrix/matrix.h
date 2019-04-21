@@ -8,7 +8,8 @@
 #include <typeinfo>
 #include "const_matrix_iterator.h"
 #include "matrix_iterator.h"
-// в этом пока не вижу смысла !
+#include "matrix_iterator_implementation.h"
+#include "const_matrix_iterator_implementation.h"
 
 template <typename T>
 class Matrix : public container_core::base_container
@@ -28,23 +29,25 @@ public:
 
     unsigned int get_n() const;
     unsigned int get_m() const;
+
     const T& get_value_by_indexes(unsigned int i, unsigned int j) const;
     T& operator ()(unsigned int i, unsigned int j);
     const T& operator ()(unsigned int i, unsigned int j) const;
 
-    Matrix<T> operator -(const Matrix<T> &mtr1);
+    const Matrix<T> operator -(const Matrix<T> &mtr1);
     const Matrix<T> operator -(const T& num);
 
-    Matrix<T> operator +(const Matrix<T>& mtr1);
+    const Matrix<T> operator +(const Matrix<T>& mtr1);
     const Matrix<T> operator +(const T& num);
 
-    Matrix<T> operator *(const Matrix<T>& mtr1);
-    Matrix<T> operator *(const T& num);
+    const Matrix<T> operator *(const Matrix<T>& mtr1);
+    const Matrix<T> operator *(const T& num);
 
-    Matrix<T> operator /(const T& num);
+    const Matrix<T> operator /(const T& num);
 
-    Matrix<T>& operator +=(const Matrix<T>& mtr);
-    Matrix<T>& operator -=(const Matrix<T>& mtr);
+    const Matrix<T>& operator +=(const Matrix<T>& mtr);
+    const Matrix<T>& operator -=(const Matrix<T>& mtr);
+    const Matrix<T>& operator *=(const Matrix<T>& mtr);
 
     template<typename _T>
     friend std::ostream& operator <<(std::ostream& os, const Matrix<_T>& matr);
@@ -62,10 +65,14 @@ public:
     void set_value_by_indexes(unsigned int i, unsigned int j, const T& value);
 
     bool is_square();
+
+    void auto_fill();
+
     template <typename _T>
     class Array
     {
     public:
+        friend class Matrix;
         Array() = delete;
         Array(_T *array1, unsigned int size1)
             :array(array1), size(size1){}
@@ -74,7 +81,7 @@ public:
         {
             time_t t_time;
             t_time = time(NULL);
-            if (index >= this->n) throw mtr_index_out_exception(__FILE__, typeid(*this).name(), __LINE__ - 4, ctime(&t_time), "INDEX OUT OF RANGE");
+            if (index >= this->n) throw mtr_index_out_exception(__FILE__, typeid(*this).name(), __LINE__, ctime(&t_time), "INDEX OUT OF RANGE");
 
             return Array<_T>(this->mtr + index * this->m, this->m);
         }
@@ -83,10 +90,11 @@ public:
         {
             time_t t_time;
             t_time = time(NULL);
-            if (index >= this->n) throw mtr_index_out_exception(__FILE__, typeid(*this).name(), __LINE__ - 4, ctime(&t_time), "INDEX OUT OF RANGE");
+            if (index >= this->n) throw mtr_index_out_exception(__FILE__, typeid(*this).name(), __LINE__, ctime(&t_time), "INDEX OUT OF RANGE");
 
             return Array<_T>(this->mtr + index * this->m, this->m);
         }
+
     private:
         unsigned int size;
         _T *array = nullptr;
@@ -94,14 +102,18 @@ public:
 
 
 private:
-    void auto_fill();
     unsigned int n;
     unsigned int m;
-    T* mtr;
+    T *mtr;
 };
 
 #include "matrix_implementation.h"
 #endif // MATRIX_H
+
+
+
+
+
 
 
 
@@ -124,4 +136,6 @@ _T& operator [](unsigned int index)
 /*
 T& operator [](unsigned int i);
 const T& operator [](unsigned int i) const;
+
+std::shared_ptr<T> mtr;
 */

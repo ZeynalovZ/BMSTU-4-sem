@@ -2,6 +2,10 @@
 #define MATRIX_IMPLEMENTATION_H
 #include "matrix.h"
 #include <math.h>
+#include "const_matrix_iterator.h"
+#include "matrix_iterator.h"
+#include "matrix_iterator_implementation.h"
+#include "const_matrix_iterator_implementation.h"
 template <typename T>
 Matrix<T>::Matrix(unsigned int n, unsigned int m)
 {
@@ -242,7 +246,7 @@ Matrix<T> &Matrix<T>::operator =(Matrix<T> &&mtr)
 
 
 template<typename T>
-Matrix<T> &Matrix<T>::operator +=(const Matrix<T> &mtr)
+const Matrix<T> &Matrix<T>::operator +=(const Matrix<T> &mtr)
 {
     time_t t_time;
     t_time = time(NULL);
@@ -265,7 +269,7 @@ Matrix<T> &Matrix<T>::operator +=(const Matrix<T> &mtr)
     return *this;
 }
 template<typename T>
-Matrix<T> &Matrix<T>::operator -=(const Matrix<T> &mtr)
+const Matrix<T> &Matrix<T>::operator -=(const Matrix<T> &mtr)
 {
     time_t t_time;
     t_time = time(NULL);
@@ -290,7 +294,7 @@ Matrix<T> &Matrix<T>::operator -=(const Matrix<T> &mtr)
 
 
 template<typename T>
-Matrix<T> Matrix<T>::operator +(const Matrix<T> &mtr1)
+const Matrix<T> Matrix<T>::operator +(const Matrix<T> &mtr1)
 {
     time_t t_time;
     t_time = time(NULL);
@@ -329,7 +333,7 @@ const Matrix<T> Matrix<T>::operator +(const T& num)
 }
 
 template <typename T>
-Matrix<T> Matrix<T>::operator -(const Matrix<T> &mtr1)
+const Matrix<T> Matrix<T>::operator -(const Matrix<T> &mtr1)
 {
     time_t t_time;
     t_time = time(NULL);
@@ -369,11 +373,11 @@ const Matrix<T> Matrix<T>::operator -(const T &num)
 }
 
 template <typename T>
-Matrix<T> Matrix<T>::operator *(const Matrix<T> &mtr1)
+const Matrix<T> Matrix<T>::operator *(const Matrix<T> &mtr1)
 {
     time_t t_time;
     t_time = time(NULL);
-    if (mtr1.get_m() == this->m)
+    if (mtr1.get_m() == this->n)
     {
         unsigned int n = this->n;
         unsigned int m = mtr1.get_m();
@@ -398,9 +402,40 @@ Matrix<T> Matrix<T>::operator *(const Matrix<T> &mtr1)
         throw mtr_wrong_sizes_exception(__FILE__, typeid(*this).name(), __LINE__ - 4, ctime(&t_time), "MTR SIZES SHOULD BE EQUAL");
     }
 }
+template<typename T>
+const Matrix<T> &Matrix<T>::operator *=(const Matrix<T> &mtr)
+{
+    time_t t_time;
+    t_time = time(NULL);
+    if (mtr.get_m() == this->n)
+    {
+        unsigned int n = this->n;
+        unsigned int m = mtr.get_m();
+        unsigned int l = this->n;
+        Matrix<T> res = Matrix<T>(n, m);
+        for (unsigned int i = 0; i < n; i++)
+        {
+            for (unsigned int j = 0; j < m; j++)
+            {
+                double sum = 0;
+                for (unsigned int k = 0; k < l; k++)
+                {
+                    sum += mtr.mtr[i * m + k] * this->mtr[k * m + j];
+                }
+                res.mtr[i * m + j] = sum;
+            }
+        }
+        return res;
+    }
+    else
+    {
+        throw mtr_wrong_sizes_exception(__FILE__, typeid(*this).name(), __LINE__ - 4, ctime(&t_time), "MTR SIZES SHOULD BE EQUAL");
+    }
+    return *this;
+}
 
 template<typename T>
-Matrix<T> Matrix<T>::operator *(const T& num)
+const Matrix<T> Matrix<T>::operator *(const T& num)
 {
     Matrix<T> res = Matrix<T>(n, m);
     for (unsigned int i = 0; i < n; i++)
@@ -414,7 +449,7 @@ Matrix<T> Matrix<T>::operator *(const T& num)
 }
 
 template<typename T>
-Matrix<T> Matrix<T>::operator /(const T& num)
+const Matrix<T> Matrix<T>::operator /(const T& num)
 {
     Matrix<T> res = Matrix<T>(n, m);
     for (unsigned int i = 0; i < n; i++)
@@ -611,6 +646,29 @@ std::ostream& operator <<(std::ostream& os, const Matrix<_T>& matr)
     os << std::endl;
     return os;
 }
+template<typename T>
+matrix_iterator<T> Matrix<T>::begin()
+{
+    return matrix_iterator<T>(this->mtr);
+}
+
+template<typename T>
+matrix_iterator<T> Matrix<T>::end()
+{
+    return matrix_iterator<T>(this->mtr + n * m);
+}
+
+template<typename T>
+const_matrix_iterator<T> Matrix<T>::begin() const
+{
+    return const_matrix_iterator<T>(mtr);
+}
+
+template<typename T>
+const_matrix_iterator<T> Matrix<T>::end() const
+{
+    return const_matrix_iterator<T>(mtr + n * m);
+}
 /*
 template<typename T>
 matrix_iterator<T> Matrix<T>::begin()
@@ -671,28 +729,5 @@ void Matrix<T>::print_matrix()
     std::cout << std::endl;
 }
 */
-/*
-template<typename T>
-matrix_iterator<T> Matrix<T>::begin()
-{
-    return matrix_iterator<T>(this->mtr);
-}
 
-template<typename T>
-matrix_iterator<T> Matrix<T>::end()
-{
-    return matrix_iterator<T>(this->mtr + n * m);
-}
 
-template<typename T>
-const_matrix_iterator<T> Matrix<T>::begin() const
-{
-    return const_matrix_iterator<T>(mtr);
-}
-
-template<typename T>
-const_matrix_iterator<T> Matrix<T>::end() const
-{
-    return const_matrix_iterator<T>(mtr + n * m);
-}
-*/
