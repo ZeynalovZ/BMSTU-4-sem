@@ -3206,7 +3206,7 @@
       <cursorShape>PointingHandCursor</cursorShape>
      </property>
      <property name="text">
-      <string>Выбрать цвет отрезка вне</string>
+      <string>Выбрать цвет отсечения</string>
      </property>
     </widget>
     <widget class="QLabel" name="outline_color_label">

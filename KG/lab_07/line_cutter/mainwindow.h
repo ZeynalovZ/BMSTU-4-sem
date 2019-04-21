@@ -17,14 +17,14 @@ public:
     explicit MainWindow(QWidget *parent = 0);
     ~MainWindow();
     void mousePressEvent(QMouseEvent *event);
-    double prev_x = -1;
-    double prev_y = -1;
-    double pixel_begin_x = -1;
-    double pixel_begin_y = -1;
-    double first_x;
-    double first_y;
-    double first_rect_x;
-    double first_rect_y;
+    int prev_x = -1;
+    int prev_y = -1;
+    int pixel_begin_x = -1;
+    int pixel_begin_y = -1;
+    int first_x;
+    int first_y;
+    int first_rect_x;
+    int first_rect_y;
     bool flag_line_exist = false;
     bool flag_first_touched = false;
     bool flag_first_rect_touched = false;
@@ -57,7 +57,7 @@ private:
     QImage img;
     QVector<QPoint> lines;
     QVector<QPoint> outlines;
-    QVector<double> rect;
+    QVector<int> rect;
 };
 
 #endif // MAINWINDOW_H

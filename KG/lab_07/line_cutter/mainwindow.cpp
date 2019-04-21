@@ -61,9 +61,9 @@ void message_box(QString message)
     msgBox.exec();
 }
 
-double min(double p1, double p2)
+int min(int p1, int p2)
 {
-    if ((p1 - p2) < EPS)
+    if (p1 < p2)
     {
         return p1;
     }
@@ -72,9 +72,9 @@ double min(double p1, double p2)
         return p2;
     }
 }
-double max(double p1, double p2)
+int max(int p1, int p2)
 {
-    if ((p1 - p2) < EPS)
+    if (p1 < p2)
     {
         return p2;
     }
@@ -83,8 +83,9 @@ double max(double p1, double p2)
         return p1;
     }
 }
-void draw_rect(QPainter &painter, double &x, double &y, double &first_rect_x,
-               double &first_rect_y, bool &flag_first_rect_touched, bool &flag_rect_set, QVector<double> &rect)
+
+void draw_rect(QPainter &painter, int &x, int &y, int &first_rect_x,
+               int &first_rect_y, bool &flag_first_rect_touched, bool &flag_rect_set, QVector<int> &rect)
 {
     painter.drawPoint(x, y);
     if (flag_first_rect_touched == false)
@@ -97,8 +98,8 @@ void draw_rect(QPainter &painter, double &x, double &y, double &first_rect_x,
     {
         flag_first_rect_touched = false;
         flag_rect_set = true;
-        double width_rect = x - first_rect_x;
-        double height_rect = y - first_rect_y;
+        int width_rect = x - first_rect_x;
+        int height_rect = y - first_rect_y;
         painter.drawRect(first_rect_x, first_rect_y, width_rect, height_rect);
         rect.append(min(first_rect_x, first_rect_x + width_rect));
         rect.append(max(first_rect_x, first_rect_x + width_rect));
@@ -107,7 +108,7 @@ void draw_rect(QPainter &painter, double &x, double &y, double &first_rect_x,
     }
 }
 
-void draw_line(QPainter &painter, double &x, double &y, double &first_x, double &first_y, bool &flag_first_touched, QVector<QPoint> &lines)
+void draw_line(QPainter &painter, int &x, int &y, int &first_x, int &first_y, bool &flag_first_touched, QVector<QPoint> &lines)
 {
     painter.drawPoint(x, y);
     if (flag_first_touched == false)
@@ -132,8 +133,8 @@ void MainWindow::on_add_point_button_clicked()
     bool ok1 = true, ok2 = false;
     QString x_value = ui->entry_x->text();
     QString y_value = ui->entry_y->text();
-    double x = x_value.toDouble(&ok1);
-    double y = y_value.toDouble(&ok2);
+    int x = x_value.toInt(&ok1);
+    int y = y_value.toInt(&ok2);
     if (ok1 && ok2)
     {
         if (ui->line_radio->isChecked())
@@ -195,8 +196,8 @@ void MainWindow::on_line_color_button_clicked()
 
 void MainWindow::mousePressEvent(QMouseEvent *event)
 {
-    double x = event->x();
-    double y = event->y();
+    int x = event->x();
+    int y = event->y();
     x -= OFFSET_X_MOUSE;
     y -= OFFSET_Y_MOUSE;
     if (x >= WINDOW_BEGIN && y >= WINDOW_BEGIN && x <= WINDOW_WIDTH && y <= WINDOW_HEIGHT)
@@ -293,10 +294,10 @@ void MainWindow::on_cutter_color_button_clicked()
     ui->cutter_color_label->show();
 }
 
-void set_bits(QVector<double> rect, QPoint point, int *array)
+void set_bits(QVector<int> rect, QPoint point, int *array)
 {
-    double x = point.x();
-    double y = point.y();
+    int x = point.x();
+    int y = point.y();
     x < rect[0] ? array[3] = 1 : array[3] = 0;
     x > rect[1] ? array[2] = 1 : array[2] = 0;
     y < rect[2] ? array[1] = 1 : array[1] = 0;
@@ -317,7 +318,7 @@ int get_p(int *array1, int *array2,  int size)
     int p = 0;
     for (int i = 0; i < size; i++)
     {
-        p += round((array1[i] * array2[i]) / 2);
+        p += array1[i] * array2[i];
     }
     return p;
 }
@@ -327,7 +328,6 @@ void MainWindow::on_cut_button_clicked()
     if (flag_line_exist && flag_rect_set)
     {
         // here algorithm
-        qDebug() << "hohohoho";
         for (int j = 0; j < lines.size(); j += 2)
         {
             // lines[i] = P1 and lines[i + 1] = P2 // P1, P2 - points
@@ -343,17 +343,17 @@ void MainWindow::on_cut_button_clicked()
                 set_bits(rect, P1, T1);
                 set_bits(rect, P2, T2);
 
+                qDebug() << T1[0] << T1[1] << T1[2] << T1[3] << "T1";
+                qDebug() << T2[0] << T2[1] << T2[2] << T2[3] << "T2";
+
                 S1 = get_sum(T1, BITS_COUNT);
                 S2 = get_sum(T2, BITS_COUNT);
-
-                qDebug() <<"T1" <<T1[0] << T1[1] << T1[2] << T1[3];
-                qDebug() <<"T2" <<T2[0] << T2[1] << T2[2] << T2[3];
                 QPoint R;
                 QPoint temp_memory;
                 if (S1 == 0 && S2 == 0)
                 {
-                    qDebug() << P1 << P2;
-                    painter->setPen(outline_color);
+                    qDebug() << "Отрезок полностью видим";
+                    painter->setPen(QPen(outline_color, 2));
                     painter->drawLine(P1, P2);
                     ui->draw_label->setPixmap(*scene);
                     break;
@@ -368,50 +368,50 @@ void MainWindow::on_cut_button_clicked()
                         if (Pr == 0)
                         {
                             qDebug() << P1 << P2;
-                            painter->setPen(outline_color);
-                            painter->drawLine(P1, P2);// визуализация;
+                            painter->setPen(QPen(outline_color, 2));
+                            painter->drawLine(P1, P2);
                             ui->draw_label->setPixmap(*scene);
                             break;
                         }
                         else
                         {
-                            break;// конец; видимо continue для след отрезка (где конец) break;
+                            break;
                         }
                     }
-                    // 8.3 Проверка точки P2 на наиболее удаленную от P1
                     if (S2 == 0)
                     {
-                        // 8.12
                         P1 = P2;
                         P2 = R;
                         i++;
-                        qDebug() << "this1";
-                        continue;
+                    }
+                    else
+                    {
+                        while (abs(P1.x() - P2.x()) > EPS || abs(P1.y() - P2.y()) > EPS)
+                        {
+
+                            QPoint Pm;
+                            Pm.setX((round((P1.x() + P2.x()) / 2)));
+                            Pm.setY((round((P1.y() + P2.y()) / 2)));
+                            temp_memory = P1;
+                            P1 = Pm;
+                            set_bits(rect, P1, T1);
+                            int pr = get_p(T1, T2, BITS_COUNT);
+                            if (pr != 0)
+                            {
+                                P1 = temp_memory;
+                                P2 = Pm;
+                            }
+                        }
+                        P1 = P2;
+                        P2 = R;
+                        i++;
                     }
                 }
                 else
                 {
-                    break;// Конец break;
+                    qDebug() << "Отрезок тривиально невидим";
+                    break;
                 }
-
-                while (fabs(P1.x() - P2.x()) >= EPS && fabs(P1.y() - P2.y()) >= EPS)
-                {
-
-                    QPoint Pm = QPoint((P1.x() + P2.x()) / 2, (P1.y() + P2.y()) / 2);
-                    temp_memory = P1;
-                    P1 = Pm;
-                    set_bits(rect, P1, T1);
-                    int pr = get_p(T1, T2, BITS_COUNT);
-                    if (pr != 0)
-                    {
-                        P1 = temp_memory;
-                        P2 = Pm;
-                    }
-                }
-                P1 = P2;
-                P2 = R;
-                i++;
-                qDebug() << "this2";
             }
         }
     }
