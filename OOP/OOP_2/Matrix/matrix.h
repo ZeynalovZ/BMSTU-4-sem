@@ -34,20 +34,20 @@ public:
     T& operator ()(unsigned int i, unsigned int j);
     const T& operator ()(unsigned int i, unsigned int j) const;
 
-    const Matrix<T> operator -(const Matrix<T> &mtr1);
-    const Matrix<T> operator -(const T& num);
+    Matrix<T> operator -(const Matrix<T> &mtr1) const;
+    Matrix<T> operator -(const T& num) const;
 
-    const Matrix<T> operator +(const Matrix<T>& mtr1);
-    const Matrix<T> operator +(const T& num);
+    Matrix<T> operator +(const Matrix<T>& mtr1) const;
+    Matrix<T> operator +(const T& num) const;
 
-    const Matrix<T> operator *(const Matrix<T>& mtr1);
-    const Matrix<T> operator *(const T& num);
+    Matrix<T> operator *(const Matrix<T>& mtr1) const;
+    Matrix<T> operator *(const T& num) const;
 
-    const Matrix<T> operator /(const T& num);
+    Matrix<T> operator /(const T& num) const;
 
-    const Matrix<T>& operator +=(const Matrix<T>& mtr);
-    const Matrix<T>& operator -=(const Matrix<T>& mtr);
-    const Matrix<T>& operator *=(const Matrix<T>& mtr);
+    Matrix<T>& operator +=(const Matrix<T>& mtr);
+    Matrix<T>& operator -=(const Matrix<T>& mtr);
+    Matrix<T>& operator *=(const Matrix<T>& mtr);
 
     template<typename _T>
     friend std::ostream& operator <<(std::ostream& os, const Matrix<_T>& matr);
@@ -102,9 +102,10 @@ public:
 
 
 private:
+
     unsigned int n;
     unsigned int m;
-    T *mtr;
+    std::shared_ptr<T> mtr;
 };
 
 #include "matrix_implementation.h"

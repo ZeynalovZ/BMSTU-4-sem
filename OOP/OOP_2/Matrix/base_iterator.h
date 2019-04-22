@@ -1,5 +1,6 @@
 #ifndef BASE_ITERATOR_H
 #define BASE_ITERATOR_H
+using namespace std;
 namespace iterator_core
 {
     template<typename ValueType>
@@ -18,10 +19,15 @@ namespace iterator_core
         base_iterator<ValueType>& operator --();
         base_iterator<ValueType> operator --(int);
 
+        operator bool() const;
+
 
         bool operator ==(const base_iterator<ValueType>&) const;
         bool operator !=(const base_iterator<ValueType>&) const;
     protected:
+        //std::weak_ptr<ValueType> ptr;
+        unsigned int count;
+        int index;
         ValueType *ptr;
     };
 }

@@ -107,6 +107,7 @@ int main()
         {
             std::cout << *iter << " ";
         }
+        cout << endl;
 
         Matrix<int> mtr1 ({{1, 2}, {2, 5}});
         Matrix<int> mtr2 ({{2, 5}, {1, 2}, {2, 5}});

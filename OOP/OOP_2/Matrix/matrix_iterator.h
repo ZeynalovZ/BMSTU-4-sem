@@ -7,7 +7,7 @@ class matrix_iterator : public base_iterator<ValueType>
 {
 public:
     matrix_iterator(const matrix_iterator<ValueType>&);
-
+    //shared
     ValueType &operator *();
     ValueType *operator ->();
     const ValueType &operator *() const;

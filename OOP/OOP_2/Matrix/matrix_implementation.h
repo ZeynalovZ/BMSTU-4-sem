@@ -18,7 +18,7 @@ Matrix<T>::Matrix(unsigned int n, unsigned int m)
 
     try
     {
-        this->mtr = new T[elements_count];
+        this->mtr = std::shared_ptr<T>(new T[elements_count]);
         this->auto_fill();
     }
     catch (std::bad_alloc)
@@ -38,7 +38,7 @@ Matrix<T>::Matrix(const Matrix<T> &mtr):base_container()
 
     try
     {
-        this->mtr = new T[elements_count];
+        this->mtr = std::shared_ptr<T>(new T[elements_count]);
     }
     catch(std::bad_alloc)
     {
@@ -48,7 +48,7 @@ Matrix<T>::Matrix(const Matrix<T> &mtr):base_container()
     {
         for (unsigned int j = 0; j < this->m; ++j)
         {
-            this->mtr[i * m + j] = mtr.mtr[i * m + j];
+            this->mtr.get()[i * m + j] = mtr.mtr.get()[i * m + j];
         }
     }
 }
@@ -62,7 +62,7 @@ Matrix<T>::Matrix(Matrix<T>&& mtr)
     this->elements_count = mtr.size();
     try
     {
-        this->mtr = new T[n * m];
+        this->mtr = std::shared_ptr<T>(new T[n * m]);
     }
     catch (std::bad_alloc)
     {
@@ -73,7 +73,7 @@ Matrix<T>::Matrix(Matrix<T>&& mtr)
     {
         for (unsigned int j = 0; j < m; ++j)
         {
-            this->mtr[i * m + j] = mtr.mtr[i * m + j];
+            this->mtr.get()[i * m + j] = mtr.mtr.get()[i * m + j];
         }
     }
 }
@@ -111,7 +111,7 @@ Matrix<T>::Matrix(std::initializer_list<std::initializer_list<T>> lst)
     auto iter_i = lst.begin();
     try
     {
-        this->mtr = new T[n * m];
+        this->mtr = std::shared_ptr<T>(new T[n * m]);
     }
     catch (std::bad_alloc)
     {
@@ -125,7 +125,7 @@ Matrix<T>::Matrix(std::initializer_list<std::initializer_list<T>> lst)
             auto iter_j = iter_i->begin();
             for (unsigned int j = 0; iter_j != iter_i->end(); ++j, ++iter_j)
             {
-                this->mtr[i * this->m + j] = *iter_j;
+                this->mtr.get()[i * this->m + j] = *iter_j;
             }
         }
     }
@@ -144,7 +144,7 @@ const T& Matrix<T>::get_value_by_indexes(unsigned int i, unsigned int j) const
     {
         if (this->mtr)
         {
-            return mtr[i * this->m + j];
+            return mtr.get()[i * this->m + j];
         }
         else
         {
@@ -166,7 +166,7 @@ void Matrix<T>::set_value_by_indexes(unsigned int i, unsigned int j, const T &va
     {
         if (this->mtr)
         {
-            this->mtr[i * this->m + j] = value;
+            this->mtr.get()[i * this->m + j] = value;
         }
         else
         {
@@ -187,7 +187,7 @@ Matrix<T>& Matrix<T>::operator =(const Matrix<T> &mtr)
     this->elements_count = mtr.elements_count;
     try
     {
-        this->mtr = new T[n * m];
+        this->mtr = std::shared_ptr<T>(new T[n * m]);
     }
     catch (std::bad_alloc)
     {
@@ -199,7 +199,7 @@ Matrix<T>& Matrix<T>::operator =(const Matrix<T> &mtr)
         {
             for (unsigned int j = 0; j < m_mtr; j++)
             {
-                this->mtr[i * m + j] = mtr.mtr[i * m + j];
+                this->mtr.get()[i * m + j] = mtr.mtr.get()[i * m + j];
             }
         }
     }
@@ -221,7 +221,7 @@ Matrix<T> &Matrix<T>::operator =(Matrix<T> &&mtr)
     this->elements_count = mtr.elements_count;
     try
     {
-        this->mtr = new T[n * m];
+        this->mtr = std::shared_ptr<T>(new T[n * m]);
     }
     catch (std::bad_alloc)
     {
@@ -233,7 +233,7 @@ Matrix<T> &Matrix<T>::operator =(Matrix<T> &&mtr)
         {
             for (unsigned int j = 0; j < m_mtr; j++)
             {
-                this->mtr[i * m + j] = mtr.mtr[i * m + j];
+                this->mtr.get()[i * m + j] = mtr.mtr.get()[i * m + j];
             }
         }
     }
@@ -246,7 +246,7 @@ Matrix<T> &Matrix<T>::operator =(Matrix<T> &&mtr)
 
 
 template<typename T>
-const Matrix<T> &Matrix<T>::operator +=(const Matrix<T> &mtr)
+Matrix<T> &Matrix<T>::operator +=(const Matrix<T> &mtr)
 {
     time_t t_time;
     t_time = time(NULL);
@@ -258,7 +258,7 @@ const Matrix<T> &Matrix<T>::operator +=(const Matrix<T> &mtr)
         {
             for (unsigned int j = 0; j < m_mtr; j++)
             {
-                this->mtr[i * m + j] += mtr.mtr[i * m + j];
+                this->mtr.get()[i * m + j] += mtr.mtr.get()[i * m + j];
             }
         }
     }
@@ -269,7 +269,7 @@ const Matrix<T> &Matrix<T>::operator +=(const Matrix<T> &mtr)
     return *this;
 }
 template<typename T>
-const Matrix<T> &Matrix<T>::operator -=(const Matrix<T> &mtr)
+Matrix<T> &Matrix<T>::operator -=(const Matrix<T> &mtr)
 {
     time_t t_time;
     t_time = time(NULL);
@@ -281,7 +281,7 @@ const Matrix<T> &Matrix<T>::operator -=(const Matrix<T> &mtr)
         {
             for (unsigned int j = 0; j < m_mtr; j++)
             {
-                this->mtr[i * m + j] -= mtr.mtr[i * m + j];
+                this->mtr.get()[i * m + j] -= mtr.mtr.get()[i * m + j];
             }
         }
     }
@@ -294,7 +294,7 @@ const Matrix<T> &Matrix<T>::operator -=(const Matrix<T> &mtr)
 
 
 template<typename T>
-const Matrix<T> Matrix<T>::operator +(const Matrix<T> &mtr1)
+Matrix<T> Matrix<T>::operator +(const Matrix<T> &mtr1) const
 {
     time_t t_time;
     t_time = time(NULL);
@@ -306,7 +306,7 @@ const Matrix<T> Matrix<T>::operator +(const Matrix<T> &mtr1)
         {
             for (unsigned int j = 0; j < res.get_m(); ++j)
             {
-                res.mtr[i * mtr1.get_m() + j] = this->mtr[i * mtr1.get_m() + j] + mtr1.mtr[i * mtr1.get_m() + j];
+                res.mtr.get()[i * mtr1.get_m() + j] = this->mtr.get()[i * mtr1.get_m() + j] + mtr1.mtr.get()[i * mtr1.get_m() + j];
             }
         }
         return res;
@@ -317,7 +317,7 @@ const Matrix<T> Matrix<T>::operator +(const Matrix<T> &mtr1)
     }
 }
 template<typename T>
-const Matrix<T> Matrix<T>::operator +(const T& num)
+Matrix<T> Matrix<T>::operator +(const T& num) const
 {
     time_t t_time;
     t_time = time(NULL);
@@ -333,7 +333,7 @@ const Matrix<T> Matrix<T>::operator +(const T& num)
 }
 
 template <typename T>
-const Matrix<T> Matrix<T>::operator -(const Matrix<T> &mtr1)
+Matrix<T> Matrix<T>::operator -(const Matrix<T> &mtr1) const
 {
     time_t t_time;
     t_time = time(NULL);
@@ -344,7 +344,7 @@ const Matrix<T> Matrix<T>::operator -(const Matrix<T> &mtr1)
         {
             for (unsigned int j = 0; j < res.get_m(); ++j)
             {
-                res.mtr[i * mtr1.get_m() + j] = this->mtr[i * this->m + j] - mtr1.mtr[i * mtr1.get_m() + j];
+                res.mtr.get()[i * mtr1.get_m() + j] = this->mtr.get()[i * this->m + j] - mtr1.mtr.get()[i * mtr1.get_m() + j];
             }
         }
         return res;
@@ -357,7 +357,7 @@ const Matrix<T> Matrix<T>::operator -(const Matrix<T> &mtr1)
 }
 
 template<typename T>
-const Matrix<T> Matrix<T>::operator -(const T &num)
+Matrix<T> Matrix<T>::operator -(const T &num) const
 {
     time_t t_time;
     t_time = time(NULL);
@@ -373,7 +373,7 @@ const Matrix<T> Matrix<T>::operator -(const T &num)
 }
 
 template <typename T>
-const Matrix<T> Matrix<T>::operator *(const Matrix<T> &mtr1)
+Matrix<T> Matrix<T>::operator *(const Matrix<T> &mtr1) const
 {
     time_t t_time;
     t_time = time(NULL);
@@ -390,9 +390,9 @@ const Matrix<T> Matrix<T>::operator *(const Matrix<T> &mtr1)
                 double sum = 0;
                 for (unsigned int k = 0; k < l; k++)
                 {
-                    sum += mtr1.mtr[i * m + k] * this->mtr[k * m + j];
+                    sum += mtr1.mtr.get()[i * m + k] * this->mtr.get()[k * m + j];
                 }
-                res.mtr[i * m + j] = sum;
+                res.mtr.get()[i * m + j] = sum;
             }
         }
         return res;
@@ -403,7 +403,7 @@ const Matrix<T> Matrix<T>::operator *(const Matrix<T> &mtr1)
     }
 }
 template<typename T>
-const Matrix<T> &Matrix<T>::operator *=(const Matrix<T> &mtr)
+Matrix<T> &Matrix<T>::operator *=(const Matrix<T> &mtr)
 {
     time_t t_time;
     t_time = time(NULL);
@@ -435,7 +435,7 @@ const Matrix<T> &Matrix<T>::operator *=(const Matrix<T> &mtr)
 }
 
 template<typename T>
-const Matrix<T> Matrix<T>::operator *(const T& num)
+Matrix<T> Matrix<T>::operator *(const T& num) const
 {
     Matrix<T> res = Matrix<T>(n, m);
     for (unsigned int i = 0; i < n; i++)
@@ -449,7 +449,7 @@ const Matrix<T> Matrix<T>::operator *(const T& num)
 }
 
 template<typename T>
-const Matrix<T> Matrix<T>::operator /(const T& num)
+Matrix<T> Matrix<T>::operator /(const T& num) const
 {
     Matrix<T> res = Matrix<T>(n, m);
     for (unsigned int i = 0; i < n; i++)
@@ -480,7 +480,7 @@ T &Matrix<T>::operator ()(unsigned int i, unsigned int j)
     t_time = time(NULL);
     if (this->n <= i || this->m <= j) throw mtr_index_out_exception(__FILE__, typeid(*this).name(), __LINE__ - 4, ctime(&t_time), "INDEX OUT OF RANGE");
 
-    return this->mtr[i * this->m + j];
+    return this->mtr.get()[i * this->m + j];
 }
 
 template<typename T>
@@ -489,7 +489,7 @@ T Matrix<T>::get_gauss_determinant()
     time_t t_time;
     t_time = time(NULL);
     double del = 1;
-    double max = this->mtr[0];
+    double max = this->mtr.get()[0];
     int max_pos = 0;
     int pos_n = 0;
     int pos_m = 0;
@@ -498,12 +498,12 @@ T Matrix<T>::get_gauss_determinant()
     if (n != m) throw mtr_wrong_sizes_exception(__FILE__, typeid(*this).name(), __LINE__ - 4, ctime(&t_time), "MTR SIZES SHOULD BE EQUAL");
     for (unsigned int i = 0; i < n - 1; i++)
     {
-        max = mtr[i * m + i];
+        max = mtr.get()[i * m + i];
         for (unsigned int l = i + 1; l < n; l++)
         {
-            if (fabs(mtr[l * m + i] - max) > eps)
+            if (fabs(mtr.get()[l * m + i] - max) > eps)
             {
-                max = mtr[l * m + i];
+                max = mtr.get()[l * m + i];
                 pos_n = i;
                 pos_m = l;
                 max_pos = l;
@@ -515,27 +515,27 @@ T Matrix<T>::get_gauss_determinant()
             double tmp;
             for (unsigned int i = 0; i < m; i++)
             {
-                tmp = mtr[pos_n * m + i];
-                mtr[pos_n * m + i] = mtr[pos_m * m + i];
-                mtr[pos_m * m + i] = tmp;
+                tmp = mtr.get()[pos_n * m + i];
+                mtr.get()[pos_n * m + i] = mtr.get()[pos_m * m + i];
+                mtr.get()[pos_m * m + i] = tmp;
             }
 
         }
         for (unsigned int j = i + 1; j < n; j++)
         {
-            if (mtr[i * m + i] != 0)
+            if (mtr.get()[i * m + i] != 0)
             {
-                del = mtr[j * m + i] / mtr[i * m + i];
+                del = mtr.get()[j * m + i] / mtr.get()[i * m + i];
             }
             for (unsigned int k = i; k < n; k++)
             {
-                mtr[j * m + k] -= (mtr[i * m + k] * del);
+                mtr.get()[j * m + k] -= (mtr.get()[i * m + k] * del);
             }
         }
     }
     for (unsigned int i = 0; i < n; i++)
     {
-        determinant = determinant * mtr[i * m + i];
+        determinant = determinant * mtr.get()[i * m + i];
     }
     return determinant;
 
@@ -554,11 +554,11 @@ Matrix<T> &Matrix<T>::create_identity_matrix()
         {
             if (i == j)
             {
-                mtr[i *m + j] = 1;
+                mtr.get()[i *m + j] = 1;
             }
             else
             {
-                mtr[i *m + j] = 0;
+                mtr.get()[i *m + j] = 0;
             }
         }
     }
@@ -577,9 +577,9 @@ Matrix<T>& Matrix<T>::transposition()
         {
             for (unsigned int j = i + 1; j <= 4; j++)
             {
-                T symbol = this->mtr[i * m + j];
-                this->mtr[i * m + j] = this->mtr[j * m + i];
-                this->mtr[j * m + i] = symbol;
+                T symbol = this->mtr.get()[i * m + j];
+                this->mtr.get()[i * m + j] = this->mtr.get()[j * m + i];
+                this->mtr.get()[j * m + i] = symbol;
             }
         }
         return *this;
@@ -621,7 +621,7 @@ unsigned int Matrix<T>::get_m() const
 template <typename T>
 Matrix<T>::~Matrix()
 {
-    delete this->mtr;
+    this->mtr.reset();
     this->n = 0;
     this->m = 0;
 }
@@ -630,7 +630,7 @@ void Matrix<T>::auto_fill()
 {
     for (size_t i = 0; i < this->n; i++)
         for (size_t j = 0; j < this->m; j++)
-            mtr[i * m + j] = rand() % 9 + 1;
+            mtr.get()[i * m + j] = rand() % 9 + 1;
 }
 template<typename _T>
 std::ostream& operator <<(std::ostream& os, const Matrix<_T>& matr)
@@ -639,7 +639,7 @@ std::ostream& operator <<(std::ostream& os, const Matrix<_T>& matr)
     {
         for(unsigned int j = 0; j < matr.get_m(); j++)
         {
-            os << matr.mtr[i * matr.get_m() + j] << " ";
+            os << matr.mtr.get()[i * matr.get_m() + j] << " ";
         }
         os << std::endl;
     }
@@ -649,13 +649,13 @@ std::ostream& operator <<(std::ostream& os, const Matrix<_T>& matr)
 template<typename T>
 matrix_iterator<T> Matrix<T>::begin()
 {
-    return matrix_iterator<T>(this->mtr);
+    return matrix_iterator<T>(this->mtr.get());
 }
 
 template<typename T>
 matrix_iterator<T> Matrix<T>::end()
 {
-    return matrix_iterator<T>(this->mtr + n * m);
+    return matrix_iterator<T>(this->mtr.get() + n * m);
 }
 
 template<typename T>
