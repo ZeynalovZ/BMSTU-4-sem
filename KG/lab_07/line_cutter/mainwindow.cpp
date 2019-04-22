@@ -14,7 +14,12 @@
 #define WINDOW_HEIGHT 561
 #define WINDOW_BEGIN 0
 #define BITS_COUNT 4
-#define EPS sqrt(2)
+#define EPS 1
+
+#define FIRST_RECT_XR 600
+#define FIRST_RECT_XL 300
+#define FIRST_RECT_YH 150
+#define FIRST_RECT_YL 300
 MainWindow::MainWindow(QWidget *parent) :
     QMainWindow(parent),
     ui(new Ui::MainWindow)
@@ -27,9 +32,15 @@ MainWindow::MainWindow(QWidget *parent) :
     scene->fill(QColor(Qt::white));
 
     painter = new QPainter(scene);
-    painter->setPen(Qt::black);
+    painter->setPen(Qt::red);
+    painter->drawRect(FIRST_RECT_XL, FIRST_RECT_YH, FIRST_RECT_XR - FIRST_RECT_XL, FIRST_RECT_YL - FIRST_RECT_YH);
+    rect.append(FIRST_RECT_XL);
+    rect.append(FIRST_RECT_XR);
+    rect.append(FIRST_RECT_YH);
+    rect.append(FIRST_RECT_YL);
+    flag_rect_set = true;
     ui->draw_label->setPixmap(*scene);
-
+    painter->setPen(Qt::black);
     QPalette Pal(palette());
     Pal.setColor(QPalette::Background, Qt::black);
 
@@ -219,6 +230,7 @@ void MainWindow::mousePressEvent(QMouseEvent *event)
                     }
                 }
                 flag_line_exist = true;
+                painter->setRenderHint(QPainter::Antialiasing, true);
                 draw_line(*painter, x, y, first_x, first_y, flag_first_touched, lines);
             }
         }
@@ -226,6 +238,7 @@ void MainWindow::mousePressEvent(QMouseEvent *event)
         {
             if (flag_rect_set == false)
             {
+                painter->setRenderHint(QPainter::Antialiasing, true);
                 painter->setPen(cutter_color);
                 draw_rect(*painter, x, y, first_rect_x, first_rect_y, flag_first_rect_touched, flag_rect_set, rect);
             }
@@ -325,9 +338,9 @@ int get_p(int *array1, int *array2,  int size)
 
 void MainWindow::on_cut_button_clicked()
 {
+    painter->setRenderHint(QPainter::Antialiasing, true);
     if (flag_line_exist && flag_rect_set)
     {
-        // here algorithm
         for (int j = 0; j < lines.size(); j += 2)
         {
             // lines[i] = P1 and lines[i + 1] = P2 // P1, P2 - points
@@ -343,8 +356,8 @@ void MainWindow::on_cut_button_clicked()
                 set_bits(rect, P1, T1);
                 set_bits(rect, P2, T2);
 
-                qDebug() << T1[0] << T1[1] << T1[2] << T1[3] << "T1";
-                qDebug() << T2[0] << T2[1] << T2[2] << T2[3] << "T2";
+                //qDebug() << T1[0] << T1[1] << T1[2] << T1[3] << "T1";
+                //qDebug() << T2[0] << T2[1] << T2[2] << T2[3] << "T2";
 
                 S1 = get_sum(T1, BITS_COUNT);
                 S2 = get_sum(T2, BITS_COUNT);
@@ -354,7 +367,7 @@ void MainWindow::on_cut_button_clicked()
                 {
                     qDebug() << "Отрезок полностью видим";
                     painter->setPen(QPen(outline_color, 2));
-                    painter->drawLine(P1, P2);
+                    painter->drawLine(round(P1.x()), round(P1.y()), round(P2.x()), round(P2.y()));
                     ui->draw_label->setPixmap(*scene);
                     break;
                 }
@@ -369,7 +382,7 @@ void MainWindow::on_cut_button_clicked()
                         {
                             qDebug() << P1 << P2;
                             painter->setPen(QPen(outline_color, 2));
-                            painter->drawLine(P1, P2);
+                            painter->drawLine(round(P1.x()), round(P1.y()), round(P2.x()), round(P2.y()));
                             ui->draw_label->setPixmap(*scene);
                             break;
                         }
@@ -390,8 +403,8 @@ void MainWindow::on_cut_button_clicked()
                         {
 
                             QPoint Pm;
-                            Pm.setX((round((P1.x() + P2.x()) / 2)));
-                            Pm.setY((round((P1.y() + P2.y()) / 2)));
+                            Pm.setX(((P1.x() + P2.x()) / 2));
+                            Pm.setY((P1.y() + P2.y()) / 2);
                             temp_memory = P1;
                             P1 = Pm;
                             set_bits(rect, P1, T1);
@@ -452,5 +465,6 @@ void MainWindow::on_delete_cutter_button_clicked()
         ui->draw_label->setPixmap(*scene);
     }
     flag_rect_set = false;
+    rect.clear();
     ui->draw_label->setPixmap(*scene);
 }
