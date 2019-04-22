@@ -14,7 +14,7 @@
 #define WINDOW_HEIGHT 561
 #define WINDOW_BEGIN 0
 #define BITS_COUNT 4
-#define EPS 1
+#define EPS sqrt(2)
 
 #define FIRST_RECT_XR 600
 #define FIRST_RECT_XL 300
@@ -367,7 +367,8 @@ void MainWindow::on_cut_button_clicked()
                 {
                     qDebug() << "Отрезок полностью видим";
                     painter->setPen(QPen(outline_color, 2));
-                    painter->drawLine(round(P1.x()), round(P1.y()), round(P2.x()), round(P2.y()));
+                    painter->drawLine(P1.x(), P1.y(), P2.x(), P2.y());
+                    //painter->drawLine(round(P1.x()), round(P1.y()), round(P2.x()), round(P2.y()));
                     ui->draw_label->setPixmap(*scene);
                     break;
                 }
@@ -382,7 +383,7 @@ void MainWindow::on_cut_button_clicked()
                         {
                             qDebug() << P1 << P2;
                             painter->setPen(QPen(outline_color, 2));
-                            painter->drawLine(round(P1.x()), round(P1.y()), round(P2.x()), round(P2.y()));
+                            painter->drawLine(P1.x(), P1.y(), P2.x(), P2.y());
                             ui->draw_label->setPixmap(*scene);
                             break;
                         }
@@ -399,12 +400,12 @@ void MainWindow::on_cut_button_clicked()
                     }
                     else
                     {
-                        while (abs(P1.x() - P2.x()) > EPS || abs(P1.y() - P2.y()) > EPS)
+                        while (abs(P1.x() - P2.x()) >= EPS || abs(P1.y() - P2.y()) >= EPS)
                         {
 
                             QPoint Pm;
-                            Pm.setX(((P1.x() + P2.x()) / 2));
-                            Pm.setY((P1.y() + P2.y()) / 2);
+                            Pm.setX((P1.x() + P2.x()) >> 1);
+                            Pm.setY((P1.y() + P2.y()) >> 1);
                             temp_memory = P1;
                             P1 = Pm;
                             set_bits(rect, P1, T1);
