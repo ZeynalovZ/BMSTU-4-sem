@@ -356,8 +356,6 @@ void MainWindow::on_cut_button_clicked()
                 set_bits(rect, P1, T1);
                 set_bits(rect, P2, T2);
 
-                //qDebug() << T1[0] << T1[1] << T1[2] << T1[3] << "T1";
-                //qDebug() << T2[0] << T2[1] << T2[2] << T2[3] << "T2";
 
                 S1 = get_sum(T1, BITS_COUNT);
                 S2 = get_sum(T2, BITS_COUNT);
@@ -400,7 +398,7 @@ void MainWindow::on_cut_button_clicked()
                     }
                     else
                     {
-                        while (abs(P1.x() - P2.x()) >= EPS || abs(P1.y() - P2.y()) >= EPS)
+                        while (abs(P1.x() - P2.x()) > EPS || abs(P1.y() - P2.y()) > EPS)
                         {
 
                             QPoint Pm;
