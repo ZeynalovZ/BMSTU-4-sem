@@ -26,7 +26,7 @@ MainWindow::MainWindow(QWidget *parent) :
 {
     ui->setupUi(this);
     ui->draw_label->setPalette(QColor(Qt::white));
-
+    this->setWindowTitle("Лр7. Отсечение половинным делением");
 
     scene = new QPixmap(881, 561);
     scene->fill(QColor(Qt::white));
