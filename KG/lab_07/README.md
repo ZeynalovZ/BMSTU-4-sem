@@ -8,9 +8,8 @@
   
   3 * Рисует след рисунок и спрашивает* 
   
-https://github.com/ZeynalovZ/BMSTU-4-sem/blob/master/KG/lab_07/Кур.PNG
+  ![](https://github.com/ZeynalovZ/BMSTU-4-sem/blob/master/KG/lab_07/Кур.PNG)
 
-  
 
     как будет работать алгоритм для отрезков а и b ?
 
