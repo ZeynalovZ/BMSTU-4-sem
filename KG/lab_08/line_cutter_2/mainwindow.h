@@ -30,8 +30,6 @@ public:
     int prev_rect_x = -1;
     int prev_y = -1;
     int prev_rect_y = -1;
-    int pixel_begin_x = -1;
-    int pixel_begin_y = -1;
     int first_x;
     int first_y;
     int first_rect_x;
@@ -39,7 +37,7 @@ public:
     bool flag_line_exist = false;
     bool flag_first_touched = false;
     bool flag_first_rect_touched = false;
-    bool flag_rect_set = false; // for filling may be only 1
+    bool flag_rect_set = false; // for cutting may be only 1
     bool flag_delete_cutter = false;
 private slots:
     void on_add_point_button_clicked();
