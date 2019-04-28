@@ -511,13 +511,29 @@ void CyrusBekaAlgorithm(QPoint P1, QPoint P2, int obhod, QVector<edge_t> rect, Q
         QPoint nVector;
         if (i == rect.size() - 1)
         {
-            nVector.setX(-obhod * (rect[0].y1 - rect[i].y1));
-            nVector.setY(obhod * (rect[0].x1 - rect[i].x1));
+            if (obhod == 1)
+            {
+                nVector.setX(-(rect[0].y1 - rect[i].y1));
+                nVector.setY((rect[0].x1 - rect[i].x1));
+            }
+            else
+            {
+                nVector.setX((rect[0].y1 - rect[i].y1));
+                nVector.setY(-(rect[0].x1 - rect[i].x1));
+            }
         }
         else
         {
-            nVector.setX(-obhod * (rect[i + 1].y1 - rect[i].y1));
-            nVector.setY(obhod * (rect[i + 1].x1 - rect[i].x1));
+            if (obhod == 1)
+            {
+                nVector.setX(-(rect[i + 1].y1 - rect[i].y1));
+                nVector.setY((rect[i + 1].x1 - rect[i].x1));
+            }
+            else
+            {
+                nVector.setX((rect[i + 1].y1 - rect[i].y1));
+                nVector.setY(-(rect[i + 1].x1 - rect[i].x1));
+            }
         }
         int Dscalar = scalar(D, nVector);
         int Wscalar = scalar(W, nVector);
@@ -540,6 +556,7 @@ void CyrusBekaAlgorithm(QPoint P1, QPoint P2, int obhod, QVector<edge_t> rect, Q
             {
                 if (t_curr > 1)
                 {
+                    qDebug() << "t_curr > 1";
                     return;
                 }
                 else
@@ -551,6 +568,7 @@ void CyrusBekaAlgorithm(QPoint P1, QPoint P2, int obhod, QVector<edge_t> rect, Q
             {
                 if (t_curr < 0)
                 {
+                    qDebug() << "t_curr < 0";
                     return;
                 }
                 else
@@ -566,6 +584,10 @@ void CyrusBekaAlgorithm(QPoint P1, QPoint P2, int obhod, QVector<edge_t> rect, Q
                          P1.y() + (P2.y() - P1.y()) * te,
                          P1.x() + (P2.x() - P1.x()) * tb,
                          P1.y() + (P2.y() - P1.y()) * tb);
+    }
+    else
+    {
+        qDebug() << "else";
     }
     return;
 }
