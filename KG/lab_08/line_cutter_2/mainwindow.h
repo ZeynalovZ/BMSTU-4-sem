@@ -5,14 +5,7 @@
 #include <QPixmap>
 #include <QMouseEvent>
 
-typedef struct EDGE edge_t;
-struct EDGE
-{
-    int x1;
-    int y1;
-    int x2;
-    int y2;
-};
+#include "algorithm.h"
 
 namespace Ui {
 class MainWindow;
@@ -34,6 +27,9 @@ public:
     int first_y;
     int first_rect_x;
     int first_rect_y;
+    int first_paral_x;
+    int first_paral_y;
+    bool first_point_of_paral_line = false;
     bool flag_line_exist = false;
     bool flag_first_touched = false;
     bool flag_first_rect_touched = false;

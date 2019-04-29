@@ -6,6 +6,7 @@
 #include <QMessageBox>
 #include <cmath>
 #include <QGraphicsScene>
+#include "algorithm.h"
 #define X_WIDTH 881
 #define Y_WIDTH 561
 #define OFFSET_X_MOUSE 10
@@ -14,35 +15,10 @@
 #define WINDOW_HEIGHT 561
 #define WINDOW_BEGIN 0
 #define BITS_COUNT 4
-#define EPS sqrt(2)
-
-#define FIRST_RECT_XR 600
-#define FIRST_RECT_XL 300
-#define FIRST_RECT_YH 150
-#define FIRST_RECT_YL 300
 
 #define SHIFT_BUTTON 0
 #define LEFT_BUTTON 1
 #define RIGHT_BUTTON 2
-
-struct tVector {
-    int x;
-    int y;
-    int z;
-    tVector() {}
-    tVector(int a, int b, int c = 0)
-    {
-        x = a;
-        y = b;
-        z = c;
-    }
-    tVector(QPoint end, QPoint start)
-    {
-        x = end.x() - start.x();
-        y = end.y() - start.y();
-        z = 0;
-    }
-};
 
 MainWindow::MainWindow(QWidget *parent) :
     QMainWindow(parent),
@@ -90,30 +66,6 @@ void message_box(QString message)
     msgBox.setStandardButtons(QMessageBox::Ok);
     msgBox.exec();
 }
-
-double min(double p1, double p2)
-{
-    if (p1 < p2)
-    {
-        return p1;
-    }
-    else
-    {
-        return p2;
-    }
-}
-double max(double p1, double p2)
-{
-    if (p1 < p2)
-    {
-        return p2;
-    }
-    else
-    {
-        return p1;
-    }
-}
-
 void draw_rect(QPainter &painter, int &x, int &y, int &first_rect_x,
                int &first_rect_y, bool &flag_first_rect_touched, bool &flag_rect_set, QVector<edge_t> &rect, int event,
                int &prev_rect_x, int &prev_rect_y)
@@ -162,6 +114,7 @@ void draw_rect(QPainter &painter, int &x, int &y, int &first_rect_x,
 void draw_line(QPainter &painter, int &x, int &y, int &first_x, int &first_y, bool &flag_first_touched, QVector<QPoint> &lines)
 {
     painter.drawPoint(x, y);
+    painter.setRenderHint(QPainter::Antialiasing, true);
     if (flag_first_touched == false)
     {
         first_x = x;
@@ -243,7 +196,55 @@ void MainWindow::on_line_color_button_clicked()
     ui->line_color_label->show();
 }
 
+double distance(QPoint a, QPoint b)
+{
+    return sqrt((a.x() - b.x()) * (a.x() - b.x()) + (a.y() - b.y()) * (a.y() - b.y()));
+}
+double CalculateDistance(edge_t edge, int x, int y)
+{
+    int x1 = edge.x1;
+    int x2 = edge.x2;
+    int y1 = edge.y1;
+    int y2 = edge.y2;
+    double ab, bp, ap;
+    ab = distance(QPoint(x1, y1), QPoint(x2, y2));
+    bp = distance(QPoint(x, y), QPoint(x2, y2));
+    ap = distance(QPoint(x, y), QPoint(x1, y1));
+    if (bp * bp + ab * ab < ap * ap)
+    {
+        return bp;
+    }
+    if (bp * bp > ab * ab + ap * ap)
+    {
+        return ap;
+    }
+    double distance = fabs((y2 - y1) * x - (x2 - x1) * y + x2 * y1 - y2 * x1) / ab;
+    return distance;
+}
 
+int selectParalLine(QVector<edge_t> rect, int x, int y)
+{
+    int min_index = 0;
+    double min = CalculateDistance(rect[0], x, y);  // initialiazing
+    for (int i = 1; i < rect.size(); i++)
+    {
+        double tmp_min = CalculateDistance(rect[i], x, y);
+        if (tmp_min < min)
+        {
+            min_index = i;
+            min = tmp_min;
+        }
+    }
+    return min_index;
+}
+
+double CalculateKoeffAngle(QVector<edge_t> rect, int index_min)
+{
+    double dy = rect[index_min].y2 - rect[index_min].y1;
+    double dx = rect[index_min].x2 - rect[index_min].x1;
+    double k = dy / dx;
+    return k;
+}
 
 void MainWindow::mousePressEvent(QMouseEvent *event)
 {
@@ -309,6 +310,7 @@ void MainWindow::mousePressEvent(QMouseEvent *event)
                 // Тип иконки сообщения
                 msgBox.setIcon(QMessageBox::Information);
                 msgBox.setInformativeText("Отсекатель уже введен, ввести новый?");
+                msgBox.setWindowTitle("Внимание !");
                 // На какой кнопке фокусироваться по умолчанию
                 msgBox.setStandardButtons(QMessageBox::Yes | QMessageBox::No);
                 int ret = msgBox.exec();
@@ -319,6 +321,42 @@ void MainWindow::mousePressEvent(QMouseEvent *event)
                 default:
                     break;
                 }
+            }
+        }
+        else if (ui->paralLine_radio->isChecked())
+        {
+            int paralLineForIndex = 0;
+            painter->setRenderHint(QPainter::Antialiasing, true);
+            painter->setPen(line_color);
+            if (flag_rect_set == true)
+            {
+                if (first_point_of_paral_line == false)
+                {
+                    first_paral_x = x;
+                    first_paral_y = y;
+                    first_point_of_paral_line = true; // first was set
+                }
+                else
+                {
+                    paralLineForIndex = selectParalLine(rect, first_paral_x, first_paral_y);
+                    first_point_of_paral_line = false; // Todo (here should be multiply of k and prev params)
+                    double k = CalculateKoeffAngle(rect, paralLineForIndex);
+                    if (k <= 1)
+                    {
+                        y = round((x - first_paral_x) * k) + first_paral_y;
+                    }
+                    else
+                    {
+                        x = round((y - first_paral_y) / k) + first_paral_x;
+                    }
+                    lines.append(QPoint(x, y));
+                    lines.append(QPoint(first_paral_x, first_paral_y));
+                    painter->drawLine(x, y, first_paral_x, first_paral_y);
+                }
+            }
+            else
+            {
+                message_box("Отсекатель не задан!");
             }
         }
         ui->draw_label->setPixmap(*scene);
@@ -369,235 +407,15 @@ void MainWindow::on_cutter_color_button_clicked()
     ui->cutter_color_label->setPalette(Pal);
     ui->cutter_color_label->show();
 }
-int CheckDirection(QVector<int> signs)
-{
-    int size = signs.size();
-    int CountOfPositive = 0;
-    for (int i = 0; i < size; i++)
-    {
-        if (signs[i] >= 0)
-        {
-            CountOfPositive++;
-        }
-    }
-    if (CountOfPositive == size)
-    {
-        return 1; // Right
-    }
-    else
-    {
-        return -1; // Left
-    }
-}
-bool CheckSigns(QVector<int> signs)
-{
-    int size = signs.size();
-    int curr;
-    int prev = signs[0];
-    int CountOfZeroSigns = 0;
-    if (prev == 0)
-    {
-        CountOfZeroSigns++;
-    }
-    bool flag = true; // is equal
-    for (int i = 1; i < size; i++)
-    {
-        curr = signs[i];
-        if (curr != prev && curr != 0 && prev != 0)
-        {
-            flag = false; // not equal
-        }
-        else if (curr == 0)
-        {
-            CountOfZeroSigns++;
-        }
-        prev = curr;
-    }
-    if (CountOfZeroSigns == size)
-    {
-        flag = false; // all of signs are zero
-    }
-    return flag;
-}
 
-int sign(int VectorMult)
-{
-    if (VectorMult == 0)
-    {
-        return 0;
-    }
-    else
-    {
-        return VectorMult / abs(VectorMult);
-    }
-}
-
-bool IsConvex(QVector<edge_t> rect, int &obhod)
-{
-    int size = rect.size();
-    QVector<int> signs;
-    bool flag = false;
-    if (size > 2)
-    {
-        for (int i = 0; i < size - 1; i++)
-        {
-            edge_t first = rect[i];
-            edge_t second = rect[i + 1];
-            int xVector1 = first.x2 - first.x1;
-            int yVector1 = first.y2 - first.y1;
-
-            int xVector2 = second.x2 - second.x1;
-            int yVector2 = second.y2 - second.y1;
-
-            int VectorMult = xVector1 * yVector2 - yVector1 * xVector2;
-            int MultSign = sign(VectorMult);
-            signs.append(MultSign);
-        }
-        // не забываем про последнюю вершину
-        edge_t first = rect[size -1];
-        edge_t second = rect[0];
-        int xVector1 = first.x2 - first.x1;
-        int yVector1 = first.y2 - first.y1;
-
-        int xVector2 = second.x2 - second.x1;
-        int yVector2 = second.y2 - second.y1;
-
-        int VectorMult = xVector1 * yVector2 - yVector1 * xVector2;
-        int MultSign = sign(VectorMult);
-        signs.append(MultSign);
-        flag = CheckSigns(signs);
-        // if is convex
-        if (flag == true)
-        {
-            obhod = CheckDirection(signs);
-        }
-    }
-    return flag;
-}
-
-void findNormVectors(QVector<edge_t> rect, int obhod, QVector<tVector> &normVect)
-{
-    int n = rect.size() - 1;
-    tVector b;
-    for(int i = 0; i < n - 1; i++) {
-        b = tVector(QPoint(rect[i + 1].x1, rect[i + 1].y1), QPoint(rect[i].x1, rect[i].y1));
-        if(obhod == -1)
-            normVect.append(tVector(b.y, -b.x));
-        else
-            normVect.append(tVector(-b.y, b.x));
-    }
-}
-
-
-int scalar(QPoint Vector1, QPoint Vector2)
-{
-    return Vector1.x() * Vector2.x() + Vector1.y() * Vector2.y();
-}
-
-void CyrusBekaAlgorithm(QPoint P1, QPoint P2, int obhod, QVector<edge_t> rect, QPainter &painter)
-{
-    double tb = 0;
-    double te = 1;
-    double t_curr = 0;
-    QPoint D;
-    D.setX(P2.x() - P1.x());
-    D.setY(P2.y() - P1.y());
-    for (int i = 0; i < rect.size(); i++)
-    {
-        QPoint W;
-        W.setX(P1.x() - rect[i].x1);
-        W.setY(P1.y() - rect[i].y1);
-
-        QPoint nVector;
-        if (i == rect.size() - 1)
-        {
-            if (obhod == 1)
-            {
-                nVector.setX(-(rect[0].y1 - rect[i].y1));
-                nVector.setY((rect[0].x1 - rect[i].x1));
-            }
-            else
-            {
-                nVector.setX((rect[0].y1 - rect[i].y1));
-                nVector.setY(-(rect[0].x1 - rect[i].x1));
-            }
-        }
-        else
-        {
-            if (obhod == 1)
-            {
-                nVector.setX(-(rect[i + 1].y1 - rect[i].y1));
-                nVector.setY((rect[i + 1].x1 - rect[i].x1));
-            }
-            else
-            {
-                nVector.setX((rect[i + 1].y1 - rect[i].y1));
-                nVector.setY(-(rect[i + 1].x1 - rect[i].x1));
-            }
-        }
-        int Dscalar = scalar(D, nVector);
-        int Wscalar = scalar(W, nVector);
-        // проверка на вырожденость отрезка в точку
-        if (Dscalar == 0)
-        {
-            //qDebug() << "Dscalar == 0";
-            // отрезок выродился в точку
-            if (Wscalar < 0)
-            {
-                //qDebug() << "Wscalar == 0";
-                // Точка видима относительно текущей границы
-                return;
-            }
-        }
-        else
-        {
-            t_curr = -(double)Wscalar / Dscalar;
-            if (Dscalar > 0)
-            {
-                if (t_curr > 1)
-                {
-                    qDebug() << "t_curr > 1";
-                    return;
-                }
-                else
-                {
-                    tb = qMax(t_curr, tb);
-                }
-            }
-            else if (Dscalar < 0)
-            {
-                if (t_curr < 0)
-                {
-                    qDebug() << "t_curr < 0";
-                    return;
-                }
-                else
-                {
-                    te = qMin(t_curr, te);
-                }
-            }
-        }
-    }
-    if (tb <= te)
-    {
-        painter.drawLine(P1.x() + (P2.x() - P1.x()) * te,
-                         P1.y() + (P2.y() - P1.y()) * te,
-                         P1.x() + (P2.x() - P1.x()) * tb,
-                         P1.y() + (P2.y() - P1.y()) * tb);
-    }
-    else
-    {
-        qDebug() << "else";
-    }
-    return;
-}
 void MainWindow::on_cut_button_clicked()
 {
     int obhod = 0;
     bool flag = IsConvex(rect, obhod);
     if (flag == true)
     {
-        painter->setPen(outline_color);
+        painter->setRenderHint(QPainter::Antialiasing, true);
+        painter->setPen(QPen(outline_color, 2));
         int lines_count = lines.size();
         for (int i = 1; i < lines_count; i += 2)
         {
