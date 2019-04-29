@@ -501,7 +501,7 @@ void CyrusBekaAlgorithm(QPoint P1, QPoint P2, int obhod, QVector<edge_t> rect, Q
     double t_curr = 0;
     QPoint D;
     D.setX(P2.x() - P1.x());
-    D.setY(P2.y() - P2.y());
+    D.setY(P2.y() - P1.y());
     for (int i = 0; i < rect.size(); i++)
     {
         QPoint W;
@@ -561,7 +561,7 @@ void CyrusBekaAlgorithm(QPoint P1, QPoint P2, int obhod, QVector<edge_t> rect, Q
                 }
                 else
                 {
-                    tb = max(t_curr, tb);
+                    tb = qMax(t_curr, tb);
                 }
             }
             else if (Dscalar < 0)
@@ -573,7 +573,7 @@ void CyrusBekaAlgorithm(QPoint P1, QPoint P2, int obhod, QVector<edge_t> rect, Q
                 }
                 else
                 {
-                    te = min(t_curr, te);
+                    te = qMin(t_curr, te);
                 }
             }
         }
@@ -607,7 +607,7 @@ void MainWindow::on_cut_button_clicked()
     }
     else
     {
-        qDebug() << "is NOT convex";
+        message_box("Многоугольник не выпуклый!");
     }
 }
 
