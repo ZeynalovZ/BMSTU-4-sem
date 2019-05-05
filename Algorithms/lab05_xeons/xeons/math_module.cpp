@@ -93,7 +93,7 @@ double get_p_result(double Pbeg, double Tbeg, double T0, double Tw, int m)
         }
         else
         {
-            cout << "not founded" << endl;
+            cout << "not found" << endl;
             break;
         }
         p_mid = (p1 + p2) / 2;
