@@ -110,13 +110,14 @@ double diffFunc(double x)
     // ln(x);
     return 1 / x;
 }
+
+
 double getAlignment(double x, double y, double rightX, double rightY)
 {
     return ((y * y) / (x * x)) * rightDiff(diffFunc(rightY), diffFunc(y), getH(diffFunc(x), diffFunc(rightX)));
 }
 void fillTable(table_t &table, int h, unsigned int r)
 {
-    int a[3] = {1, 2, 3};
     for (unsigned int i = 0; i < table.rowCount; i++)
     {
         // 1
@@ -149,7 +150,6 @@ void fillTable(table_t &table, int h, unsigned int r)
                     table.table[i + r][1], table.table[i - r][1], r, h);
         }
         // 5
-        //table.table[i][6] = func(a, table.table[i][0]);
 
         if (i == table.rowCount - 1)
         {
@@ -159,6 +159,7 @@ void fillTable(table_t &table, int h, unsigned int r)
         {
             table.table[i][6] = getAlignment(table.table[i][0], table.table[i][1], table.table[i + 1][0], table.table[i + 1][1]);
         }
+
         table.table[i][7] = diffFunc(table.table[i][0]);
     }
 }
