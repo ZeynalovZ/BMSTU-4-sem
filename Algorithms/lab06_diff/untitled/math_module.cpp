@@ -4,11 +4,20 @@
 
 using namespace std;
 
-
+static double a0 = 1;
+static double a1 = 2;
+static double a2 = 3;
 
 double f(double x)
+{    
+    return (a0 * x) / (a1 + a2 * x);
+}
+
+
+double diffFunc(double x)
 {
-    return log(x);
+    // f(x);
+    return (a0 * a1) / pow((a1 + a2 * x), 2);
 }
 
 int CreateTable(table_t &table, int begin, int end, int step)
@@ -105,17 +114,38 @@ double getH(double x1, double x2)
 {
     return fabs(x1 - x2);
 }
-double diffFunc(double x)
+
+
+double ksi(double x)
 {
-    // ln(x);
     return 1 / x;
 }
 
+double eta(double x)
+{
+    return 1 / f(x);
+}
+
+double ksiDiff(double x)
+{
+    return -1 / pow(x, 2);
+}
+
+double etaDiff(double y)
+{
+    return -1 / pow(y, 2);
+}
+
+double EtaKsiDiff()
+{
+    return a1 / a0;
+}
 
 double getAlignment(double x, double y, double rightX, double rightY)
 {
     return ((y * y) / (x * x)) * rightDiff(diffFunc(rightY), diffFunc(y), getH(diffFunc(x), diffFunc(rightX)));
 }
+
 void fillTable(table_t &table, int h, unsigned int r)
 {
     for (unsigned int i = 0; i < table.rowCount; i++)
@@ -150,7 +180,7 @@ void fillTable(table_t &table, int h, unsigned int r)
                     table.table[i + r][1], table.table[i - r][1], r, h);
         }
         // 5
-
+        /*
         if (i == table.rowCount - 1)
         {
             table.table[i][6] = -getAlignment(table.table[i][0], table.table[i][1], table.table[i - 1][0], table.table[i - 1][1]);
@@ -159,7 +189,28 @@ void fillTable(table_t &table, int h, unsigned int r)
         {
             table.table[i][6] = getAlignment(table.table[i][0], table.table[i][1], table.table[i + 1][0], table.table[i + 1][1]);
         }
-
+        */
+        table.table[i][6] = EtaKsiDiff() * ksiDiff(table.table[i][0]) / etaDiff(table.table[i][1]);
         table.table[i][7] = diffFunc(table.table[i][0]);
     }
+    /*
+    for (unsigned int i = 0; i < table.rowCount; i++)
+    {
+        if (i != 0 && i != table.rowCount - 1)
+        {
+            ksi_strih_x = midDdiff(ksi(table.table[i - 1][0]), ksi(table.table[i + 1][0]), h);
+            ksi_array[i] = ksi_strih_x;
+        }
+    }
+    for (unsigned int i = 0; i < table.rowCount; i++)
+    {
+        if (i != 0 && i != table.rowCount - 1)
+        {
+            eta_shtrih_y = midDdiff(eta(table.table[i - 1][1]), eta(table.table[i + 1][1]), h);
+            table.table[i][6] = midDdiff(eta(ksi_array[i - 1]), eta(ksi_array[i + 1]), h) * ksi_array[i] / eta_shtrih_y;
+        }
+
+    }
+    */
+
 }
