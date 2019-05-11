@@ -1,0 +1,13 @@
+INPUT(
+./release/main.o
+./release/mainwindow.o
+./release/mylift.o
+./release/liftbuttons.o
+./release/liftdoors.o
+./release/liftcabin.o
+./release/controller.o
+./release/moc_mainwindow.o
+./release/moc_liftbuttons.o
+./release/moc_liftcabin.o
+./release/moc_controller.o
+);
