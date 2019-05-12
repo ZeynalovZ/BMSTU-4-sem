@@ -6,6 +6,7 @@
 #define FLOOR_NUMBERS 10
 #include "liftbuttons.h"
 #include "mylift.h"
+#include "neededlibs.h"
 namespace Ui {
 class MainWindow;
 }

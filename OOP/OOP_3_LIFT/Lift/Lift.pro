@@ -38,7 +38,8 @@ HEADERS += \
     liftbuttons.h \
     liftdoors.h \
     liftcabin.h \
-    controller.h
+    controller.h \
+    neededlibs.h
 
 FORMS += \
         mainwindow.ui

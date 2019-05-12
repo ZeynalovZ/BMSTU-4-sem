@@ -25,8 +25,31 @@ Controller::~Controller()
 
 }
 
+bool Controller::TargetExists()
+{
+    for (int i = 0; i < FLOOR_NUMBERS; i++)
+    {
+        if (TargetsArray[i] == true)
+            return true;
+    }
+    return false;
+}
+
+void Controller::passCurrentFloor(int floor, Direction direct)
+{
+    currentFloor = floor;
+    currentDirection = direct;
+    //qDebug() << "floor" << floor << "was passed";
+}
+
+void Controller::AchieveFloor(int floor)
+{
+    emit buttons[floor]->resetButton();
+}
+
 void Controller::slotAddNewTarget(int floor)
 {
+    TargetsArray[floor] = true;
     qDebug() << "slotAddNewFloor" << floor;
     state = BUSY;
     // needed queue here

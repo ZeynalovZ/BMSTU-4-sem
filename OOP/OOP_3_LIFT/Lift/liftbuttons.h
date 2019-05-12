@@ -3,6 +3,7 @@
 #include <QPushButton>
 #include <QDebug>
 #include "QObject"
+#include "neededlibs.h"
 class LiftButtons : public QPushButton
 {
     Q_OBJECT

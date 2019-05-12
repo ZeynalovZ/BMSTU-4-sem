@@ -1,9 +1,11 @@
 #ifndef LIFTCABIN_H
 #define LIFTCABIN_H
 #include <QObject>
+#include <QTimer>
 #include <liftbuttons.h>
 #include "controller.h"
-
+#include "neededlibs.h"
+#include "liftdoors.h"
 class LiftCabin : public QObject
 {
     Q_OBJECT
@@ -13,21 +15,30 @@ class LiftCabin : public QObject
         BUSY,
         FREE
     };
+
 public:
     explicit LiftCabin(QObject *parent = 0);
     virtual ~LiftCabin();
 
 public slots:
-    void FloorAchieving(int floor);
+    void FloorAchieving();
+    void slotBusy(int floor);
     void Stay();
+
 
 signals:
     void FloorAchieved();
+    void FloorPassed(int floor, Direction direction);
+    void Move();
+    void AchievedForResetButton(int floor);
 
 private:
     CabinState state;
-    unsigned int CurrentFloor;
+    int CurrentFloor;
     unsigned int TargetFloor;
+    Direction currentDirection;
+    QTimer floorMoving;
+    LiftDoors doors;
 };
 
 #endif // LIFTCABIN_H

@@ -1,16 +1,16 @@
 /****************************************************************************
-** Meta object code from reading C++ file 'liftcabin.h'
+** Meta object code from reading C++ file 'liftbuttons.h'
 **
 ** Created by: The Qt Meta Object Compiler version 67 (Qt 5.10.1)
 **
 ** WARNING! All changes made in this file will be lost!
 *****************************************************************************/
 
-#include "../../Lift/liftcabin.h"
+#include "../../Lift/liftbuttons.h"
 #include <QtCore/qbytearray.h>
 #include <QtCore/qmetatype.h>
 #if !defined(Q_MOC_OUTPUT_REVISION)
-#error "The header file 'liftcabin.h' doesn't include <QObject>."
+#error "The header file 'liftbuttons.h' doesn't include <QObject>."
 #elif Q_MOC_OUTPUT_REVISION != 67
 #error "This file was generated using the moc from 5.10.1. It"
 #error "cannot be used with the include files from this version of Qt."
@@ -20,35 +20,32 @@
 QT_BEGIN_MOC_NAMESPACE
 QT_WARNING_PUSH
 QT_WARNING_DISABLE_DEPRECATED
-struct qt_meta_stringdata_LiftCabin_t {
-    QByteArrayData data[9];
-    char stringdata0[83];
+struct qt_meta_stringdata_LiftButtons_t {
+    QByteArrayData data[7];
+    char stringdata0[69];
 };
 #define QT_MOC_LITERAL(idx, ofs, len) \
     Q_STATIC_BYTE_ARRAY_DATA_HEADER_INITIALIZER_WITH_OFFSET(len, \
-    qptrdiff(offsetof(qt_meta_stringdata_LiftCabin_t, stringdata0) + ofs \
+    qptrdiff(offsetof(qt_meta_stringdata_LiftButtons_t, stringdata0) + ofs \
         - idx * sizeof(QByteArrayData)) \
     )
-static const qt_meta_stringdata_LiftCabin_t qt_meta_stringdata_LiftCabin = {
+static const qt_meta_stringdata_LiftButtons_t qt_meta_stringdata_LiftButtons = {
     {
-QT_MOC_LITERAL(0, 0, 9), // "LiftCabin"
-QT_MOC_LITERAL(1, 10, 13), // "FloorAchieved"
+QT_MOC_LITERAL(0, 0, 11), // "LiftButtons"
+QT_MOC_LITERAL(1, 12, 11), // "resetButton"
 QT_MOC_LITERAL(2, 24, 0), // ""
-QT_MOC_LITERAL(3, 25, 11), // "FloorPassed"
-QT_MOC_LITERAL(4, 37, 5), // "floor"
-QT_MOC_LITERAL(5, 43, 9), // "Direction"
-QT_MOC_LITERAL(6, 53, 9), // "direction"
-QT_MOC_LITERAL(7, 63, 14), // "FloorAchieving"
-QT_MOC_LITERAL(8, 78, 4) // "Stay"
+QT_MOC_LITERAL(3, 25, 12), // "floorRequest"
+QT_MOC_LITERAL(4, 38, 5), // "floor"
+QT_MOC_LITERAL(5, 44, 11), // "slotPressed"
+QT_MOC_LITERAL(6, 56, 12) // "slotReleased"
 
     },
-    "LiftCabin\0FloorAchieved\0\0FloorPassed\0"
-    "floor\0Direction\0direction\0FloorAchieving\0"
-    "Stay"
+    "LiftButtons\0resetButton\0\0floorRequest\0"
+    "floor\0slotPressed\0slotReleased"
 };
 #undef QT_MOC_LITERAL
 
-static const uint qt_meta_data_LiftCabin[] = {
+static const uint qt_meta_data_LiftButtons[] = {
 
  // content:
        7,       // revision
@@ -63,47 +60,47 @@ static const uint qt_meta_data_LiftCabin[] = {
 
  // signals: name, argc, parameters, tag, flags
        1,    0,   34,    2, 0x06 /* Public */,
-       3,    2,   35,    2, 0x06 /* Public */,
+       3,    1,   35,    2, 0x06 /* Public */,
 
  // slots: name, argc, parameters, tag, flags
-       7,    1,   40,    2, 0x0a /* Public */,
-       8,    0,   43,    2, 0x0a /* Public */,
+       5,    0,   38,    2, 0x0a /* Public */,
+       6,    0,   39,    2, 0x0a /* Public */,
 
  // signals: parameters
     QMetaType::Void,
-    QMetaType::Void, QMetaType::Int, 0x80000000 | 5,    4,    6,
+    QMetaType::Void, QMetaType::Int,    4,
 
  // slots: parameters
-    QMetaType::Void, QMetaType::Int,    4,
+    QMetaType::Void,
     QMetaType::Void,
 
        0        // eod
 };
 
-void LiftCabin::qt_static_metacall(QObject *_o, QMetaObject::Call _c, int _id, void **_a)
+void LiftButtons::qt_static_metacall(QObject *_o, QMetaObject::Call _c, int _id, void **_a)
 {
     if (_c == QMetaObject::InvokeMetaMethod) {
-        LiftCabin *_t = static_cast<LiftCabin *>(_o);
+        LiftButtons *_t = static_cast<LiftButtons *>(_o);
         Q_UNUSED(_t)
         switch (_id) {
-        case 0: _t->FloorAchieved(); break;
-        case 1: _t->FloorPassed((*reinterpret_cast< int(*)>(_a[1])),(*reinterpret_cast< Direction(*)>(_a[2]))); break;
-        case 2: _t->FloorAchieving((*reinterpret_cast< int(*)>(_a[1]))); break;
-        case 3: _t->Stay(); break;
+        case 0: _t->resetButton(); break;
+        case 1: _t->floorRequest((*reinterpret_cast< int(*)>(_a[1]))); break;
+        case 2: _t->slotPressed(); break;
+        case 3: _t->slotReleased(); break;
         default: ;
         }
     } else if (_c == QMetaObject::IndexOfMethod) {
         int *result = reinterpret_cast<int *>(_a[0]);
         {
-            typedef void (LiftCabin::*_t)();
-            if (*reinterpret_cast<_t *>(_a[1]) == static_cast<_t>(&LiftCabin::FloorAchieved)) {
+            typedef void (LiftButtons::*_t)();
+            if (*reinterpret_cast<_t *>(_a[1]) == static_cast<_t>(&LiftButtons::resetButton)) {
                 *result = 0;
                 return;
             }
         }
         {
-            typedef void (LiftCabin::*_t)(int , Direction );
-            if (*reinterpret_cast<_t *>(_a[1]) == static_cast<_t>(&LiftCabin::FloorPassed)) {
+            typedef void (LiftButtons::*_t)(int );
+            if (*reinterpret_cast<_t *>(_a[1]) == static_cast<_t>(&LiftButtons::floorRequest)) {
                 *result = 1;
                 return;
             }
@@ -111,28 +108,28 @@ void LiftCabin::qt_static_metacall(QObject *_o, QMetaObject::Call _c, int _id, v
     }
 }
 
-QT_INIT_METAOBJECT const QMetaObject LiftCabin::staticMetaObject = {
-    { &QObject::staticMetaObject, qt_meta_stringdata_LiftCabin.data,
-      qt_meta_data_LiftCabin,  qt_static_metacall, nullptr, nullptr}
+QT_INIT_METAOBJECT const QMetaObject LiftButtons::staticMetaObject = {
+    { &QPushButton::staticMetaObject, qt_meta_stringdata_LiftButtons.data,
+      qt_meta_data_LiftButtons,  qt_static_metacall, nullptr, nullptr}
 };
 
 
-const QMetaObject *LiftCabin::metaObject() const
+const QMetaObject *LiftButtons::metaObject() const
 {
     return QObject::d_ptr->metaObject ? QObject::d_ptr->dynamicMetaObject() : &staticMetaObject;
 }
 
-void *LiftCabin::qt_metacast(const char *_clname)
+void *LiftButtons::qt_metacast(const char *_clname)
 {
     if (!_clname) return nullptr;
-    if (!strcmp(_clname, qt_meta_stringdata_LiftCabin.stringdata0))
+    if (!strcmp(_clname, qt_meta_stringdata_LiftButtons.stringdata0))
         return static_cast<void*>(this);
-    return QObject::qt_metacast(_clname);
+    return QPushButton::qt_metacast(_clname);
 }
 
-int LiftCabin::qt_metacall(QMetaObject::Call _c, int _id, void **_a)
+int LiftButtons::qt_metacall(QMetaObject::Call _c, int _id, void **_a)
 {
-    _id = QObject::qt_metacall(_c, _id, _a);
+    _id = QPushButton::qt_metacall(_c, _id, _a);
     if (_id < 0)
         return _id;
     if (_c == QMetaObject::InvokeMetaMethod) {
@@ -148,15 +145,15 @@ int LiftCabin::qt_metacall(QMetaObject::Call _c, int _id, void **_a)
 }
 
 // SIGNAL 0
-void LiftCabin::FloorAchieved()
+void LiftButtons::resetButton()
 {
     QMetaObject::activate(this, &staticMetaObject, 0, nullptr);
 }
 
 // SIGNAL 1
-void LiftCabin::FloorPassed(int _t1, Direction _t2)
+void LiftButtons::floorRequest(int _t1)
 {
-    void *_a[] = { nullptr, const_cast<void*>(reinterpret_cast<const void*>(&_t1)), const_cast<void*>(reinterpret_cast<const void*>(&_t2)) };
+    void *_a[] = { nullptr, const_cast<void*>(reinterpret_cast<const void*>(&_t1)) };
     QMetaObject::activate(this, &staticMetaObject, 1, _a);
 }
 QT_WARNING_POP
