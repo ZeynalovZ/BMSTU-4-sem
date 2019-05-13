@@ -22,7 +22,11 @@ Controller::Controller(QWidget *parent)
 
 Controller::~Controller()
 {
-
+    for (int i = 0; i < FLOOR_NUMBERS; i++)
+    {
+        delete buttons[i];
+    }
+    delete layout;
 }
 
 bool Controller::TargetExists()
@@ -45,6 +49,7 @@ void Controller::passCurrentFloor(int floor, Direction direct)
 void Controller::AchieveFloor(int floor)
 {
     emit buttons[floor]->resetButton();
+    state = NO_TARGET;
 }
 
 void Controller::slotAddNewTarget(int floor)

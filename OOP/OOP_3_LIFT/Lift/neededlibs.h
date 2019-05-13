@@ -1,7 +1,7 @@
 #ifndef NEEDEDLIBS_H
 #define NEEDEDLIBS_H
-#define TIME_DOOR         500
-#define TIME_DOOR_WAIT    500
+#define TIME_DOOR         1000
+#define TIME_DOOR_WAIT    1000
 #define TIME_MOVING_FLOOR 1000
 enum Direction
 {
