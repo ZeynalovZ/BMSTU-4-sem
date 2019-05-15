@@ -12,6 +12,7 @@ public:
 private:
     Controller controller;
     LiftCabin cabin;
+    LiftDoors Doors;
 };
 
 #endif // MYLIFT_H

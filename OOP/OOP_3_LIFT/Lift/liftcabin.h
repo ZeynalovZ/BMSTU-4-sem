@@ -24,7 +24,7 @@ public slots:
     void FloorAchieving();
     void slotBusy(int floor);
     void Stay();
-
+    void DoorsIsClosed();
 
 signals:
     void FloorAchieved();

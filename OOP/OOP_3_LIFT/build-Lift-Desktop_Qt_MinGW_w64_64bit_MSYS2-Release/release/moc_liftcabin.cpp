@@ -21,8 +21,8 @@ QT_BEGIN_MOC_NAMESPACE
 QT_WARNING_PUSH
 QT_WARNING_DISABLE_DEPRECATED
 struct qt_meta_stringdata_LiftCabin_t {
-    QByteArrayData data[12];
-    char stringdata0[120];
+    QByteArrayData data[13];
+    char stringdata0[134];
 };
 #define QT_MOC_LITERAL(idx, ofs, len) \
     Q_STATIC_BYTE_ARRAY_DATA_HEADER_INITIALIZER_WITH_OFFSET(len, \
@@ -42,13 +42,14 @@ QT_MOC_LITERAL(7, 63, 4), // "Move"
 QT_MOC_LITERAL(8, 68, 22), // "AchievedForResetButton"
 QT_MOC_LITERAL(9, 91, 14), // "FloorAchieving"
 QT_MOC_LITERAL(10, 106, 8), // "slotBusy"
-QT_MOC_LITERAL(11, 115, 4) // "Stay"
+QT_MOC_LITERAL(11, 115, 4), // "Stay"
+QT_MOC_LITERAL(12, 120, 13) // "DoorsIsClosed"
 
     },
     "LiftCabin\0FloorAchieved\0\0FloorPassed\0"
     "floor\0Direction\0direction\0Move\0"
     "AchievedForResetButton\0FloorAchieving\0"
-    "slotBusy\0Stay"
+    "slotBusy\0Stay\0DoorsIsClosed"
 };
 #undef QT_MOC_LITERAL
 
@@ -58,7 +59,7 @@ static const uint qt_meta_data_LiftCabin[] = {
        7,       // revision
        0,       // classname
        0,    0, // classinfo
-       7,   14, // methods
+       8,   14, // methods
        0,    0, // properties
        0,    0, // enums/sets
        0,    0, // constructors
@@ -66,15 +67,16 @@ static const uint qt_meta_data_LiftCabin[] = {
        4,       // signalCount
 
  // signals: name, argc, parameters, tag, flags
-       1,    0,   49,    2, 0x06 /* Public */,
-       3,    2,   50,    2, 0x06 /* Public */,
-       7,    0,   55,    2, 0x06 /* Public */,
-       8,    1,   56,    2, 0x06 /* Public */,
+       1,    0,   54,    2, 0x06 /* Public */,
+       3,    2,   55,    2, 0x06 /* Public */,
+       7,    0,   60,    2, 0x06 /* Public */,
+       8,    1,   61,    2, 0x06 /* Public */,
 
  // slots: name, argc, parameters, tag, flags
-       9,    0,   59,    2, 0x0a /* Public */,
-      10,    1,   60,    2, 0x0a /* Public */,
-      11,    0,   63,    2, 0x0a /* Public */,
+       9,    0,   64,    2, 0x0a /* Public */,
+      10,    1,   65,    2, 0x0a /* Public */,
+      11,    0,   68,    2, 0x0a /* Public */,
+      12,    0,   69,    2, 0x0a /* Public */,
 
  // signals: parameters
     QMetaType::Void,
@@ -85,6 +87,7 @@ static const uint qt_meta_data_LiftCabin[] = {
  // slots: parameters
     QMetaType::Void,
     QMetaType::Void, QMetaType::Int,    4,
+    QMetaType::Void,
     QMetaType::Void,
 
        0        // eod
@@ -103,6 +106,7 @@ void LiftCabin::qt_static_metacall(QObject *_o, QMetaObject::Call _c, int _id, v
         case 4: _t->FloorAchieving(); break;
         case 5: _t->slotBusy((*reinterpret_cast< int(*)>(_a[1]))); break;
         case 6: _t->Stay(); break;
+        case 7: _t->DoorsIsClosed(); break;
         default: ;
         }
     } else if (_c == QMetaObject::IndexOfMethod) {
@@ -163,13 +167,13 @@ int LiftCabin::qt_metacall(QMetaObject::Call _c, int _id, void **_a)
     if (_id < 0)
         return _id;
     if (_c == QMetaObject::InvokeMetaMethod) {
-        if (_id < 7)
+        if (_id < 8)
             qt_static_metacall(this, _c, _id, _a);
-        _id -= 7;
+        _id -= 8;
     } else if (_c == QMetaObject::RegisterMethodArgumentMetaType) {
-        if (_id < 7)
+        if (_id < 8)
             *reinterpret_cast<int*>(_a[0]) = -1;
-        _id -= 7;
+        _id -= 8;
     }
     return _id;
 }

@@ -49,6 +49,7 @@ void Controller::passCurrentFloor(int floor, Direction direct)
 void Controller::AchieveFloor(int floor)
 {
     emit buttons[floor]->resetButton();
+    TargetsArray[floor] = false;
     state = NO_TARGET;
 }
 

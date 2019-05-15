@@ -6,6 +6,7 @@ LiftCabin::LiftCabin(QObject *parent)
     CurrentFloor = 0;
     TargetFloor = 0;
     currentDirection = NO_DIRECTION;
+    QObject::connect(&doors, SIGNAL(DoorsClosed()), this,  SLOT(DoorsIsClosed()));
     QObject::connect(this, SIGNAL(Move()), this, SLOT(FloorAchieving()));
     QObject::connect(&floorMoving, SIGNAL(timeout()), this , SLOT(FloorAchieving()));
     QObject::connect(this, SIGNAL(FloorAchieved()), this , SLOT(Stay()));
@@ -49,28 +50,36 @@ void LiftCabin::FloorAchieving()
 
 void LiftCabin::slotBusy(int floor)
 {
-    state = BUSY;
-    qDebug() << "slot moving to" << floor;
-    TargetFloor = floor;
-    if (CurrentFloor == TargetFloor)
+    if (state == FREE)
     {
-
-        emit FloorAchieved();
-    }
-    else
-    {
-        if (CurrentFloor < TargetFloor)
+        state = BUSY;
+        qDebug() << "slot moving to" << floor;
+        TargetFloor = floor;
+        if (CurrentFloor == TargetFloor)
         {
-            currentDirection = UP;
-            CurrentFloor += currentDirection;
+
+            emit FloorAchieved();
         }
         else
         {
-            currentDirection = DOWN;
-            CurrentFloor += currentDirection;
+            if (CurrentFloor < TargetFloor)
+            {
+                currentDirection = UP;
+                CurrentFloor += currentDirection;
+            }
+            else
+            {
+                currentDirection = DOWN;
+                CurrentFloor += currentDirection;
+            }
+            emit Move();
         }
-        emit Move();
     }
+}
+void LiftCabin::DoorsIsClosed()
+{
+    state = FREE;
+    qDebug() << "12312312312313";
 }
 
 // здесь нужен контроль за таргетами, если направления все еще совпадают, то сначала на ближний
@@ -78,8 +87,11 @@ void LiftCabin::slotBusy(int floor)
 
 void LiftCabin::Stay()
 {
-    state = FREE;
+
     floorMoving.stop();
     emit AchievedForResetButton(CurrentFloor);
     emit doors.DoorsOpen();
+    state = BUSY;
 }
+
+
