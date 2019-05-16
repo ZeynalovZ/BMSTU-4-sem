@@ -6,10 +6,12 @@ LiftCabin::LiftCabin(QObject *parent)
     CurrentFloor = 0;
     TargetFloor = 0;
     currentDirection = NO_DIRECTION;
-    QObject::connect(&doors, SIGNAL(DoorsClosed()), this,  SLOT(DoorsIsClosed()));
-    QObject::connect(this, SIGNAL(Move()), this, SLOT(FloorAchieving()));
+    QObject::connect(this, SIGNAL(Move()), &doors, SLOT(DoorsClosing()));
     QObject::connect(&floorMoving, SIGNAL(timeout()), this , SLOT(FloorAchieving()));
+    QObject::connect(&doors, SIGNAL(DoorsClosed()), this , SLOT(FloorAchieving()));
     QObject::connect(this, SIGNAL(FloorAchieved()), this , SLOT(Stay()));
+    QObject::connect(this, SIGNAL(cabinStopped()), &doors , SLOT(DoorsOpenning()));
+    floorMoving.setSingleShot(true);
 }
 
 LiftCabin::~LiftCabin()
@@ -50,36 +52,28 @@ void LiftCabin::FloorAchieving()
 
 void LiftCabin::slotBusy(int floor)
 {
-    if (state == FREE)
+    state = BUSY;
+    qDebug() << "slot moving to" << floor;
+    TargetFloor = floor;
+    if (CurrentFloor == TargetFloor)
     {
-        state = BUSY;
-        qDebug() << "slot moving to" << floor;
-        TargetFloor = floor;
-        if (CurrentFloor == TargetFloor)
-        {
 
-            emit FloorAchieved();
+        emit FloorAchieved();
+    }
+    else
+    {
+        if (CurrentFloor < TargetFloor)
+        {
+            currentDirection = UP;
+            CurrentFloor += currentDirection;
         }
         else
         {
-            if (CurrentFloor < TargetFloor)
-            {
-                currentDirection = UP;
-                CurrentFloor += currentDirection;
-            }
-            else
-            {
-                currentDirection = DOWN;
-                CurrentFloor += currentDirection;
-            }
-            emit Move();
+            currentDirection = DOWN;
+            CurrentFloor += currentDirection;
         }
+        emit Move();
     }
-}
-void LiftCabin::DoorsIsClosed()
-{
-    state = FREE;
-    qDebug() << "12312312312313";
 }
 
 // здесь нужен контроль за таргетами, если направления все еще совпадают, то сначала на ближний
@@ -87,11 +81,10 @@ void LiftCabin::DoorsIsClosed()
 
 void LiftCabin::Stay()
 {
-
     floorMoving.stop();
     emit AchievedForResetButton(CurrentFloor);
-    emit doors.DoorsOpen();
-    state = BUSY;
+    emit cabinStopped();
+    state = FREE;
 }
 
 

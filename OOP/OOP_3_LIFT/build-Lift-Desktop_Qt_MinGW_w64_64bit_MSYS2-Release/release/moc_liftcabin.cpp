@@ -22,7 +22,7 @@ QT_WARNING_PUSH
 QT_WARNING_DISABLE_DEPRECATED
 struct qt_meta_stringdata_LiftCabin_t {
     QByteArrayData data[13];
-    char stringdata0[134];
+    char stringdata0[133];
 };
 #define QT_MOC_LITERAL(idx, ofs, len) \
     Q_STATIC_BYTE_ARRAY_DATA_HEADER_INITIALIZER_WITH_OFFSET(len, \
@@ -40,16 +40,16 @@ QT_MOC_LITERAL(5, 43, 9), // "Direction"
 QT_MOC_LITERAL(6, 53, 9), // "direction"
 QT_MOC_LITERAL(7, 63, 4), // "Move"
 QT_MOC_LITERAL(8, 68, 22), // "AchievedForResetButton"
-QT_MOC_LITERAL(9, 91, 14), // "FloorAchieving"
-QT_MOC_LITERAL(10, 106, 8), // "slotBusy"
-QT_MOC_LITERAL(11, 115, 4), // "Stay"
-QT_MOC_LITERAL(12, 120, 13) // "DoorsIsClosed"
+QT_MOC_LITERAL(9, 91, 12), // "cabinStopped"
+QT_MOC_LITERAL(10, 104, 14), // "FloorAchieving"
+QT_MOC_LITERAL(11, 119, 8), // "slotBusy"
+QT_MOC_LITERAL(12, 128, 4) // "Stay"
 
     },
     "LiftCabin\0FloorAchieved\0\0FloorPassed\0"
     "floor\0Direction\0direction\0Move\0"
-    "AchievedForResetButton\0FloorAchieving\0"
-    "slotBusy\0Stay\0DoorsIsClosed"
+    "AchievedForResetButton\0cabinStopped\0"
+    "FloorAchieving\0slotBusy\0Stay"
 };
 #undef QT_MOC_LITERAL
 
@@ -64,18 +64,18 @@ static const uint qt_meta_data_LiftCabin[] = {
        0,    0, // enums/sets
        0,    0, // constructors
        0,       // flags
-       4,       // signalCount
+       5,       // signalCount
 
  // signals: name, argc, parameters, tag, flags
        1,    0,   54,    2, 0x06 /* Public */,
        3,    2,   55,    2, 0x06 /* Public */,
        7,    0,   60,    2, 0x06 /* Public */,
        8,    1,   61,    2, 0x06 /* Public */,
+       9,    0,   64,    2, 0x06 /* Public */,
 
  // slots: name, argc, parameters, tag, flags
-       9,    0,   64,    2, 0x0a /* Public */,
-      10,    1,   65,    2, 0x0a /* Public */,
-      11,    0,   68,    2, 0x0a /* Public */,
+      10,    0,   65,    2, 0x0a /* Public */,
+      11,    1,   66,    2, 0x0a /* Public */,
       12,    0,   69,    2, 0x0a /* Public */,
 
  // signals: parameters
@@ -83,11 +83,11 @@ static const uint qt_meta_data_LiftCabin[] = {
     QMetaType::Void, QMetaType::Int, 0x80000000 | 5,    4,    6,
     QMetaType::Void,
     QMetaType::Void, QMetaType::Int,    4,
+    QMetaType::Void,
 
  // slots: parameters
     QMetaType::Void,
     QMetaType::Void, QMetaType::Int,    4,
-    QMetaType::Void,
     QMetaType::Void,
 
        0        // eod
@@ -103,10 +103,10 @@ void LiftCabin::qt_static_metacall(QObject *_o, QMetaObject::Call _c, int _id, v
         case 1: _t->FloorPassed((*reinterpret_cast< int(*)>(_a[1])),(*reinterpret_cast< Direction(*)>(_a[2]))); break;
         case 2: _t->Move(); break;
         case 3: _t->AchievedForResetButton((*reinterpret_cast< int(*)>(_a[1]))); break;
-        case 4: _t->FloorAchieving(); break;
-        case 5: _t->slotBusy((*reinterpret_cast< int(*)>(_a[1]))); break;
-        case 6: _t->Stay(); break;
-        case 7: _t->DoorsIsClosed(); break;
+        case 4: _t->cabinStopped(); break;
+        case 5: _t->FloorAchieving(); break;
+        case 6: _t->slotBusy((*reinterpret_cast< int(*)>(_a[1]))); break;
+        case 7: _t->Stay(); break;
         default: ;
         }
     } else if (_c == QMetaObject::IndexOfMethod) {
@@ -136,6 +136,13 @@ void LiftCabin::qt_static_metacall(QObject *_o, QMetaObject::Call _c, int _id, v
             typedef void (LiftCabin::*_t)(int );
             if (*reinterpret_cast<_t *>(_a[1]) == static_cast<_t>(&LiftCabin::AchievedForResetButton)) {
                 *result = 3;
+                return;
+            }
+        }
+        {
+            typedef void (LiftCabin::*_t)();
+            if (*reinterpret_cast<_t *>(_a[1]) == static_cast<_t>(&LiftCabin::cabinStopped)) {
+                *result = 4;
                 return;
             }
         }
@@ -202,6 +209,12 @@ void LiftCabin::AchievedForResetButton(int _t1)
 {
     void *_a[] = { nullptr, const_cast<void*>(reinterpret_cast<const void*>(&_t1)) };
     QMetaObject::activate(this, &staticMetaObject, 3, _a);
+}
+
+// SIGNAL 4
+void LiftCabin::cabinStopped()
+{
+    QMetaObject::activate(this, &staticMetaObject, 4, nullptr);
 }
 QT_WARNING_POP
 QT_END_MOC_NAMESPACE

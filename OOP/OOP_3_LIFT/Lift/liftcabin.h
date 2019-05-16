@@ -24,14 +24,13 @@ public slots:
     void FloorAchieving();
     void slotBusy(int floor);
     void Stay();
-    void DoorsIsClosed();
 
 signals:
     void FloorAchieved();
     void FloorPassed(int floor, Direction direction);
     void Move();
     void AchievedForResetButton(int floor);
-
+    void cabinStopped();
 private:
     CabinState state;
     int CurrentFloor;

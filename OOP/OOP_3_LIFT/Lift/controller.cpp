@@ -29,12 +29,36 @@ Controller::~Controller()
     delete layout;
 }
 
-bool Controller::TargetExists()
+bool Controller::TargetExists(int &floor)
 {
+    /*
     for (int i = 0; i < FLOOR_NUMBERS; i++)
     {
         if (TargetsArray[i] == true)
+        {
+            floor = i;
             return true;
+        }
+    }*/
+    int step = -1;
+    if (currentDirection == UP)
+        step = 1;
+    for (int i = currentFloor; i <= FLOOR_NUMBERS && i > 0; i += step)
+    {
+        if (TargetsArray[i - 1])
+        {
+            floor = i;
+            return true;
+        }
+    }
+    step = -step;
+    for (int i = currentFloor; i <= FLOOR_NUMBERS && i > 0; i+= step)
+    {
+        if (TargetsArray[i - 1])
+        {
+            floor = i;
+            return true;
+        }
     }
     return false;
 }
@@ -48,17 +72,32 @@ void Controller::passCurrentFloor(int floor, Direction direct)
 
 void Controller::AchieveFloor(int floor)
 {
+    /*
+    for (int i = 0; i < FLOOR_NUMBERS; i++)
+    {
+        qDebug() << TargetsArray[i];
+    }
+    */
     emit buttons[floor]->resetButton();
     TargetsArray[floor] = false;
-    state = NO_TARGET;
+    if (TargetExists(floor))
+    {
+        emit sendTarget(floor);
+    }
+    else
+    {
+        state = NO_TARGET;
+    }
+
 }
 
 void Controller::slotAddNewTarget(int floor)
 {
     TargetsArray[floor] = true;
     qDebug() << "slotAddNewFloor" << floor;
-    state = BUSY;
     // needed queue here
+    state = BUSY;
+    TargetExists(floor);
     emit sendTarget(floor);
 
 }

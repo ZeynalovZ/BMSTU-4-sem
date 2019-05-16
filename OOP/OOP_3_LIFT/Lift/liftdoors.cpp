@@ -7,6 +7,11 @@ LiftDoors::LiftDoors(QObject *parent)
     QObject::connect(&OpeningTimer, SIGNAL(timeout()), this, SLOT(Open()));
     QObject::connect(&OpenTimer, SIGNAL(timeout()), this, SLOT(DoorsClosing()));
     QObject::connect(&CloseTimer, SIGNAL(timeout()), this, SLOT(Close()));
+    QObject::connect(&AddTimer, SIGNAL(timeout()), this, SLOT(DoorsClosing()));
+    OpeningTimer.setSingleShot(true);
+    OpenTimer.setSingleShot(true);
+    CloseTimer.setSingleShot(true);
+    AddTimer.setSingleShot(true);
 }
 
 void LiftDoors::DoorsOpenning()
@@ -17,16 +22,37 @@ void LiftDoors::DoorsOpenning()
         qDebug() << "Doors opening";
         OpeningTimer.start(TIME_DOOR_WAIT);
     }
+    if (state == CLOSING)
+    {
+        state = OPENING;
+        qDebug() << "Doors opening";
+        CloseTimer.stop();
+        OpeningTimer.start(TIME_DOOR_WAIT);
+    }
 }
 
 void LiftDoors::DoorsClosing()
 {
-    if (state == OPEN)
+    switch (state)
     {
+    case OPEN:
         state = CLOSING;
         CloseTimer.start(TIME_DOOR);
         qDebug() << "Doors closing";
+        break;
+    case CLOSE:
+        qDebug() << "==================";
+        emit DoorsClosed();
+        break;
+    case CLOSING:
+        CloseTimer.stop();
+        this->Close();
+        break;
+    default:
+        break;
     }
+
+
 }
 
 void LiftDoors::Open()

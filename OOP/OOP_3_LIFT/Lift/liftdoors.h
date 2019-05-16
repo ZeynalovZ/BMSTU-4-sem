@@ -29,6 +29,7 @@ private:
     QTimer OpenTimer;
     QTimer CloseTimer;
     QTimer OpeningTimer;
+    QTimer AddTimer;
 
 };
 

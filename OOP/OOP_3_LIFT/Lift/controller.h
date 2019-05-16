@@ -18,7 +18,7 @@ public:
     explicit Controller(QWidget *parent = 0);
     virtual ~Controller();
 
-    bool TargetExists();
+    bool TargetExists(int &floor);
 public slots:
     void slotAddNewTarget(int floor);
     void passCurrentFloor(int floor, Direction direct);
