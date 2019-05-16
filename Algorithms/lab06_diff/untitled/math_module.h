@@ -13,8 +13,8 @@ struct TABLE
     unsigned int columnCount = COLUMN_COUNT;
 };
 
-void fillTable(table_t &table, int h, unsigned int r);
-int CreateTable(table_t &table, int begin, int end, int step);
+void fillTable(table_t &table, double h, unsigned int r);
+int CreateTable(table_t &table, int begin, int end, double step);
 void print_table(table_t table);
 
 #endif

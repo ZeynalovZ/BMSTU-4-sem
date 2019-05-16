@@ -5,7 +5,7 @@ int main()
 {
     int begin_x = 2;
     int end_x = 11;
-    int step = 1;
+    double step = 1;
     table_t table;
     int code_error = CreateTable(table, begin_x, end_x, step);
     if (code_error == OK)

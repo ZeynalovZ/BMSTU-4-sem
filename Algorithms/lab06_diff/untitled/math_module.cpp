@@ -20,7 +20,7 @@ double diffFunc(double x)
     return (a0 * a1) / pow((a1 + a2 * x), 2);
 }
 
-int CreateTable(table_t &table, int begin, int end, int step)
+int CreateTable(table_t &table, int begin, int end, double step)
 {
     if (begin >= end || step <= 0) return ERR_CREATION;
     if (table.table == nullptr)
@@ -39,7 +39,7 @@ int CreateTable(table_t &table, int begin, int end, int step)
             return ERR_ALLOCATION;
         }
 
-        int currentX = begin;
+        double currentX = begin;
         for (unsigned int i = 0; i < table.rowCount; i++)
         {
             cout << currentX << endl;
@@ -146,21 +146,21 @@ double getAlignment(double x, double y, double rightX, double rightY)
     return ((y * y) / (x * x)) * rightDiff(diffFunc(rightY), diffFunc(y), getH(diffFunc(x), diffFunc(rightX)));
 }
 
-void fillTable(table_t &table, int h, unsigned int r)
+void fillTable(table_t &table, double h, unsigned int r)
 {
     for (unsigned int i = 0; i < table.rowCount; i++)
     {
         // 1
-        if (i != 0)
+        if (i != table.rowCount - 1)
         {
-            table.table[i][2] = rightDiff(table.table[i - 1][1], table.table[i][1], getH(table.table[i - 1][0], table.table[i][0]));
+            table.table[i][2] = rightDiff(table.table[i][1], table.table[i + 1][1], getH(table.table[i + 1][0], table.table[i][0]));
         }
 
         // 2 С повышенной точностью на границах
         if (i == 0)
         {
             //double h = getH(table.table[0][0], table.table[0][1]);
-
+            cout << "h is" << h;
             table.table[i][3] = border_accuracy_first(table.table[0][1], table.table[1][1], table.table[2][1], h);
         }
         if (i == table.rowCount - 1)
