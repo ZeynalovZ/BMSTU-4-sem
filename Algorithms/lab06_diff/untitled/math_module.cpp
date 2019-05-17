@@ -16,7 +16,7 @@ double f(double x)
 
 double diffFunc(double x)
 {
-    // f(x);
+    // f'(x);
     return (a0 * a1) / pow((a1 + a2 * x), 2);
 }
 
@@ -65,7 +65,6 @@ void print_table(table_t table)
             {
                 printf("|");
             }
-
             printf("%-8.4f ", table.table[i][j]);
             if (j == table.columnCount - 1)
             {
@@ -90,11 +89,16 @@ double midDdiff(double yPrev, double yNext, double h)
     return (yNext - yPrev) / (2.0 * h);
 }
 
-double RungeDiff(double yNext, double yPREV, double yNr, double yPr, double r, double h)
+double RungeDiff(double yNext, double y, double yNnext, double r, double h)
 {
+    /*
         double y1 = (yNext - yPREV) / ( 2 * h);
         double y2 = (yNr - yPr) / (2 * h * r);
         return y1 + (y1 - y2) / (pow(r, 2) - 1);
+    */
+    double y1 = (yNext - y) / h;
+    double y2 = (yNnext - y) / (h * r);
+    return y1 + (y1 - y2) / (pow(r, 2) - 1);
 }
 // С повышенной точностью на границах
 double border_accuracy_first(double y0, double y1, double y2, double h)
@@ -160,7 +164,6 @@ void fillTable(table_t &table, double h, unsigned int r)
         if (i == 0)
         {
             //double h = getH(table.table[0][0], table.table[0][1]);
-            cout << "h is" << h;
             table.table[i][3] = border_accuracy_first(table.table[0][1], table.table[1][1], table.table[2][1], h);
         }
         if (i == table.rowCount - 1)
@@ -174,10 +177,9 @@ void fillTable(table_t &table, double h, unsigned int r)
             table.table[i][4] = midDdiff(table.table[i - 1][1], table.table[i + 1][1], h);
         }
         // 4. 2-я формула Рунге
-        if (i > r - 1 && i < table.rowCount - r)
+        if (i < table.rowCount - r)
         {
-            table.table[i][5] = RungeDiff(table.table[i + 1][1], table.table[i - 1][1],
-                    table.table[i + r][1], table.table[i - r][1], r, h);
+            table.table[i][5] = RungeDiff(table.table[i + 1][1], table.table[i][1], table.table[i + r][1], r, h);
         }
         // 5
         /*
