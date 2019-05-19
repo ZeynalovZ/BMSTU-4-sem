@@ -293,8 +293,8 @@ QPoint SearchIntersection(QPoint P1, QPoint P2, QPoint Q1, QPoint Q2)
     res[0][0] = koef[0][0] * right[0][0] + koef[0][1] * right[1][0];
     res[1][0] = koef[1][0] * right[0][0] + koef[1][1] * right[1][0];
     QPoint I;
-    I.setX(P1.x() + (P2.x() - P1.x()) * res[0][0]);
-    I.setY(P1.y() + (P2.y() - P1.y()) * res[1][0]);
+    I.setX((double)P1.x() + (double)(P2.x() - P1.x()) * res[0][0]);
+    I.setY((double)P1.y() + (double)(P2.y() - P1.y()) * res[0][0]);
     qDebug() << "===";
     qDebug() << I;
     return I;
