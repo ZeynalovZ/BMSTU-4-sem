@@ -246,6 +246,7 @@ bool IsIntersectionExist(QPoint P, QPoint S, QPoint P1, QPoint P2)
 
 QPoint SearchIntersection(QPoint P1, QPoint P2, QPoint Q1, QPoint Q2)
 {
+    /*
     double delta1 = (P2.x() - P1.x()) * (Q1.y() - Q2.y()) - (Q1.x() - Q2.x() * (P2.y() - P1.y()));
     double delta2 = (Q1.x() - P1.x()) * (Q1.y() - Q2.y()) - (Q1.x() - Q2.x() * (Q1.y() - P1.y()));
     if (abs(delta1) < 1e-6)
@@ -258,8 +259,67 @@ QPoint SearchIntersection(QPoint P1, QPoint P2, QPoint Q1, QPoint Q2)
     I.setX(P1.x() + (P2.x() - P1.x()) * t);
     I.setY(P1.y() + (P2.y() - P1.y()) * t);
     return I;
-}
+    */
+    double koef[2][2];
+    koef[0][0] = P2.x() - P1.x();
+    koef[0][1] = Q1.x() - Q2.x();
+    koef[1][0] = P2.y() - P1.y();
+    koef[1][1] = Q1.y() - Q2.y();
+    double determinant = koef[0][0] * koef[1][1] - koef[1][0] * koef[0][1];
 
+    double right[2][1];
+    right[0][0] = Q1.x() - P1.x();
+    right[1][0] = Q1.y() - P1.y();
+
+    double tmp = koef[0][0];
+    koef[0][0] = koef[1][1];
+    koef[1][1] = tmp;
+
+    tmp = -koef[1][0];
+    koef[1][0] = -koef[0][1];
+    koef[0][1] = tmp;
+    //for (int i = 0; i < 2; i++)
+    //{
+    //    qDebug() << koef[i][0] << koef[i][1];
+    //}
+    double k = (double)1 / determinant;
+    qDebug() << k << "Koef";
+    koef[0][0] *= k;
+    koef[1][1] *= k;
+    koef[1][0] *= k;
+    koef[0][1] *= k;
+
+    double res[2][1];
+    res[0][0] = koef[0][0] * right[0][0] + koef[0][1] * right[1][0];
+    res[1][0] = koef[1][0] * right[0][0] + koef[1][1] * right[1][0];
+    QPoint I;
+    I.setX(P1.x() + (P2.x() - P1.x()) * res[0][0]);
+    I.setY(P1.y() + (P2.y() - P1.y()) * res[1][0]);
+    qDebug() << "===";
+    qDebug() << I;
+    return I;
+}
+void check_exist()
+{
+    QPoint P1(0, 0);
+    QPoint P2(3, 2);
+    QPoint P3(3, 0);
+    QPoint P4(0, 2);
+    int vis1 = isVisible(P3, P1, P2);
+    int vis2 = isVisible(P4, P1, P2);
+    QPoint I = SearchIntersection(P3, P4, P1, P2);
+    qDebug() << I << "testtest";
+    /*
+    if (IsIntersectionExist(P3, P4, P1, P2))
+    {
+        qDebug() << "yeeeeeees";
+    }
+    else
+    {
+        qDebug() << "noo";
+    }
+    */
+}
 
 void Copy(QVector<QPoint> &dist, QVector<QPoint> source)
 {
@@ -270,17 +330,19 @@ void Copy(QVector<QPoint> &dist, QVector<QPoint> source)
     }
 }
 
-void SutherlandHodgman(QVector<QPoint> &polygon, QVector<QPoint> cutter, QVector<QPoint> result_polygon)
+void SutherlandHodgman(QVector<QPoint> &polygon, QVector<QPoint> cutter)
 {
+    QVector<QPoint> result_polygon;
+    check_exist();
     cutter.append(cutter[0]);
     QPoint F;
     QPoint S;
     QPoint I;
     for (int i = 1; i < cutter.size() - 1; i++)
     {
-        for (int j = 1; j < polygon.size(); j++)
+        for (int j = 0; j < polygon.size(); j++)
         {
-            if (j != 0)
+            if (j != 1)
             {
                 if (IsIntersectionExist(S, polygon[j], cutter[i], cutter[i + 1])) // params here
                 {
@@ -293,7 +355,7 @@ void SutherlandHodgman(QVector<QPoint> &polygon, QVector<QPoint> cutter, QVector
                 F = polygon[j];
             }
             S = polygon[j];
-            if (isVisible(F, cutter[i], cutter[i + 1]))
+            if (isVisible(S, cutter[i], cutter[i + 1]) >= 0)
             {
                 result_polygon.append(S);
             }
@@ -309,5 +371,4 @@ void SutherlandHodgman(QVector<QPoint> &polygon, QVector<QPoint> cutter, QVector
         Copy(polygon, result_polygon);
         result_polygon.clear();
     }
-    // return polygon
 }

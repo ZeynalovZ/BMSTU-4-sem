@@ -7,6 +7,7 @@
 #include <cmath>
 #include <QGraphicsScene>
 #include "algorithm.h"
+#include <iostream>
 #define X_WIDTH 881
 #define Y_WIDTH 561
 #define OFFSET_X_MOUSE 10
@@ -433,6 +434,13 @@ void MainWindow::on_cutter_color_button_clicked()
     ui->cutter_color_label->show();
 }
 
+void print_poly(QVector<edge_t> poly)
+{
+    for (int i = 0; i < poly.size(); i++)
+    {
+        qDebug() <<poly[i].x1 << " " << poly[i].y1 << " " << poly[i].x2 << " " << poly[i].y2;
+    }
+}
 
 void MainWindow::on_cut_button_clicked()
 {
@@ -442,21 +450,31 @@ void MainWindow::on_cut_button_clicked()
     {
         painter->setRenderHint(QPainter::Antialiasing, true);
         painter->setPen(QPen(outline_color, 2));
+        qDebug() << "========";
+        //print_poly(rect);
         QVector<QPoint> cutter;
         for (int i = 0; i < rect.size(); i++)
         {
             cutter.append(QPoint(rect[i].x1, rect[i].y1));
+            //qDebug() << cutter[i];
         }
         QVector<QPoint> poly;
+        qDebug() << "========";
+        //print_poly(polygon);
         for (int i = 0; i < polygon.size(); i++)
         {
             poly.append(QPoint(polygon[i].x1, polygon[i].y1));
+            //qDebug() << poly[i];
         }
-        QVector<QPoint> res;
-        // doesn't work
-        SutherlandHodgman(poly, cutter, res);
+        for (int i = 0; i < poly.size(); i++)
+        {
+            qDebug() << poly[i];
+        }
+        SutherlandHodgman(poly, cutter);
+
         for (int i = 0; i < poly.size() - 1; i++)
         {
+            qDebug() << poly[i];
             painter->drawLine(poly[i], poly[i + 1]);
         }
         //SutherlandHodgman();
