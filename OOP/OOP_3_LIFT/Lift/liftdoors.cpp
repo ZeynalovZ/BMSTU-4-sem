@@ -41,7 +41,6 @@ void LiftDoors::DoorsClosing()
         qDebug() << "Doors closing";
         break;
     case CLOSE:
-        qDebug() << "==================";
         emit DoorsClosed();
         break;
     case CLOSING:

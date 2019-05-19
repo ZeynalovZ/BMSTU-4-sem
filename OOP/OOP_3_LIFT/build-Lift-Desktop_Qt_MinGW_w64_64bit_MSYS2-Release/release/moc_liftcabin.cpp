@@ -21,8 +21,8 @@ QT_BEGIN_MOC_NAMESPACE
 QT_WARNING_PUSH
 QT_WARNING_DISABLE_DEPRECATED
 struct qt_meta_stringdata_LiftCabin_t {
-    QByteArrayData data[13];
-    char stringdata0[133];
+    QByteArrayData data[14];
+    char stringdata0[146];
 };
 #define QT_MOC_LITERAL(idx, ofs, len) \
     Q_STATIC_BYTE_ARRAY_DATA_HEADER_INITIALIZER_WITH_OFFSET(len, \
@@ -41,15 +41,17 @@ QT_MOC_LITERAL(6, 53, 9), // "direction"
 QT_MOC_LITERAL(7, 63, 4), // "Move"
 QT_MOC_LITERAL(8, 68, 22), // "AchievedForResetButton"
 QT_MOC_LITERAL(9, 91, 12), // "cabinStopped"
-QT_MOC_LITERAL(10, 104, 14), // "FloorAchieving"
-QT_MOC_LITERAL(11, 119, 8), // "slotBusy"
-QT_MOC_LITERAL(12, 128, 4) // "Stay"
+QT_MOC_LITERAL(10, 104, 12), // "CurrentFloor"
+QT_MOC_LITERAL(11, 117, 14), // "FloorAchieving"
+QT_MOC_LITERAL(12, 132, 8), // "slotBusy"
+QT_MOC_LITERAL(13, 141, 4) // "Stay"
 
     },
     "LiftCabin\0FloorAchieved\0\0FloorPassed\0"
     "floor\0Direction\0direction\0Move\0"
     "AchievedForResetButton\0cabinStopped\0"
-    "FloorAchieving\0slotBusy\0Stay"
+    "CurrentFloor\0FloorAchieving\0slotBusy\0"
+    "Stay"
 };
 #undef QT_MOC_LITERAL
 
@@ -71,19 +73,19 @@ static const uint qt_meta_data_LiftCabin[] = {
        3,    2,   55,    2, 0x06 /* Public */,
        7,    0,   60,    2, 0x06 /* Public */,
        8,    1,   61,    2, 0x06 /* Public */,
-       9,    0,   64,    2, 0x06 /* Public */,
+       9,    1,   64,    2, 0x06 /* Public */,
 
  // slots: name, argc, parameters, tag, flags
-      10,    0,   65,    2, 0x0a /* Public */,
-      11,    1,   66,    2, 0x0a /* Public */,
-      12,    0,   69,    2, 0x0a /* Public */,
+      11,    0,   67,    2, 0x0a /* Public */,
+      12,    1,   68,    2, 0x0a /* Public */,
+      13,    0,   71,    2, 0x0a /* Public */,
 
  // signals: parameters
     QMetaType::Void,
     QMetaType::Void, QMetaType::Int, 0x80000000 | 5,    4,    6,
     QMetaType::Void,
     QMetaType::Void, QMetaType::Int,    4,
-    QMetaType::Void,
+    QMetaType::Void, QMetaType::Int,   10,
 
  // slots: parameters
     QMetaType::Void,
@@ -103,7 +105,7 @@ void LiftCabin::qt_static_metacall(QObject *_o, QMetaObject::Call _c, int _id, v
         case 1: _t->FloorPassed((*reinterpret_cast< int(*)>(_a[1])),(*reinterpret_cast< Direction(*)>(_a[2]))); break;
         case 2: _t->Move(); break;
         case 3: _t->AchievedForResetButton((*reinterpret_cast< int(*)>(_a[1]))); break;
-        case 4: _t->cabinStopped(); break;
+        case 4: _t->cabinStopped((*reinterpret_cast< int(*)>(_a[1]))); break;
         case 5: _t->FloorAchieving(); break;
         case 6: _t->slotBusy((*reinterpret_cast< int(*)>(_a[1]))); break;
         case 7: _t->Stay(); break;
@@ -140,7 +142,7 @@ void LiftCabin::qt_static_metacall(QObject *_o, QMetaObject::Call _c, int _id, v
             }
         }
         {
-            typedef void (LiftCabin::*_t)();
+            typedef void (LiftCabin::*_t)(int );
             if (*reinterpret_cast<_t *>(_a[1]) == static_cast<_t>(&LiftCabin::cabinStopped)) {
                 *result = 4;
                 return;
@@ -212,9 +214,10 @@ void LiftCabin::AchievedForResetButton(int _t1)
 }
 
 // SIGNAL 4
-void LiftCabin::cabinStopped()
+void LiftCabin::cabinStopped(int _t1)
 {
-    QMetaObject::activate(this, &staticMetaObject, 4, nullptr);
+    void *_a[] = { nullptr, const_cast<void*>(reinterpret_cast<const void*>(&_t1)) };
+    QMetaObject::activate(this, &staticMetaObject, 4, _a);
 }
 QT_WARNING_POP
 QT_END_MOC_NAMESPACE

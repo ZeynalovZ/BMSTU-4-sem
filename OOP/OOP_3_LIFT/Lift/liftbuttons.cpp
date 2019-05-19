@@ -22,7 +22,6 @@ void LiftButtons::slotPressed()
 {
     if (state == RELEASED)
     {
-        qDebug() << "press";
         state = PRESSED;
         this->setEnabled(false);
         emit floorRequest(FloorNumber);
@@ -33,7 +32,6 @@ void LiftButtons::slotReleased()
 {
     if (state == PRESSED)
     {
-        qDebug() << "released";
         state = RELEASED;
         this->setEnabled(true);
     }

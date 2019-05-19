@@ -30,7 +30,7 @@ signals:
     void FloorPassed(int floor, Direction direction);
     void Move();
     void AchievedForResetButton(int floor);
-    void cabinStopped();
+    void cabinStopped(int CurrentFloor);
 private:
     CabinState state;
     int CurrentFloor;

@@ -5,12 +5,12 @@ LiftCabin::LiftCabin(QObject *parent)
     state = FREE;
     CurrentFloor = 0;
     TargetFloor = 0;
+    QObject::connect(&doors, SIGNAL(DoorsClosed()), this , SLOT(FloorAchieving()));
     currentDirection = NO_DIRECTION;
     QObject::connect(this, SIGNAL(Move()), &doors, SLOT(DoorsClosing()));
     QObject::connect(&floorMoving, SIGNAL(timeout()), this , SLOT(FloorAchieving()));
-    QObject::connect(&doors, SIGNAL(DoorsClosed()), this , SLOT(FloorAchieving()));
     QObject::connect(this, SIGNAL(FloorAchieved()), this , SLOT(Stay()));
-    QObject::connect(this, SIGNAL(cabinStopped()), &doors , SLOT(DoorsOpenning()));
+    QObject::connect(this, SIGNAL(cabinStopped(int)), &doors , SLOT(DoorsOpenning()));
     floorMoving.setSingleShot(true);
 }
 
@@ -23,29 +23,29 @@ void LiftCabin::FloorAchieving()
 {
     if (state == MOVING || state == BUSY)
     {
-
         state = MOVING;
         if (CurrentFloor == TargetFloor)
         {
-            qDebug() << "Floor achieved:" << CurrentFloor;
             emit FloorAchieved();
         }
         else
         {
-            qDebug() << "Floor achieving. Now at" << CurrentFloor;
-            floorMoving.start(TIME_MOVING_FLOOR);
-            if (CurrentFloor < TargetFloor)
+            if (!floorMoving.isActive())
             {
-                currentDirection = UP;
+                floorMoving.start(TIME_MOVING_FLOOR);
                 emit FloorPassed(CurrentFloor, currentDirection);
-                CurrentFloor += currentDirection;
+                if (CurrentFloor < TargetFloor)
+                {
+                    currentDirection = UP;
+                    CurrentFloor += currentDirection;
+                }
+                else
+                {
+                    currentDirection = DOWN;
+                    CurrentFloor += currentDirection;
+                }
             }
-            else
-            {
-                currentDirection = DOWN;
-                emit FloorPassed(CurrentFloor, currentDirection);
-                CurrentFloor += currentDirection;
-            }
+
         }
     }
 }
@@ -53,11 +53,9 @@ void LiftCabin::FloorAchieving()
 void LiftCabin::slotBusy(int floor)
 {
     state = BUSY;
-    qDebug() << "slot moving to" << floor;
     TargetFloor = floor;
     if (CurrentFloor == TargetFloor)
     {
-
         emit FloorAchieved();
     }
     else
@@ -65,12 +63,10 @@ void LiftCabin::slotBusy(int floor)
         if (CurrentFloor < TargetFloor)
         {
             currentDirection = UP;
-            CurrentFloor += currentDirection;
         }
         else
         {
             currentDirection = DOWN;
-            CurrentFloor += currentDirection;
         }
         emit Move();
     }
@@ -81,10 +77,12 @@ void LiftCabin::slotBusy(int floor)
 
 void LiftCabin::Stay()
 {
-    floorMoving.stop();
-    emit AchievedForResetButton(CurrentFloor);
-    emit cabinStopped();
     state = FREE;
+    qDebug() << "floor " << CurrentFloor << "achieved";
+    floorMoving.stop();
+    emit cabinStopped(CurrentFloor);
+    //emit AchievedForResetButton(CurrentFloor);
+
 }
 
 

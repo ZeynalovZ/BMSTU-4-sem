@@ -31,32 +31,25 @@ Controller::~Controller()
 
 bool Controller::TargetExists(int &floor)
 {
-    /*
-    for (int i = 0; i < FLOOR_NUMBERS; i++)
-    {
-        if (TargetsArray[i] == true)
-        {
-            floor = i;
-            return true;
-        }
-    }*/
     int step = -1;
     if (currentDirection == UP)
         step = 1;
-    for (int i = currentFloor; i <= FLOOR_NUMBERS && i > 0; i += step)
+    for (int i = currentFloor; i < FLOOR_NUMBERS && i  >= 0; i += step)
     {
-        if (TargetsArray[i - 1])
+        if (TargetsArray[i])
         {
             floor = i;
+            //qDebug() << "first";
             return true;
         }
     }
     step = -step;
-    for (int i = currentFloor; i <= FLOOR_NUMBERS && i > 0; i+= step)
+    for (int i = currentFloor; i < FLOOR_NUMBERS && i >= 0; i+= step)
     {
-        if (TargetsArray[i - 1])
+        if (TargetsArray[i])
         {
             floor = i;
+            //qDebug() << "second" << floor;
             return true;
         }
     }
@@ -67,19 +60,21 @@ void Controller::passCurrentFloor(int floor, Direction direct)
 {
     currentFloor = floor;
     currentDirection = direct;
-    //qDebug() << "floor" << floor << "was passed";
+    qDebug() << "floor" << floor << "was passed";
 }
 
-void Controller::AchieveFloor(int floor)
+void print_targets(bool *targets)
 {
-    /*
     for (int i = 0; i < FLOOR_NUMBERS; i++)
     {
-        qDebug() << TargetsArray[i];
+        qDebug() << targets[i];
     }
-    */
+}
+void Controller::AchieveFloor(int floor)
+{
     emit buttons[floor]->resetButton();
     TargetsArray[floor] = false;
+    //print_targets(TargetsArray);
     if (TargetExists(floor))
     {
         emit sendTarget(floor);
@@ -94,10 +89,9 @@ void Controller::AchieveFloor(int floor)
 void Controller::slotAddNewTarget(int floor)
 {
     TargetsArray[floor] = true;
-    qDebug() << "slotAddNewFloor" << floor;
-    // needed queue here
     state = BUSY;
     TargetExists(floor);
     emit sendTarget(floor);
+
 
 }
