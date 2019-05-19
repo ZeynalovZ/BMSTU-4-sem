@@ -8,7 +8,7 @@ MainWindow::MainWindow(QWidget *parent) :
     ui(new Ui::MainWindow)
 {
     ui->setupUi(this);
-    this->setFixedSize(200, 300);
+    this->setFixedSize(250, 530);
     layout = new QVBoxLayout;
     this->setLayout(layout);
     ui->centralWidget->setLayout(layout);

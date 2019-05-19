@@ -23,6 +23,7 @@ private:
     Ui::MainWindow *ui;
     QVBoxLayout *layout;
     MyLift lift;
+    QTextEdit *text;
 };
 
 #endif // MAINWINDOW_H

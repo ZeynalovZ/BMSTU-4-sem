@@ -1,4 +1,5 @@
 #include "liftdoors.h"
+#include "controller.h"
 #include <QDebug>
 LiftDoors::LiftDoors(QObject *parent)
 {
@@ -19,12 +20,15 @@ void LiftDoors::DoorsOpenning()
     if (state == CLOSE)
     {
         state = OPENING;
+        //text->append("Двери открываются");
+        //Controller::setText("Двери открываются");
         qDebug() << "Doors opening";
         OpeningTimer.start(TIME_DOOR_WAIT);
     }
     if (state == CLOSING)
     {
         state = OPENING;
+        //text->append("Двери открываются");
         qDebug() << "Doors opening";
         CloseTimer.stop();
         OpeningTimer.start(TIME_DOOR_WAIT);
@@ -38,6 +42,7 @@ void LiftDoors::DoorsClosing()
     case OPEN:
         state = CLOSING;
         CloseTimer.start(TIME_DOOR);
+        //text->append("Двери закрываются");
         qDebug() << "Doors closing";
         break;
     case CLOSE:
@@ -59,6 +64,7 @@ void LiftDoors::Open()
     if (state == OPENING)
     {
         state = OPEN;
+        //text->append("Двери открыты");
         qDebug() << "Doors are open";
         OpenTimer.start(TIME_DOOR);
     }
@@ -69,7 +75,8 @@ void LiftDoors::Close()
     if (state == CLOSING)
     {
         state = CLOSE;
-        qDebug() << "doors closed";
+        qDebug() << "Doors are closed";
+        //contr.setText("Двери закрыты");
     }
     emit DoorsClosed();
 }

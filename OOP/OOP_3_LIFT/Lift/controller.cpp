@@ -2,7 +2,19 @@
 Controller::Controller(QWidget *parent)
 {
     layout = new QVBoxLayout;
+    layoutH = new QHBoxLayout;
     this->setLayout(layout);
+    LCD = new QLCDNumber;
+    layout->addWidget(dynamic_cast<QLCDNumber*>(LCD));
+    QPushButton *p_open = new QPushButton;
+    QPushButton *p_close = new QPushButton;
+    p_open->setText("<|>");
+    p_close->setText(">|<");
+    QObject::connect(p_open, SIGNAL(pressed()), &doors, SLOT(DoorsOpenning()));
+    QObject::connect(p_close, SIGNAL(pressed()), &doors, SLOT(DoorsClosing()));
+    layoutH->addWidget(dynamic_cast<QPushButton*> (p_open));
+    layoutH->addWidget(dynamic_cast<QPushButton*> (p_close));
+    text = new QTextEdit;
     for (unsigned int i = 0; i < FLOOR_NUMBERS; i++)
     {
         buttons[i] = new LiftButtons();
@@ -18,6 +30,11 @@ Controller::Controller(QWidget *parent)
         layout->addWidget(dynamic_cast<QPushButton*> (buttons[i]));
         QObject::connect(buttons[i], SIGNAL(floorRequest(int)), this, SLOT(slotAddNewTarget(int)));
     }
+    layout->addLayout(dynamic_cast<QHBoxLayout*> (layoutH));
+    text->setFixedHeight(80);
+    text->setPlainText("Лифт работает в штатном режиме");
+
+    layout->addWidget(dynamic_cast<QTextEdit*> (text));
 }
 
 Controller::~Controller()
@@ -60,6 +77,8 @@ void Controller::passCurrentFloor(int floor, Direction direct)
 {
     currentFloor = floor;
     currentDirection = direct;
+    LCD->display(floor);
+    text->append("Этаж " + QString::number(floor) + " пройден");
     qDebug() << "floor" << floor << "was passed";
 }
 
@@ -74,6 +93,8 @@ void Controller::AchieveFloor(int floor)
 {
     emit buttons[floor]->resetButton();
     TargetsArray[floor] = false;
+    LCD->display(floor);
+    text->append("Этаж " + QString::number(floor) + " Достигнут ");
     //print_targets(TargetsArray);
     if (TargetExists(floor))
     {
@@ -92,6 +113,4 @@ void Controller::slotAddNewTarget(int floor)
     state = BUSY;
     TargetExists(floor);
     emit sendTarget(floor);
-
-
 }

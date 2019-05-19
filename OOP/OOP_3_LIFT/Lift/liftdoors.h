@@ -15,6 +15,7 @@ class LiftDoors : public QObject
     };
 public:
     explicit LiftDoors(QObject *parent = 0);
+    void setText(QTextEdit *t);
 public slots:
     void DoorsOpenning();
     void DoorsClosing();
