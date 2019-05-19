@@ -259,7 +259,7 @@ QPoint SearchIntersection(QPoint P1, QPoint P2, QPoint Q1, QPoint Q2)
     I.setX(P1.x() + (P2.x() - P1.x()) * t);
     I.setY(P1.y() + (P2.y() - P1.y()) * t);
     return I;
-    */
+
     double koef[2][2];
     koef[0][0] = P2.x() - P1.x();
     koef[0][1] = Q1.x() - Q2.x();
@@ -298,6 +298,21 @@ QPoint SearchIntersection(QPoint P1, QPoint P2, QPoint Q1, QPoint Q2)
     qDebug() << "===";
     qDebug() << I;
     return I;
+    */
+    double A = P2.x() - P1.x();
+    double B = Q2.x() - Q1.x();
+    double C = Q1.x() - P1.x();
+
+    double D = P2.y() - P1.y();
+    double E = Q2.y() - Q1.y();
+    double F = Q1.y() - P1.y();
+    const double det = A * E - B * D;
+    QPoint I;
+    const double X = (C * E - B * F) / det;
+    const double Y = (A * F - C * D) / det;
+    I.setX((double)Q1.x() + (double)(Q2.x() - Q1.x()) * X);
+    I.setY((double)Q1.y() + (double)(Q2.y() - Q1.y()) * X);
+    return I;
 }
 void check_exist()
 {
@@ -333,7 +348,7 @@ void Copy(QVector<QPoint> &dist, QVector<QPoint> source)
 void SutherlandHodgman(QVector<QPoint> &polygon, QVector<QPoint> cutter)
 {
     QVector<QPoint> result_polygon;
-    check_exist();
+    //check_exist();
     cutter.append(cutter[0]);
     QPoint F;
     QPoint S;
@@ -342,7 +357,7 @@ void SutherlandHodgman(QVector<QPoint> &polygon, QVector<QPoint> cutter)
     {
         for (int j = 0; j < polygon.size(); j++)
         {
-            if (j != 1)
+            if (j != 0)
             {
                 if (IsIntersectionExist(S, polygon[j], cutter[i], cutter[i + 1])) // params here
                 {
