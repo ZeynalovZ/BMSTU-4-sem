@@ -208,7 +208,7 @@ void CyrusBekaAlgorithm(QPoint P1, QPoint P2, int obhod, QVector<edge_t> rect, Q
     }
     return;
 }
-int signVis(double w)
+int signVis(int w)
 {
     if (w < 0)
     {
@@ -225,16 +225,16 @@ int signVis(double w)
 }
 int isVisible(QPoint P, QPoint P1, QPoint P2)
 {
-    double Worker1 = (P.x() - P1.x()) * (P2.y() - P1.y());
-    double Worker2 = (P.y() - P1.y()) * (P2.x() - P1.x());
-    double Worker3 = Worker1 - Worker2;
+    int Worker1 = (P.x() - P1.x()) * (P2.y() - P1.y());
+    int Worker2 = (P.y() - P1.y()) * (P2.x() - P1.x());
+    int Worker3 = Worker1 - Worker2;
     return signVis(Worker3);
 }
 bool IsIntersectionExist(QPoint P, QPoint S, QPoint P1, QPoint P2)
 {
     int vis1 = isVisible(P, P1, P2);
     int vis2 = isVisible(S, P1, P2);
-    if (vis1 < 0 && vis2 > 0 || vis1 > 0 && vis2 < 0)
+    if ((vis1 < 0 && vis2 > 0) || (vis1 > 0 && vis2 < 0))
     {
         return true;
     }
@@ -246,59 +246,7 @@ bool IsIntersectionExist(QPoint P, QPoint S, QPoint P1, QPoint P2)
 
 QPoint SearchIntersection(QPoint P1, QPoint P2, QPoint Q1, QPoint Q2)
 {
-    /*
-    double delta1 = (P2.x() - P1.x()) * (Q1.y() - Q2.y()) - (Q1.x() - Q2.x() * (P2.y() - P1.y()));
-    double delta2 = (Q1.x() - P1.x()) * (Q1.y() - Q2.y()) - (Q1.x() - Q2.x() * (Q1.y() - P1.y()));
-    if (abs(delta1) < 1e-6)
-    {
-        return P2;
-    }
-    double t = delta2 / delta1;
-
-    QPoint I;
-    I.setX(P1.x() + (P2.x() - P1.x()) * t);
-    I.setY(P1.y() + (P2.y() - P1.y()) * t);
-    return I;
-
-    double koef[2][2];
-    koef[0][0] = P2.x() - P1.x();
-    koef[0][1] = Q1.x() - Q2.x();
-    koef[1][0] = P2.y() - P1.y();
-    koef[1][1] = Q1.y() - Q2.y();
-    double determinant = koef[0][0] * koef[1][1] - koef[1][0] * koef[0][1];
-
-    double right[2][1];
-    right[0][0] = Q1.x() - P1.x();
-    right[1][0] = Q1.y() - P1.y();
-
-    double tmp = koef[0][0];
-    koef[0][0] = koef[1][1];
-    koef[1][1] = tmp;
-
-    tmp = -koef[1][0];
-    koef[1][0] = -koef[0][1];
-    koef[0][1] = tmp;
-    //for (int i = 0; i < 2; i++)
-    //{
-    //    qDebug() << koef[i][0] << koef[i][1];
-    //}
-    double k = (double)1 / determinant;
-    qDebug() << k << "Koef";
-    koef[0][0] *= k;
-    koef[1][1] *= k;
-    koef[1][0] *= k;
-    koef[0][1] *= k;
-
-    double res[2][1];
-    res[0][0] = koef[0][0] * right[0][0] + koef[0][1] * right[1][0];
-    res[1][0] = koef[1][0] * right[0][0] + koef[1][1] * right[1][0];
-    QPoint I;
-    I.setX((double)P1.x() + (double)(P2.x() - P1.x()) * res[0][0]);
-    I.setY((double)P1.y() + (double)(P2.y() - P1.y()) * res[0][0]);
-    qDebug() << "===";
-    qDebug() << I;
-    return I;
-    */
+    //qDebug() << P1 << P2 << Q1 << Q2;
     double A = P2.x() - P1.x();
     double B = Q1.x() - Q2.x();
     double C = Q1.x() - P1.x();
@@ -309,32 +257,11 @@ QPoint SearchIntersection(QPoint P1, QPoint P2, QPoint Q1, QPoint Q2)
     const double det = A * E - B * D;
     QPoint I;
     const double t = (C * E - B * F) / det;
-    I.setX((double)Q1.x() + (double)(Q2.x() - Q1.x()) * t);
-    I.setY((double)Q1.y() + (double)(Q2.y() - Q1.y()) * t);
+    I.setX(P1.x() + (P2.x() - P1.x()) * t);
+    I.setY(P1.y() + (P2.y() - P1.y()) * t);
+    //qDebug() << I;
     return I;
 }
-void check_exist()
-{
-    QPoint P1(0, 0);
-    QPoint P2(3, 2);
-    QPoint P3(3, 0);
-    QPoint P4(0, 2);
-    int vis1 = isVisible(P3, P1, P2);
-    int vis2 = isVisible(P4, P1, P2);
-    QPoint I = SearchIntersection(P3, P4, P1, P2);
-    qDebug() << I << "testtest";
-    /*
-    if (IsIntersectionExist(P3, P4, P1, P2))
-    {
-        qDebug() << "yeeeeeees";
-    }
-    else
-    {
-        qDebug() << "noo";
-    }
-    */
-}
-
 void Copy(QVector<QPoint> &dist, QVector<QPoint> source)
 {
     dist.clear();
@@ -344,28 +271,27 @@ void Copy(QVector<QPoint> &dist, QVector<QPoint> source)
     }
 }
 
-void SutherlandHodgman(QVector<QPoint> &polygon, QVector<QPoint> cutter)
+void SutherlandHodgman(QVector<QPoint> &polygon, QVector<QPoint> cutter, int obhod)
 {
     QVector<QPoint> result_polygon;
-    //check_exist();
-    int Nc = cutter.size();
-    int Na = polygon.size();
+    int Nw = cutter.size();
+    int Np = polygon.size();
     cutter.append(cutter[0]);
     QPoint F;
     QPoint S;
     QPoint I;
-    for (int i = 0; i < Nc; i++)
+    for (int i = 0; i < Nw; i++)
     {
-        int Nb = 0;
-        for (int j = 0; j < Na; j++)
+        int Nq = 0;
+        for (int j = 0; j < Np; j++)
         {
             if (j != 0)
             {
-                if (IsIntersectionExist(S, polygon[j], cutter[i], cutter[i + 1])) // params here
+                if (IsIntersectionExist(S, polygon[j], cutter[i], cutter[i + 1]))
                 {
-                    I = SearchIntersection(S, polygon[j], cutter[i], cutter[i + 1]); // params here
-                    result_polygon.append(I); // params here
-                    Nb++;
+                    I = SearchIntersection(S, polygon[j], cutter[i], cutter[i + 1]);
+                    result_polygon.append(I);
+                    Nq++;
                 }
             }
             else
@@ -373,23 +299,25 @@ void SutherlandHodgman(QVector<QPoint> &polygon, QVector<QPoint> cutter)
                 F = polygon[j];
             }
             S = polygon[j];
-            if (isVisible(S, cutter[i], cutter[i + 1]) >= 0)
+            int vis = isVisible(S, cutter[i], cutter[i + 1]);
+            if ((vis >= 0 && obhod == -1) || (vis <= 0 && obhod == 1))
             {
                 result_polygon.append(S);
-                Nb++;
+                Nq++;
             }
         }
-        if (Nb != 0)
+        if (Nq != 0)
         {
             if (IsIntersectionExist(S, F, cutter[i], cutter[i + 1]))
             {
                 I = SearchIntersection(S, F, cutter[i], cutter[i + 1]);
                 result_polygon.append(I);
-                Nb++;
+                Nq++;
             }
         }
-        Na = Nb;
+        Np = Nq;
         polygon = result_polygon;
         result_polygon.clear();
     }
+    result_polygon.clear();
 }

@@ -399,7 +399,7 @@ void MainWindow::on_clear_button_clicked()
     prev_polygon_y = -1;
     flag_polygon_set = false;
     flag_polygon_first_touched = false;
-
+    polygon.clear();
     prev_rect_y = -1;
     prev_rect_x = -1;
     flag_first_touched = false;
@@ -451,7 +451,7 @@ void MainWindow::on_cut_button_clicked()
         painter->setRenderHint(QPainter::Antialiasing, true);
         painter->setPen(QPen(outline_color, 2));
 
-        qDebug() << "========";
+        //qDebug() << "========";
         //print_poly(rect);
         QVector<QPoint> cutter;
         for (int i = 0; i < rect.size(); i++)
@@ -459,10 +459,9 @@ void MainWindow::on_cut_button_clicked()
             cutter.append(QPoint(rect[i].x1, rect[i].y1));
             //qDebug() << cutter[i];
         }
-
         QVector<QPoint> poly;
         qDebug() << "========";
-        //print_poly(polygon);
+        print_poly(polygon);
         for (int i = 0; i < polygon.size(); i++)
         {
             poly.append(QPoint(polygon[i].x1, polygon[i].y1));
@@ -470,16 +469,24 @@ void MainWindow::on_cut_button_clicked()
         }
         for (int i = 0; i < poly.size(); i++)
         {
-            qDebug() << poly[i];
+            //qDebug() << poly[i];
+            ;
         }
 
-        SutherlandHodgman(poly, cutter);
+        SutherlandHodgman(poly, cutter, obhod);
 
         for (int i = 0; i < poly.size() - 1; i++)
         {
-            qDebug() << poly[i];
+            //qDebug() << poly[i];
             painter->drawLine(poly[i], poly[i + 1]);
         }
+        if (poly.size() != 0)
+        {
+            painter->drawLine(poly[poly.size() - 1], poly[0]);
+        }
+
+        cutter.clear();
+        poly.clear();
         //SutherlandHodgman();
         ui->draw_label->setPixmap(*scene);
     }
@@ -510,6 +517,7 @@ void MainWindow::on_delete_cutter_button_clicked()
     }
     flag_rect_set = false;
     rect.clear();
+    //polygon.clear();
     ui->draw_label->setPixmap(*scene);
     prev_rect_y = -1;
     prev_rect_x = -1;

@@ -12,5 +12,5 @@ struct EDGE
 };
 void CyrusBekaAlgorithm(QPoint P1, QPoint P2, int obhod, QVector<edge_t> rect, QPainter &painter);
 bool IsConvex(QVector<edge_t> rect, int &obhod);
-void SutherlandHodgman(QVector<QPoint> &polygon, QVector<QPoint> cutter);
+void SutherlandHodgman(QVector<QPoint> &polygon, QVector<QPoint> cutter, int obhod);
 #endif // ALGORITHM_H
