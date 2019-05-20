@@ -300,18 +300,17 @@ QPoint SearchIntersection(QPoint P1, QPoint P2, QPoint Q1, QPoint Q2)
     return I;
     */
     double A = P2.x() - P1.x();
-    double B = Q2.x() - Q1.x();
+    double B = Q1.x() - Q2.x();
     double C = Q1.x() - P1.x();
 
     double D = P2.y() - P1.y();
-    double E = Q2.y() - Q1.y();
+    double E = Q1.y() - Q2.y();
     double F = Q1.y() - P1.y();
     const double det = A * E - B * D;
     QPoint I;
-    const double X = (C * E - B * F) / det;
-    const double Y = (A * F - C * D) / det;
-    I.setX((double)Q1.x() + (double)(Q2.x() - Q1.x()) * X);
-    I.setY((double)Q1.y() + (double)(Q2.y() - Q1.y()) * X);
+    const double t = (C * E - B * F) / det;
+    I.setX((double)Q1.x() + (double)(Q2.x() - Q1.x()) * t);
+    I.setY((double)Q1.y() + (double)(Q2.y() - Q1.y()) * t);
     return I;
 }
 void check_exist()
@@ -349,13 +348,16 @@ void SutherlandHodgman(QVector<QPoint> &polygon, QVector<QPoint> cutter)
 {
     QVector<QPoint> result_polygon;
     //check_exist();
+    int Nc = cutter.size();
+    int Na = polygon.size();
     cutter.append(cutter[0]);
     QPoint F;
     QPoint S;
     QPoint I;
-    for (int i = 1; i < cutter.size() - 1; i++)
+    for (int i = 0; i < Nc; i++)
     {
-        for (int j = 0; j < polygon.size(); j++)
+        int Nb = 0;
+        for (int j = 0; j < Na; j++)
         {
             if (j != 0)
             {
@@ -363,6 +365,7 @@ void SutherlandHodgman(QVector<QPoint> &polygon, QVector<QPoint> cutter)
                 {
                     I = SearchIntersection(S, polygon[j], cutter[i], cutter[i + 1]); // params here
                     result_polygon.append(I); // params here
+                    Nb++;
                 }
             }
             else
@@ -373,17 +376,20 @@ void SutherlandHodgman(QVector<QPoint> &polygon, QVector<QPoint> cutter)
             if (isVisible(S, cutter[i], cutter[i + 1]) >= 0)
             {
                 result_polygon.append(S);
+                Nb++;
             }
         }
-        if (result_polygon.size() != 0)
+        if (Nb != 0)
         {
             if (IsIntersectionExist(S, F, cutter[i], cutter[i + 1]))
             {
                 I = SearchIntersection(S, F, cutter[i], cutter[i + 1]);
                 result_polygon.append(I);
+                Nb++;
             }
         }
-        Copy(polygon, result_polygon);
+        Na = Nb;
+        polygon = result_polygon;
         result_polygon.clear();
     }
 }

@@ -27,7 +27,7 @@ MainWindow::MainWindow(QWidget *parent) :
 {
     ui->setupUi(this);
     ui->draw_label->setPalette(QColor(Qt::white));
-    this->setWindowTitle("Лр8. Отсечение выпуклым многоугольником (Алгоритмом Кируса-Бека)");
+    this->setWindowTitle("Лр9. Отсчение многоульника выпуклым многоугольником (Алгоритмом Сазерленда-Ходжмена)");
 
     scene = new QPixmap(881, 561);
     scene->fill(QColor(Qt::white));
@@ -450,6 +450,7 @@ void MainWindow::on_cut_button_clicked()
     {
         painter->setRenderHint(QPainter::Antialiasing, true);
         painter->setPen(QPen(outline_color, 2));
+
         qDebug() << "========";
         //print_poly(rect);
         QVector<QPoint> cutter;
@@ -458,6 +459,7 @@ void MainWindow::on_cut_button_clicked()
             cutter.append(QPoint(rect[i].x1, rect[i].y1));
             //qDebug() << cutter[i];
         }
+
         QVector<QPoint> poly;
         qDebug() << "========";
         //print_poly(polygon);
@@ -470,6 +472,7 @@ void MainWindow::on_cut_button_clicked()
         {
             qDebug() << poly[i];
         }
+
         SutherlandHodgman(poly, cutter);
 
         for (int i = 0; i < poly.size() - 1; i++)
@@ -479,7 +482,6 @@ void MainWindow::on_cut_button_clicked()
         }
         //SutherlandHodgman();
         ui->draw_label->setPixmap(*scene);
-
     }
     else
     {
@@ -535,6 +537,7 @@ void MainWindow::delete_current_polygon()
     }
     flag_polygon_set = false;
     polygon.clear();
+    rect.clear();
     ui->draw_label->setPixmap(*scene);
     prev_polygon_y = -1;
     prev_polygon_x = -1;
