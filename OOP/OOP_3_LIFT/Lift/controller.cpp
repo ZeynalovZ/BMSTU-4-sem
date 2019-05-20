@@ -30,7 +30,7 @@ Controller::Controller(QWidget *parent)
         layout->addWidget(dynamic_cast<QPushButton*> (buttons[i]));
         QObject::connect(buttons[i], SIGNAL(floorRequest(int)), this, SLOT(slotAddNewTarget(int)));
     }
-    layout->addLayout(dynamic_cast<QHBoxLayout*> (layoutH));
+    //layout->addLayout(dynamic_cast<QHBoxLayout*> (layoutH));
     text->setFixedHeight(80);
     text->setPlainText("Лифт работает в штатном режиме");
 
