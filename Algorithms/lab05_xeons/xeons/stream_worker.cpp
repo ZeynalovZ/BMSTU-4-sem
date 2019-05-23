@@ -16,6 +16,7 @@ int read_data(double *Pbeg, double *Tbeg, double *T0, double *Tw, int *m, const 
         {
             code_error = ERR_READ;
         }
+        cout << Pbeg << Tbeg << T0 << Tw << m << "data" << endl;
     }
     else
     {

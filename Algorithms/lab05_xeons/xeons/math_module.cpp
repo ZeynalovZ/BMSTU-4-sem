@@ -8,7 +8,7 @@
 #define KOEF 7243
 #define P1 3
 #define P2 25
-#define EPS 0.0001
+#define EPS 0.001
 #include <iostream>
 #define A_MATRIX_SIZE 6
 #define XEONS_COUNT 5
@@ -248,8 +248,8 @@ double systemSolver(double T, double P)
         calculate_k(K_table, T, gamma);
         get_A_matrix(A, v_x + 1, v_x[0]);
         fill_r(r_vector, v_x + 1, K_table, v_x[0], coef, alpha);
-        printf("A:\n");
-        print_matrix(A);
+        //printf("A:\n");
+        //print_matrix(A);
     }
     while (fabs(delta[0] / v_x[0]) >= EPS || xi_bigger_eps(delta + 1, v_x + 1));
 
