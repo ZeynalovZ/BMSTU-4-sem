@@ -22,7 +22,7 @@ int main()
         cout << "T0" << " " << "Tw" << " "  << "m" << " "  << "Tbeg" << " "  << "Pbeg" << " "  << endl;
         cout << T0 << " " << Tw << " "  << m << " "  << Tbeg << " "  << Pbeg << " "  << endl;
         P_result = get_p_result(Pbeg, Tbeg, T0, Tw, m);
-        cout << P_result << endl;
+        cout << P_result << "result is" << endl;
     }
     else
     {

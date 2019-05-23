@@ -5,12 +5,14 @@ CONFIG -= qt
 
 SOURCES += main.cpp \
     stream_worker.cpp \
-    math_module.cpp
+    math_module.cpp \
+    interpolate.cpp
 
 HEADERS += \
     stream_worker.h \
     errors.h \
-    math_module.h
+    math_module.h \
+    interpolate.h
 
 DISTFILES += \
     data.txt
