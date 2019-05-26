@@ -1,15 +1,15 @@
 <H2><i>Бытовой прибор: Стиральная машина</i></H2> </br>
 
-# МВО
+# Диаграмма: Модель взаимодействия объектов
   ![](https://github.com/ZeynalovZ/BMSTU-4-sem/blob/master/OOP/OOP_5/МВО%20СМ1.PNG)
 
-# Сущность-связь
+# Диаграмма: Сущность-связь
  ![](https://github.com/ZeynalovZ/BMSTU-4-sem/blob/master/OOP/OOP_5/Сущность-Связь%20СМ1.PNG)
  
-# ДПДД
+# Диаграмма: ДПДД ( Диграмма потоков данных действий)
   ![](https://github.com/ZeynalovZ/BMSTU-4-sem/blob/master/OOP/OOP_5/ДПДД%20СМ4.PNG)
  
-# Диаграммы сотояний
+# Диаграммы переходов состояний сотояний
   1. Дверь</br>
     ![](https://github.com/ZeynalovZ/BMSTU-4-sem/blob/master/OOP/OOP_5/Дверь%20СМ1.PNG)
     
