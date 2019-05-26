@@ -24,3 +24,11 @@
  
   5. Датчик слива воды</br>
     ![](https://github.com/ZeynalovZ/BMSTU-4-sem/blob/master/OOP/OOP_5/ДСВ%20СМ1.PNG)
+    
+# Канал управления
+
+  ```
+    int i = 0;
+    i++;
+    return 0;
+  ```
