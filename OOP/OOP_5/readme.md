@@ -8,6 +8,19 @@
  
 # Диаграмма: ДПДД ( Диграмма потоков данных действий)
   ![](https://github.com/ZeynalovZ/BMSTU-4-sem/blob/master/OOP/OOP_5/ДПДД%20СМ4.PNG)
+  
+  1. Дверь </br>
+  ![](https://github.com/ZeynalovZ/BMSTU-4-sem/blob/master/OOP/OOP_5/ДПДД%20Дверь.PNG)
+  2. Клапан подачи воды </br>
+  ![](https://github.com/ZeynalovZ/BMSTU-4-sem/blob/master/OOP/OOP_5/ДПДД%20ДПВ.PNG)
+  3. Приемник порошка </br>
+  ![](https://github.com/ZeynalovZ/BMSTU-4-sem/blob/master/OOP/OOP_5/ДПДД%20П%20СМ1.PNG)
+  4. Двмгатель </br>
+  ![](https://github.com/ZeynalovZ/BMSTU-4-sem/blob/master/OOP/OOP_5/ДПДД%20ДВ%20СМ1.PNG)
+  5. Датчик слива воды </br>
+  ![](https://github.com/ZeynalovZ/BMSTU-4-sem/blob/master/OOP/OOP_5/ДПДД%20ДСВ.PNG)
+  
+  
  
 # Диаграммы переходов состояний сотояний
   1. Дверь</br>
@@ -44,3 +57,4 @@
         ↓
   Уведомить интерфейс об окончании стирки
   ```
+   ![](https://github.com/ZeynalovZ/BMSTU-4-sem/blob/master/OOP/OOP_5/Канал%20данных.PNG)
