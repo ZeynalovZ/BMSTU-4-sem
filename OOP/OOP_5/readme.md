@@ -1,4 +1,4 @@
-<i>Бытовой прибор: Стиральная машина</i> </br>
+<i><big>Бытовой прибор: Стиральная машина</big></i> </br>
 # МВО
   ![](https://github.com/ZeynalovZ/BMSTU-4-sem/blob/master/OOP/OOP_5/МВО%20СМ1.PNG)
 
