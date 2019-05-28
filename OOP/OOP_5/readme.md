@@ -7,7 +7,6 @@
  ![](https://github.com/ZeynalovZ/BMSTU-4-sem/blob/master/OOP/OOP_5/Сущность-Связь%20СМ1.PNG)
  
 # Диаграмма: ДПДД ( Диграмма потоков данных действий)
-  ![](https://github.com/ZeynalovZ/BMSTU-4-sem/blob/master/OOP/OOP_5/ДПДД%20СМ4.PNG)
   
   1. Дверь </br>
   ![](https://github.com/ZeynalovZ/BMSTU-4-sem/blob/master/OOP/OOP_5/ДПДД%20Дверь.PNG)
