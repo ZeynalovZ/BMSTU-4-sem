@@ -13,7 +13,8 @@ int sign(double x)
 
 void SearchIntersection(int x1, int y1, int x2, int y2, QVector<int> &horizon, int &xi, int &yi)
 {
-
+    xi = x1;
+    yi = y1;
     int delta_x = x2 - x1;
     int delta_y_c = y2 - y1;
     int delta_y_p = horizon[x2] - horizon[x1];
@@ -35,15 +36,11 @@ void SearchIntersection(int x1, int y1, int x2, int y2, QVector<int> &horizon, i
     else
     {
         // Тут ошибка if ( delta_y_p - delta_y_c != 0)
-
-        xi = x1 - static_cast<int>(round(delta_x * (y1 - horizon[x1]) / static_cast<double>(delta_y_c - delta_y_p)));
-        yi = static_cast<int>(round((xi - x1) * m + y1));
-        if (xi < 0 || xi > 882)
+        if (delta_y_c != delta_y_p)
         {
-            xi = x2 + x1;
-            yi = y2 + y1;
+            xi = x1 - static_cast<int>(round(delta_x * (y1 - horizon[x1]) / static_cast<double>(delta_y_c - delta_y_p)));
+            yi = static_cast<int>(round((xi - x1) * m + y1));
         }
-
     }
     qDebug() << xi;
 }
@@ -86,7 +83,7 @@ void horizon(int x1, int y1, int x2, int y2, QVector<int> &TOP, QVector<int> &DO
     }
 }
 
-void EdgeWhatcher(int x, int y, int &xEdge, int &yEdge, QVector<int> &TOP, QVector<int> &DOWN, QPainter &painter)
+void EdgeWhatcher(int &x, int &y, int &xEdge, int &yEdge, QVector<int> &TOP, QVector<int> &DOWN, QPainter &painter)
 {
     if (xEdge != -1)
     {
@@ -98,13 +95,12 @@ void EdgeWhatcher(int x, int y, int &xEdge, int &yEdge, QVector<int> &TOP, QVect
 // тут всегда -1
 int Visible(int x, int y, QVector<int> TOP, QVector<int> DOWN)
 {
-    /*
-     * это верно!!!
+
+    // * это верно!!!
     if (y < TOP[x] && y > DOWN[x]) return 0;
     if (y >= TOP[x]) return 1;
     return -1;
-    */
-    return -1;
+
 }
 
 void transform_begin(NeededParams &Params)
@@ -155,13 +151,15 @@ void transform(double &x, double &y, double &z, double tetax, double tetay, doub
     rotate_x(y_tmp, z_tmp, tetax);
     rotate_y(x_tmp, z_tmp, tetay);
     rotate_z(x_tmp, y_tmp, tetaz);
-    res_x = static_cast<int>(round(x_tmp * 70 + x_center));
-    res_y = static_cast<int>(round(y_tmp * 70 + y_center));
+    res_x = static_cast<int>(round(x_tmp * 50 + x_center));
+    res_y = static_cast<int>(round(y_tmp * 50 + y_center));
 }
 
 void HorizonAlgo(NeededParams Params, QPainter &painter, double tetax, double tetay, double tetaz)
 {
     //transform_begin(Params);
+    qDebug() << Params.xB << Params.xE << Params.xD;
+    qDebug() << Params.zB << Params.zE << Params.zD;
     QVector<int> TOP;
     QVector<int> DOWN;
     for (int i = 0; i <= WINDOW_WIDTH; i++)
@@ -173,93 +171,69 @@ void HorizonAlgo(NeededParams Params, QPainter &painter, double tetax, double te
     int y_left = -1;
     int x_right = -1;
     int y_right = -1;
-    int Pflag = 0;
-    int Tflag = 0;
-    double x, y;
+    double x;
     int x_prev, y_prev;
-    for (double z = Params.zE; z > Params.zB; z -= Params.zD)
+    for (double z = Params.zE; z >= Params.zB; z -= Params.zD)
     {
-        //double x_prev = Params.xB;
         double y_p = Params.f(Params.xB, z);
         transform(Params.xB, y_p, z, tetax, tetay, tetaz, x_prev, y_prev);
         EdgeWhatcher(x_prev, y_prev, x_left, y_left, TOP, DOWN, painter);
-        Pflag = Visible(x_prev, y_prev, TOP, DOWN);
+        int Pflag = Visible(x_prev, y_prev, TOP, DOWN);
         for (x = Params.xB; x < Params.xE; x += Params.xD)
         {
-            int x_curr, y_curr;
+            int x_curr = 0, y_curr = 0;
             int xi;
             int yi;
             y_p = Params.f(x, z);
             transform(x, y_p, z, tetax, tetay, tetaz, x_curr, y_curr);
-            Tflag = Visible(x_curr, y_curr, TOP, DOWN);
+            int Tflag = Visible(x_curr, y_curr, TOP, DOWN);
             if (Tflag == Pflag)
             {
-                if (Tflag == 1 || Tflag == -1)
+                if (Pflag)
                 {
-                    //painter.drawLine(x_prev, y_prev, x, y);
-
                     horizon(x_prev, y_prev, x_curr, y_curr, TOP, DOWN, painter);
                 }
             }
-            else
+            else if (Tflag == 0)
             {
-                if (Tflag == 0)
+                if (Pflag == 1)
                 {
-                    if (Pflag == 1)
-                    {
-                        SearchIntersection(x_prev, y_prev, x_curr, y_curr, TOP, xi, yi);
-                    }
-                    else
-                    {
-                        SearchIntersection(x_prev, y_prev, x_curr, y_curr, DOWN, xi, yi);
-                    }
-                    //painter.drawLine(x_prev, y_prev, xi, yi);
-
+                    SearchIntersection(x_prev, y_prev, x_curr, y_curr, TOP, xi, yi);
+                }
+                else
+                {
+                    SearchIntersection(x_prev, y_prev, x_curr, y_curr, DOWN, xi, yi);
+                }
+                horizon(x_prev, y_prev, xi, yi, TOP, DOWN, painter);
+            }
+            else if (Tflag == 1)
+            {
+                if (Pflag == 0)
+                {
+                    SearchIntersection(x_prev, y_prev, x_curr, y_curr, TOP, xi, yi);
                     horizon(x_prev, y_prev, xi, yi, TOP, DOWN, painter);
                 }
                 else
                 {
-                    if (Tflag == 1)
-                    {
-                        if (Pflag == 0)
-                        {
-                            SearchIntersection(x_prev, y_prev, x_curr, y_curr, TOP, xi, yi);
-                            //painter.drawLine(xi, yi, x, y);
-
-                            horizon(x_prev, y_prev, xi, yi, TOP, DOWN, painter);
-                        }
-                        else
-                        {
-                            SearchIntersection(x_prev, y_prev, x_curr, y_curr, TOP, xi, yi);
-                            //painter.drawLine(x_prev, y_prev, xi, yi);
-
-                            horizon(x_prev, y_prev, xi, yi, TOP, DOWN, painter);
-
-                            SearchIntersection(x_prev, y_prev, x_curr, y_curr, TOP, xi, yi);
-                            //painter.drawLine(xi, yi, x, y);
-                            horizon(xi, yi, x_curr, y_curr, TOP, DOWN, painter);
-                        }
-                    }
-                    else
-                    {
-                        if (Pflag == 0)
-                        {
-                            SearchIntersection(x_prev, y_prev, x_curr, y_curr, TOP, xi, yi);
-                            //painter.drawLine(xi, yi, x, y);
-
-                            horizon(x_prev, y_prev, xi, yi, TOP, DOWN, painter);
-                        }
-                        else
-                        {
-                            SearchIntersection(x_prev, y_prev, x_curr, y_curr, TOP, xi, yi);
-                            //painter.drawLine(x_prev, y_prev, xi, yi);
-                            horizon(x_prev, y_prev, xi, yi, TOP, DOWN, painter);
-
-                            SearchIntersection(x_prev, y_prev, x_curr, y_curr, TOP, xi, yi);
-                            //painter.drawLine(xi, yi, x, y);
-                            horizon(xi, yi, x_curr, y_curr, TOP, DOWN, painter);
-                        }
-                    }
+                    SearchIntersection(x_prev, y_prev, x_curr, y_curr, TOP, xi, yi);
+                    horizon(x_prev, y_prev, xi, yi, TOP, DOWN, painter);
+                    SearchIntersection(x_prev, y_prev, x_curr, y_curr, TOP, xi, yi);
+                    horizon(xi, yi, x_curr, y_curr, TOP, DOWN, painter);
+                }
+            }
+            else
+            {
+                if (Pflag == 0)
+                {
+                    SearchIntersection(x_prev, y_prev, x_curr, y_curr, TOP, xi, yi);
+                    horizon(x_prev, y_prev, xi, yi, TOP, DOWN, painter);
+                }
+                else
+                {
+                    SearchIntersection(x_prev, y_prev, x_curr, y_curr, TOP, xi, yi);
+                    horizon(x_prev, y_prev, xi, yi, TOP, DOWN, painter);
+                    SearchIntersection(x_prev, y_prev, x_curr, y_curr, TOP, xi, yi);
+                    horizon(xi, yi, x_curr, y_curr, TOP, DOWN, painter);
                 }
             }
             Pflag = Tflag;
