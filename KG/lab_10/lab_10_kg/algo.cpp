@@ -13,31 +13,46 @@ int sign(double x)
 
 void SearchIntersection(int x1, int y1, int x2, int y2, QVector<int> &horizon, int &xi, int &yi)
 {
+
     int delta_x = x2 - x1;
     int delta_y_c = y2 - y1;
     int delta_y_p = horizon[x2] - horizon[x1];
+    qDebug() << y2 << y1;
+    qDebug() << horizon[x2] << horizon[x1];
     double m = delta_y_c / static_cast<double>(delta_x);
     if (delta_x == 0)
     {
+        qDebug() << "first";
         xi = x2;
         yi = horizon[x2];
     }
     else if (y1 == horizon[x1] && y2 == horizon[x2])
     {
+        qDebug() << "second";
         xi = x1;
         yi = y1;
     }
     else
     {
-        xi = x1 - static_cast<int>(round(delta_x * (horizon[x1] - y1) / static_cast<double>(delta_y_p - delta_y_c)));
-        yi =  static_cast<int>(round((xi - x1) * m + y1));
+        // Тут ошибка if ( delta_y_p - delta_y_c != 0)
+
+        xi = x1 - static_cast<int>(round(delta_x * (y1 - horizon[x1]) / static_cast<double>(delta_y_c - delta_y_p)));
+        yi = static_cast<int>(round((xi - x1) * m + y1));
+        if (xi < 0 || xi > 882)
+        {
+            xi = x2 + x1;
+            yi = y2 + y1;
+        }
+
     }
+    qDebug() << xi;
 }
 
 
 
 void horizon(int x1, int y1, int x2, int y2, QVector<int> &TOP, QVector<int> &DOWN, QPainter &painter)
 {
+
     if (x2 < x1)
     {
         qSwap(x1, x2);
@@ -54,6 +69,8 @@ void horizon(int x1, int y1, int x2, int y2, QVector<int> &TOP, QVector<int> &DO
     }
     else
     {
+        int x_prev = x1;
+        int y_prev = y1;
         double m = (y2 - y1) / static_cast<double>(x2 - x1);
         //qDebug() << m;
         for (int x = x1; x <= x2; x++)
@@ -61,9 +78,9 @@ void horizon(int x1, int y1, int x2, int y2, QVector<int> &TOP, QVector<int> &DO
             int y = static_cast<int>(round(m * (x - x1) + y1));
             TOP[x] = qMax(TOP[x], y);
             DOWN[x] = qMin(DOWN[x], y);
-            if (x2 >= 0 && x2 <= WINDOW_WIDTH)
+            if (x >= 0 && x <= WINDOW_WIDTH)
             {
-                painter.drawLine(x1, y1, x2, y2);
+                painter.drawLine(x_prev, y_prev, x, y);
             }
         }
     }
@@ -78,14 +95,16 @@ void EdgeWhatcher(int x, int y, int &xEdge, int &yEdge, QVector<int> &TOP, QVect
     xEdge = x;
     yEdge = y;
 }
-
+// тут всегда -1
 int Visible(int x, int y, QVector<int> TOP, QVector<int> DOWN)
 {
-    int Tflag;
-    if (y <= TOP[x] && y > DOWN[x]) Tflag = 0;
-    if (y >= TOP[x]) Tflag = 1;
-    Tflag = -1;
-    return Tflag;
+    /*
+     * это верно!!!
+    if (y < TOP[x] && y > DOWN[x]) return 0;
+    if (y >= TOP[x]) return 1;
+    return -1;
+    */
+    return -1;
 }
 
 void transform_begin(NeededParams &Params)
@@ -129,15 +148,15 @@ void rotate_z(double &x, double &y, double tetaz)
 void transform(double &x, double &y, double &z, double tetax, double tetay, double tetaz, int &res_x, int &res_y)
 {
     double x_center = WINDOW_WIDTH / 2;
-    double y_center = WINDOW_WIDTH / 2;
+    double y_center = WINDOW_WIDTH / 2 - 130;
     double x_tmp = x;
     double y_tmp = y;
     double z_tmp = z;
     rotate_x(y_tmp, z_tmp, tetax);
     rotate_y(x_tmp, z_tmp, tetay);
     rotate_z(x_tmp, y_tmp, tetaz);
-    res_x = static_cast<int>(round(x_tmp * 100 + x_center));
-    res_y = static_cast<int>(round(y_tmp * 100 + y_center));
+    res_x = static_cast<int>(round(x_tmp * 70 + x_center));
+    res_y = static_cast<int>(round(y_tmp * 70 + y_center));
 }
 
 void HorizonAlgo(NeededParams Params, QPainter &painter, double tetax, double tetay, double tetaz)
@@ -178,6 +197,7 @@ void HorizonAlgo(NeededParams Params, QPainter &painter, double tetax, double te
                 if (Tflag == 1 || Tflag == -1)
                 {
                     //painter.drawLine(x_prev, y_prev, x, y);
+
                     horizon(x_prev, y_prev, x_curr, y_curr, TOP, DOWN, painter);
                 }
             }
@@ -194,6 +214,7 @@ void HorizonAlgo(NeededParams Params, QPainter &painter, double tetax, double te
                         SearchIntersection(x_prev, y_prev, x_curr, y_curr, DOWN, xi, yi);
                     }
                     //painter.drawLine(x_prev, y_prev, xi, yi);
+
                     horizon(x_prev, y_prev, xi, yi, TOP, DOWN, painter);
                 }
                 else
@@ -204,15 +225,17 @@ void HorizonAlgo(NeededParams Params, QPainter &painter, double tetax, double te
                         {
                             SearchIntersection(x_prev, y_prev, x_curr, y_curr, TOP, xi, yi);
                             //painter.drawLine(xi, yi, x, y);
-                            horizon(xi, yi, x_curr, y_curr, TOP, DOWN, painter);
+
+                            horizon(x_prev, y_prev, xi, yi, TOP, DOWN, painter);
                         }
                         else
                         {
                             SearchIntersection(x_prev, y_prev, x_curr, y_curr, TOP, xi, yi);
                             //painter.drawLine(x_prev, y_prev, xi, yi);
+
                             horizon(x_prev, y_prev, xi, yi, TOP, DOWN, painter);
 
-                            SearchIntersection(x_prev, y_prev, x, y, TOP, xi, yi);
+                            SearchIntersection(x_prev, y_prev, x_curr, y_curr, TOP, xi, yi);
                             //painter.drawLine(xi, yi, x, y);
                             horizon(xi, yi, x_curr, y_curr, TOP, DOWN, painter);
                         }
@@ -223,7 +246,8 @@ void HorizonAlgo(NeededParams Params, QPainter &painter, double tetax, double te
                         {
                             SearchIntersection(x_prev, y_prev, x_curr, y_curr, TOP, xi, yi);
                             //painter.drawLine(xi, yi, x, y);
-                            horizon(xi, yi, x_curr, y_curr, TOP, DOWN, painter);
+
+                            horizon(x_prev, y_prev, xi, yi, TOP, DOWN, painter);
                         }
                         else
                         {
@@ -242,6 +266,6 @@ void HorizonAlgo(NeededParams Params, QPainter &painter, double tetax, double te
             x_prev = x_curr;
             y_prev = y_curr;
         }
-        EdgeWhatcher(x, y, x_right, y_right, TOP, DOWN, painter);
+        EdgeWhatcher(x_prev, y_prev, x_right, y_right, TOP, DOWN, painter);
     }
 }
