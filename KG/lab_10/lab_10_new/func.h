@@ -1,5 +1,5 @@
-#ifndef FUNCTIONS_H
-#define FUNCTIONS_H
+#ifndef FUNC_H
+#define FUNC_H
 #include <cmath>
 
 typedef double(*FuncPointer)(double, double);
@@ -11,6 +11,7 @@ public:
         Arr[0] = &f1;
         Arr[1] = &f2;
         Arr[2] = &f3;
+        Arr[3] = &f4;
     }
 
     FuncPointer GetFunc(int FuncIndex)
@@ -19,7 +20,7 @@ public:
     }
 
 private:
-    FuncPointer Arr[3];
+    FuncPointer Arr[4];
     static double f1(double x, double z)
     {
         return cos(x) * cos(x) - sin(z) * sin(z);
@@ -34,7 +35,8 @@ private:
     }
     static double f4(double x, double z)
     {
-        return exp(cos(x));
+        return exp(cos(x)) + sin(z) * x;
     }
 };
-#endif // FUNCTIONS_H
+
+#endif // FUNC_H

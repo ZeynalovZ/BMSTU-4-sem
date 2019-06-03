@@ -134,8 +134,10 @@ void MainWindow::on_drawButton_clicked()
     {
         NeededParams Params(xBegin, xEnd, xDelta, zBegin, zEnd, zDelta);
         int FuncIndex = ui->comboBox->currentIndex();
+        qDebug() << FuncIndex;
         f = FunctionHolder.GetFunc(FuncIndex);
         Params.f = f;
+        //qDebug() << f(1, 2);
         figureExists = true;
         HorizonAlgo(Params, *painter, tetax, tetay, tetaz);
         ui->draw_label->setPixmap(*scene);

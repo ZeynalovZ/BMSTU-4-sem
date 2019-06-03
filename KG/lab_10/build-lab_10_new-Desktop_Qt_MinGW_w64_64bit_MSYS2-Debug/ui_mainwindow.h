@@ -333,8 +333,8 @@ public:
         label_6->setText(QApplication::translate("MainWindow", "Powered by ZZ \302\251\302\256", nullptr));
         comboBox->setItemText(0, QApplication::translate("MainWindow", "        cos^2(x) - sin^2(z)", nullptr));
         comboBox->setItemText(1, QApplication::translate("MainWindow", "        sin(x) * cos(z)", nullptr));
-        comboBox->setItemText(2, QApplication::translate("MainWindow", "x * z", nullptr));
-        comboBox->setItemText(3, QApplication::translate("MainWindow", "exp(cos(x))", nullptr));
+        comboBox->setItemText(2, QApplication::translate("MainWindow", "        cos^2(x) * z^2", nullptr));
+        comboBox->setItemText(3, QApplication::translate("MainWindow", "        exp(cos(x)) + sin(z) * x", nullptr));
 
         groupBox->setTitle(QApplication::translate("MainWindow", "\320\237\320\260\321\200\320\260\320\274\320\265\321\202\321\200\321\213 \320\277\320\276\321\201\321\202\321\200\320\276\320\265\320\275\320\270\321\217", nullptr));
         LabelxBegin->setText(QApplication::translate("MainWindow", "X\320\275", nullptr));

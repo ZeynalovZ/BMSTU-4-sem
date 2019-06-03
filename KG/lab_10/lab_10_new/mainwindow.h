@@ -4,7 +4,7 @@
 #include <QMainWindow>
 #include <QPainter>
 #include <QDebug>
-#include "functions.h"
+#include "func.h"
 #include "algo.h"
 #include <QMouseEvent>
 #include <QGraphicsSceneMouseEvent>

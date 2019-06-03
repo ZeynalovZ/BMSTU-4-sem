@@ -496,12 +496,12 @@
     </item>
     <item>
      <property name="text">
-      <string>x * z</string>
+      <string>        cos^2(x) * z^2</string>
      </property>
     </item>
     <item>
      <property name="text">
-      <string>exp(cos(x))</string>
+      <string>        exp(cos(x)) + sin(z) * x</string>
      </property>
     </item>
    </widget>
