@@ -41,28 +41,28 @@ public:
     QWidget *verticalLayoutWidget;
     QVBoxLayout *verticalLayout;
     QHBoxLayout *horizontalLayout_2;
-    QLabel *xBegin;
-    QLineEdit *LabelxBegin;
-    QLabel *xEnd;
-    QLineEdit *LabelxEnd;
-    QLabel *xDelta;
-    QLineEdit *LabelxDelta;
+    QLabel *LabelxBegin;
+    QLineEdit *xBegin;
+    QLabel *LabelxEnd;
+    QLineEdit *xEnd;
+    QLabel *LabelxDelta;
+    QLineEdit *xDelta;
     QHBoxLayout *horizontalLayout;
-    QLabel *zBegin;
-    QLineEdit *LabelzBegin;
-    QLabel *zEnd;
-    QLineEdit *LabelzEnd;
-    QLabel *zEnd_2;
-    QLineEdit *lineEdit_3;
+    QLabel *LabelzBegin;
+    QLineEdit *zBegin;
+    QLabel *LabelzEnd;
+    QLineEdit *zEnd;
+    QLabel *LabelzDelta;
+    QLineEdit *zDelta;
     QLabel *label;
     QPushButton *drawButton;
     QGroupBox *groupBox_2;
     QLabel *label_2;
-    QLineEdit *lineEdit;
+    QLineEdit *tetax;
     QLabel *label_3;
-    QLineEdit *lineEdit_2;
+    QLineEdit *tetay;
     QLabel *label_4;
-    QLineEdit *lineEdit_4;
+    QLineEdit *tetaz;
     QPushButton *rotateButton;
     QPushButton *clearButton;
     QToolBar *mainToolBar;
@@ -155,6 +155,8 @@ public:
         label_6->setStyleSheet(QStringLiteral(""));
         comboBox = new QComboBox(centralWidget);
         comboBox->addItem(QString());
+        comboBox->addItem(QString());
+        comboBox->addItem(QString());
         comboBox->setObjectName(QStringLiteral("comboBox"));
         comboBox->setGeometry(QRect(910, 30, 291, 41));
         QFont font1;
@@ -175,43 +177,43 @@ public:
         horizontalLayout_2 = new QHBoxLayout();
         horizontalLayout_2->setSpacing(6);
         horizontalLayout_2->setObjectName(QStringLiteral("horizontalLayout_2"));
-        xBegin = new QLabel(verticalLayoutWidget);
-        xBegin->setObjectName(QStringLiteral("xBegin"));
+        LabelxBegin = new QLabel(verticalLayoutWidget);
+        LabelxBegin->setObjectName(QStringLiteral("LabelxBegin"));
         QFont font2;
         font2.setPointSize(16);
-        xBegin->setFont(font2);
-
-        horizontalLayout_2->addWidget(xBegin);
-
-        LabelxBegin = new QLineEdit(verticalLayoutWidget);
-        LabelxBegin->setObjectName(QStringLiteral("LabelxBegin"));
-        LabelxBegin->setFont(font1);
+        LabelxBegin->setFont(font2);
 
         horizontalLayout_2->addWidget(LabelxBegin);
 
-        xEnd = new QLabel(verticalLayoutWidget);
-        xEnd->setObjectName(QStringLiteral("xEnd"));
-        xEnd->setFont(font2);
+        xBegin = new QLineEdit(verticalLayoutWidget);
+        xBegin->setObjectName(QStringLiteral("xBegin"));
+        xBegin->setFont(font1);
 
-        horizontalLayout_2->addWidget(xEnd);
+        horizontalLayout_2->addWidget(xBegin);
 
-        LabelxEnd = new QLineEdit(verticalLayoutWidget);
+        LabelxEnd = new QLabel(verticalLayoutWidget);
         LabelxEnd->setObjectName(QStringLiteral("LabelxEnd"));
-        LabelxEnd->setFont(font1);
+        LabelxEnd->setFont(font2);
 
         horizontalLayout_2->addWidget(LabelxEnd);
 
-        xDelta = new QLabel(verticalLayoutWidget);
-        xDelta->setObjectName(QStringLiteral("xDelta"));
-        xDelta->setFont(font2);
+        xEnd = new QLineEdit(verticalLayoutWidget);
+        xEnd->setObjectName(QStringLiteral("xEnd"));
+        xEnd->setFont(font1);
 
-        horizontalLayout_2->addWidget(xDelta);
+        horizontalLayout_2->addWidget(xEnd);
 
-        LabelxDelta = new QLineEdit(verticalLayoutWidget);
+        LabelxDelta = new QLabel(verticalLayoutWidget);
         LabelxDelta->setObjectName(QStringLiteral("LabelxDelta"));
-        LabelxDelta->setFont(font1);
+        LabelxDelta->setFont(font2);
 
         horizontalLayout_2->addWidget(LabelxDelta);
+
+        xDelta = new QLineEdit(verticalLayoutWidget);
+        xDelta->setObjectName(QStringLiteral("xDelta"));
+        xDelta->setFont(font1);
+
+        horizontalLayout_2->addWidget(xDelta);
 
 
         verticalLayout->addLayout(horizontalLayout_2);
@@ -219,41 +221,41 @@ public:
         horizontalLayout = new QHBoxLayout();
         horizontalLayout->setSpacing(6);
         horizontalLayout->setObjectName(QStringLiteral("horizontalLayout"));
-        zBegin = new QLabel(verticalLayoutWidget);
-        zBegin->setObjectName(QStringLiteral("zBegin"));
-        zBegin->setFont(font2);
-
-        horizontalLayout->addWidget(zBegin);
-
-        LabelzBegin = new QLineEdit(verticalLayoutWidget);
+        LabelzBegin = new QLabel(verticalLayoutWidget);
         LabelzBegin->setObjectName(QStringLiteral("LabelzBegin"));
-        LabelzBegin->setFont(font1);
+        LabelzBegin->setFont(font2);
 
         horizontalLayout->addWidget(LabelzBegin);
 
-        zEnd = new QLabel(verticalLayoutWidget);
-        zEnd->setObjectName(QStringLiteral("zEnd"));
-        zEnd->setFont(font2);
+        zBegin = new QLineEdit(verticalLayoutWidget);
+        zBegin->setObjectName(QStringLiteral("zBegin"));
+        zBegin->setFont(font1);
 
-        horizontalLayout->addWidget(zEnd);
+        horizontalLayout->addWidget(zBegin);
 
-        LabelzEnd = new QLineEdit(verticalLayoutWidget);
+        LabelzEnd = new QLabel(verticalLayoutWidget);
         LabelzEnd->setObjectName(QStringLiteral("LabelzEnd"));
-        LabelzEnd->setFont(font1);
+        LabelzEnd->setFont(font2);
 
         horizontalLayout->addWidget(LabelzEnd);
 
-        zEnd_2 = new QLabel(verticalLayoutWidget);
-        zEnd_2->setObjectName(QStringLiteral("zEnd_2"));
-        zEnd_2->setFont(font2);
+        zEnd = new QLineEdit(verticalLayoutWidget);
+        zEnd->setObjectName(QStringLiteral("zEnd"));
+        zEnd->setFont(font1);
 
-        horizontalLayout->addWidget(zEnd_2);
+        horizontalLayout->addWidget(zEnd);
 
-        lineEdit_3 = new QLineEdit(verticalLayoutWidget);
-        lineEdit_3->setObjectName(QStringLiteral("lineEdit_3"));
-        lineEdit_3->setFont(font1);
+        LabelzDelta = new QLabel(verticalLayoutWidget);
+        LabelzDelta->setObjectName(QStringLiteral("LabelzDelta"));
+        LabelzDelta->setFont(font2);
 
-        horizontalLayout->addWidget(lineEdit_3);
+        horizontalLayout->addWidget(LabelzDelta);
+
+        zDelta = new QLineEdit(verticalLayoutWidget);
+        zDelta->setObjectName(QStringLiteral("zDelta"));
+        zDelta->setFont(font1);
+
+        horizontalLayout->addWidget(zDelta);
 
 
         verticalLayout->addLayout(horizontalLayout);
@@ -274,26 +276,26 @@ public:
         label_2->setObjectName(QStringLiteral("label_2"));
         label_2->setGeometry(QRect(30, 30, 51, 21));
         label_2->setFont(font1);
-        lineEdit = new QLineEdit(groupBox_2);
-        lineEdit->setObjectName(QStringLiteral("lineEdit"));
-        lineEdit->setGeometry(QRect(20, 60, 71, 31));
-        lineEdit->setFont(font1);
+        tetax = new QLineEdit(groupBox_2);
+        tetax->setObjectName(QStringLiteral("tetax"));
+        tetax->setGeometry(QRect(20, 60, 71, 31));
+        tetax->setFont(font1);
         label_3 = new QLabel(groupBox_2);
         label_3->setObjectName(QStringLiteral("label_3"));
         label_3->setGeometry(QRect(120, 30, 51, 21));
         label_3->setFont(font1);
-        lineEdit_2 = new QLineEdit(groupBox_2);
-        lineEdit_2->setObjectName(QStringLiteral("lineEdit_2"));
-        lineEdit_2->setGeometry(QRect(110, 60, 71, 31));
-        lineEdit_2->setFont(font1);
+        tetay = new QLineEdit(groupBox_2);
+        tetay->setObjectName(QStringLiteral("tetay"));
+        tetay->setGeometry(QRect(110, 60, 71, 31));
+        tetay->setFont(font1);
         label_4 = new QLabel(groupBox_2);
         label_4->setObjectName(QStringLiteral("label_4"));
         label_4->setGeometry(QRect(220, 30, 51, 21));
         label_4->setFont(font1);
-        lineEdit_4 = new QLineEdit(groupBox_2);
-        lineEdit_4->setObjectName(QStringLiteral("lineEdit_4"));
-        lineEdit_4->setGeometry(QRect(200, 60, 71, 31));
-        lineEdit_4->setFont(font1);
+        tetaz = new QLineEdit(groupBox_2);
+        tetaz->setObjectName(QStringLiteral("tetaz"));
+        tetaz->setGeometry(QRect(200, 60, 71, 31));
+        tetaz->setFont(font1);
         rotateButton = new QPushButton(groupBox_2);
         rotateButton->setObjectName(QStringLiteral("rotateButton"));
         rotateButton->setGeometry(QRect(90, 100, 121, 41));
@@ -328,25 +330,33 @@ public:
         MainWindow->setWindowTitle(QApplication::translate("MainWindow", "MainWindow", nullptr));
         draw_label->setText(QString());
         label_6->setText(QApplication::translate("MainWindow", "Powered by ZZ \302\251\302\256", nullptr));
-        comboBox->setItemText(0, QApplication::translate("MainWindow", "        cos^2(x) - sin^2(x)", nullptr));
+        comboBox->setItemText(0, QApplication::translate("MainWindow", "        cos^2(x) - sin^2(z)", nullptr));
+        comboBox->setItemText(1, QApplication::translate("MainWindow", "        sin(x) * cos(z)", nullptr));
+        comboBox->setItemText(2, QApplication::translate("MainWindow", "x * z", nullptr));
 
         groupBox->setTitle(QApplication::translate("MainWindow", "\320\237\320\260\321\200\320\260\320\274\320\265\321\202\321\200\321\213 \320\277\320\276\321\201\321\202\321\200\320\276\320\265\320\275\320\270\321\217", nullptr));
-        xBegin->setText(QApplication::translate("MainWindow", "X\320\275", nullptr));
-        xEnd->setText(QApplication::translate("MainWindow", "X\320\272", nullptr));
-        xDelta->setText(QApplication::translate("MainWindow", "X\316\224", nullptr));
-        zBegin->setText(QApplication::translate("MainWindow", "Z\320\275", nullptr));
-        zEnd->setText(QApplication::translate("MainWindow", "Z\320\272", nullptr));
-        zEnd_2->setText(QApplication::translate("MainWindow", "Z\316\224", nullptr));
+        LabelxBegin->setText(QApplication::translate("MainWindow", "X\320\275", nullptr));
+        xBegin->setText(QApplication::translate("MainWindow", "-2", nullptr));
+        LabelxEnd->setText(QApplication::translate("MainWindow", "X\320\272", nullptr));
+        xEnd->setText(QApplication::translate("MainWindow", "2", nullptr));
+        LabelxDelta->setText(QApplication::translate("MainWindow", "X\316\224", nullptr));
+        xDelta->setText(QApplication::translate("MainWindow", "0.05", nullptr));
+        LabelzBegin->setText(QApplication::translate("MainWindow", "Z\320\275", nullptr));
+        zBegin->setText(QApplication::translate("MainWindow", "-2", nullptr));
+        LabelzEnd->setText(QApplication::translate("MainWindow", "Z\320\272", nullptr));
+        zEnd->setText(QApplication::translate("MainWindow", "2", nullptr));
+        LabelzDelta->setText(QApplication::translate("MainWindow", "Z\316\224", nullptr));
+        zDelta->setText(QApplication::translate("MainWindow", "0.05", nullptr));
         label->setText(QApplication::translate("MainWindow", "\320\222\321\213\320\261\320\265\321\200\320\270\321\202\320\265 \321\204\321\203\320\275\320\272\321\206\320\270\321\216 \320\277\320\276\321\201\321\202\321\200\320\276\320\265\320\275\320\270\321\217:", nullptr));
         drawButton->setText(QApplication::translate("MainWindow", "\320\235\320\260\321\200\320\270\321\201\320\276\320\262\320\260\321\202\321\214", nullptr));
         groupBox_2->setTitle(QApplication::translate("MainWindow", "\320\237\320\276\320\262\320\276\321\200\320\276\321\202", nullptr));
         label_2->setText(QApplication::translate("MainWindow", "\316\270 X", nullptr));
-        lineEdit->setText(QApplication::translate("MainWindow", "0", nullptr));
-        lineEdit->setPlaceholderText(QString());
+        tetax->setText(QApplication::translate("MainWindow", "0", nullptr));
+        tetax->setPlaceholderText(QString());
         label_3->setText(QApplication::translate("MainWindow", "\316\270 Y", nullptr));
-        lineEdit_2->setText(QApplication::translate("MainWindow", "0", nullptr));
+        tetay->setText(QApplication::translate("MainWindow", "0", nullptr));
         label_4->setText(QApplication::translate("MainWindow", "\316\270 Z", nullptr));
-        lineEdit_4->setText(QApplication::translate("MainWindow", "0", nullptr));
+        tetaz->setText(QApplication::translate("MainWindow", "0", nullptr));
         rotateButton->setText(QApplication::translate("MainWindow", "\320\237\320\276\320\262\320\276\321\200\320\276\321\202", nullptr));
         clearButton->setText(QApplication::translate("MainWindow", "\320\236\321\207\320\270\321\201\321\202\320\270\321\202\321\214", nullptr));
         menu->setTitle(QApplication::translate("MainWindow", "\320\270\320\275\321\204\320\276\321\200\320\274\320\260\321\206\320\270\321\217", nullptr));
