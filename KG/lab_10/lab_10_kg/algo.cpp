@@ -23,13 +23,11 @@ void SearchIntersection(int x1, int y1, int x2, int y2, QVector<int> &horizon, i
     double m = delta_y_c / static_cast<double>(delta_x);
     if (delta_x == 0)
     {
-        qDebug() << "first";
         xi = x2;
         yi = horizon[x2];
     }
     else if (y1 == horizon[x1] && y2 == horizon[x2])
     {
-        qDebug() << "second";
         xi = x1;
         yi = y1;
     }
@@ -41,6 +39,7 @@ void SearchIntersection(int x1, int y1, int x2, int y2, QVector<int> &horizon, i
             xi = x1 - static_cast<int>(round(delta_x * (y1 - horizon[x1]) / static_cast<double>(delta_y_c - delta_y_p)));
             yi = static_cast<int>(round((xi - x1) * m + y1));
         }
+
     }
     qDebug() << xi;
 }
@@ -69,7 +68,6 @@ void horizon(int x1, int y1, int x2, int y2, QVector<int> &TOP, QVector<int> &DO
         int x_prev = x1;
         int y_prev = y1;
         double m = (y2 - y1) / static_cast<double>(x2 - x1);
-        //qDebug() << m;
         for (int x = x1; x <= x2; x++)
         {
             int y = static_cast<int>(round(m * (x - x1) + y1));
@@ -92,7 +90,7 @@ void EdgeWhatcher(int &x, int &y, int &xEdge, int &yEdge, QVector<int> &TOP, QVe
     xEdge = x;
     yEdge = y;
 }
-// тут всегда -1
+
 int Visible(int x, int y, QVector<int> TOP, QVector<int> DOWN)
 {
 
@@ -151,8 +149,8 @@ void transform(double &x, double &y, double &z, double tetax, double tetay, doub
     rotate_x(y_tmp, z_tmp, tetax);
     rotate_y(x_tmp, z_tmp, tetay);
     rotate_z(x_tmp, y_tmp, tetaz);
-    res_x = static_cast<int>(round(x_tmp * 50 + x_center));
-    res_y = static_cast<int>(round(y_tmp * 50 + y_center));
+    res_x = static_cast<int>(round(x_tmp * 48 + x_center));
+    res_y = static_cast<int>(round(y_tmp * 48 + y_center));
 }
 
 void HorizonAlgo(NeededParams Params, QPainter &painter, double tetax, double tetay, double tetaz)
@@ -179,7 +177,7 @@ void HorizonAlgo(NeededParams Params, QPainter &painter, double tetax, double te
         transform(Params.xB, y_p, z, tetax, tetay, tetaz, x_prev, y_prev);
         EdgeWhatcher(x_prev, y_prev, x_left, y_left, TOP, DOWN, painter);
         int Pflag = Visible(x_prev, y_prev, TOP, DOWN);
-        for (x = Params.xB; x < Params.xE; x += Params.xD)
+        for (x = Params.xB; x <= Params.xE; x += Params.xD)
         {
             int x_curr = 0, y_curr = 0;
             int xi;
@@ -211,7 +209,7 @@ void HorizonAlgo(NeededParams Params, QPainter &painter, double tetax, double te
                 if (Pflag == 0)
                 {
                     SearchIntersection(x_prev, y_prev, x_curr, y_curr, TOP, xi, yi);
-                    horizon(x_prev, y_prev, xi, yi, TOP, DOWN, painter);
+                    horizon(x_curr, y_curr, xi, yi, TOP, DOWN, painter);
                 }
                 else
                 {
@@ -226,7 +224,7 @@ void HorizonAlgo(NeededParams Params, QPainter &painter, double tetax, double te
                 if (Pflag == 0)
                 {
                     SearchIntersection(x_prev, y_prev, x_curr, y_curr, TOP, xi, yi);
-                    horizon(x_prev, y_prev, xi, yi, TOP, DOWN, painter);
+                    horizon(x_curr, y_curr, xi, yi, TOP, DOWN, painter);
                 }
                 else
                 {
@@ -241,5 +239,6 @@ void HorizonAlgo(NeededParams Params, QPainter &painter, double tetax, double te
             y_prev = y_curr;
         }
         EdgeWhatcher(x_prev, y_prev, x_right, y_right, TOP, DOWN, painter);
+
     }
 }
